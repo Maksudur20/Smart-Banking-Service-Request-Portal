@@ -359,6 +359,7 @@ const UI = {
 
   setAILanguage(lang, firstName) {
     this.aiLang = lang;
+    this.chatHistory = [];
     localStorage.setItem('smartbank_ai_lang', lang);
 
     const widget = document.getElementById('floatingAIWidget');
@@ -374,6 +375,7 @@ const UI = {
   },
 
   renderAIWelcomeMessage(firstName) {
+    this.chatHistory = [];
     const chatBody = document.getElementById('aiChatBody');
     const input = document.getElementById('aiInputText');
     const headerTitle = document.getElementById('aiHeaderTitle');
@@ -522,6 +524,10 @@ Smart Banking Account Number, কার্ডধারীর নাম, নি�
 
     if (guides[topicKey]) {
       const g = guides[topicKey];
+      if (!this.chatHistory) this.chatHistory = [];
+      this.chatHistory.push({ role: 'user', content: g.query });
+      this.chatHistory.push({ role: 'assistant', content: g.bn.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() });
+
       // Display immediate formatted card in chat body
       const chatBody = document.getElementById('aiChatBody');
       if (chatBody) {
@@ -546,6 +552,8 @@ Smart Banking Account Number, কার্ডধারীর নাম, নি�
     const chatBody = document.getElementById('aiChatBody');
     if (!chatBody) return;
 
+    if (!this.chatHistory) this.chatHistory = [];
+
     // Append user message bubble
     const userDiv = document.createElement('div');
     userDiv.className = 'ai-msg user';
@@ -561,18 +569,29 @@ Smart Banking Account Number, কার্ডধারীর নাম, নি�
     chatBody.appendChild(typingDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
 
+    // Send history + current message
+    const historyPayload = this.chatHistory.slice(-8);
+
     try {
       const res = await window.api.post('/api/ai/chat', {
         message: userText,
+        conversationHistory: historyPayload,
+        history: historyPayload,
         language: this.aiLang
       });
 
       typingDiv.remove();
 
+      const replyText = res.reply || (this.aiLang === 'bn' ? 'আমি আপনার ব্যাংকিং সহায়তায় প্রস্তুত।' : 'I am ready to help with your banking inquiries.');
+
+      // Record in local conversation history for multi-turn conversational flow
+      this.chatHistory.push({ role: 'user', content: userText });
+      this.chatHistory.push({ role: 'assistant', content: replyText });
+
       const botDiv = document.createElement('div');
       botDiv.className = 'ai-msg bot';
       // Format markdown bold & linebreaks
-      botDiv.innerHTML = (res.reply || (this.aiLang === 'bn' ? 'আমি আপনার ব্যাংকিং সহায়তায় প্রস্তুত।' : 'I am ready to help with your banking inquiries.'))
+      botDiv.innerHTML = replyText
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
       chatBody.appendChild(botDiv);
