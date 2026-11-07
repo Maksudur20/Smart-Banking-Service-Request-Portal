@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Review & Decision - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+    @media (max-width: 1024px) {
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .evidence-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 20px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <a href="/admin/admin-requests.html" class="btn btn-secondary btn-sm">&larr; Back to Queue</a>
+          <h1 class="page-heading" id="adminHeading">Application Review</h1>
+        </div>
+        <div class="top-nav-right">
+          <span id="headerStatusBadge"></span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- AI Executive Briefing Card (Collapsible) -->
+        <div class="card" style="border-left: 4px solid var(--purple); background: #faf5ff;">
+          <div class="card-body" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div class="ai-badge">🤖 AI Assistant Executive Briefing</div>
+              <p id="aiBriefingText" style="font-size:0.9rem; color:var(--navy); margin-top:8px; line-height:1.5;">
+                Click below to request an instant AI synthesis of this customer application and document verification findings.
+              </p>
+            </div>
+            <button onclick="generateAISummary()" id="aiSummaryBtn" class="btn btn-secondary btn-sm" style="border-color:var(--purple); color:var(--purple); font-weight:700;">
+              ✨ Generate AI Summary
+            </button>
+          </div>
+        </div>
+
+        <div class="review-grid">
+          <!-- Left Column: Customer Profile & Uploaded Documents with AI Cards -->
+          <div>
+            <!-- Customer & Service Overview -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Customer Application Profile</h3>
+              </div>
+              <div class="card-body">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:16px;">
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Customer Name</span>
+                    <div id="cName" style="font-weight:700; color:var(--navy);">...</div>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Customer Reference</span>
+                    <div id="cRef" style="font-weight:700; color:var(--primary);">...</div>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Account Number</span>
+                    <div id="cAcc" style="font-weight:700; color:var(--navy);">...</div>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Contact Phone</span>
+                    <div id="cPhone" style="font-weight:600; color:var(--text-muted);">...</div>
+                  </div>
+                </div>
+
+                <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; margin-bottom:12px;">
+                  <strong style="color:var(--navy); font-size:0.88rem;">Banking Service:</strong> <span id="cService" style="font-weight:600;">...</span><br>
+                  <strong style="color:var(--navy); font-size:0.88rem;">Subject:</strong> <span id="cSubject">...</span><br>
+                  <strong style="color:var(--navy); font-size:0.88rem;">Customer Details:</strong> <span id="cDetails" style="color:var(--text-muted);">...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents & AI Analysis Results -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Uploaded Evidence & AI-Assisted Validation</h3>
+              </div>
+              <div class="card-body">
+                <div id="evidenceContainer">
+                  <p style="color:var(--text-light);">Loading evidence...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Administrative Decision Panel & Audit Trail -->
+          <div>
+            <!-- Decision Action Card -->
+            <div class="card" style="border-top: 4px solid var(--primary); position:sticky; top:88px;">
+              <div class="card-header">
+                <h3 class="card-title">Officer Decision Panel</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label required">Officer Remarks / Rationale</label>
+                  <textarea id="adminRemarks" class="form-control" placeholder="Provide reason for decision (mandatory when requesting correction or rejecting)..." style="min-height:100px;"></textarea>
+                  <div class="form-hint">These remarks will be recorded in the audit log and sent to the customer.</div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                  <button onclick="submitDecision('APPROVE')" id="btnApprove" class="btn btn-success btn-block">
+                    ✓ Approve Application
+                  </button>
+                  <button onclick="submitDecision('CORRECTION_REQUIRED')" id="btnCorrection" class="btn btn-warning btn-block">
+                    ⚠️ Request Document Correction
+                  </button>
+                  <button onclick="submitDecision('REJECT')" id="btnReject" class="btn btn-danger btn-block">
+                    ✕ Reject Application
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('requests');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestId = urlParams.get('id');
+
+    if (!requestId) {
+      window.location.href = '/admin/admin-requests.html';
+    }
+
+    async function loadRequest() {
+      try {
+        const res = await window.api.get(`/api/admin/requests/${requestId}`);
+        const r = res.request;
+        const docs = res.documents || [];
+
+        document.getElementById('adminHeading').innerText = `Review Request ${r.request_number}`;
+        document.getElementById('headerStatusBadge').innerHTML = window.UI.renderStatusBadge(r.status);
+        document.getElementById('cName').innerText = r.customer_name;
+        document.getElementById('cRef').innerText = r.customer_reference;
+        document.getElementById('cAcc').innerText = r.account_number || 'N/A';
+        document.getElementById('cPhone').innerText = r.customer_phone || 'N/A';
+        document.getElementById('cService').innerText = r.service_name;
+        document.getElementById('cSubject').innerText = r.subject;
+        document.getElementById('cDetails').innerText = r.details || 'None provided.';
+
+        renderEvidence(docs);
+      } catch (err) {
+        window.showToast('Failed to load request details.', 'error');
+      }
+    }
+
+    function renderEvidence(docs) {
+      const container = document.getElementById('evidenceContainer');
+
+      if (docs.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:24px;">Customer has not uploaded any documents yet.</p>';
+        return;
+      }
+
+      container.innerHTML = docs.map(d => `
+        <div class="evidence-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <div>
+              <strong style="font-size:1.05rem; color:var(--navy);">${d.document_type_name}</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted);">
+                File: <code>${d.original_file_name}</code> (${Math.round(d.file_size_bytes/1024)} KB)
+              </div>
+            </div>
+            <button onclick="previewDoc(${d.id})" class="btn btn-secondary btn-sm">
+              🔍 Inspect File in New Tab
+            </button>
+          </div>
+
+          <!-- AI Assistant Output Card -->
+          <div class="ai-review-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="ai-badge">🤖 AI Analysis Report</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Model: <code>${d.model_id || 'vision-agent'}</code></span>
+            </div>
+
+            <div class="ai-metrics-row">
+              <div class="ai-metric-item">
+                <div class="ai-metric-label">Readability</div>
+                <div class="ai-metric-val" style="color:${d.readability_status === 'readable' ? 'var(--success)' : 'var(--warning)'};">
+                  ${d.readability_status || 'Unknown'}
+                </div>
+              </div>
+              <div class="ai-metric-item">
+                <div class="ai-metric-label">Completeness</div>
+                <div class="ai-metric-val" style="color:${d.completeness_status === 'appears_complete' ? 'var(--success)' : 'var(--warning)'};">
+                  ${d.completeness_status || 'Unknown'}
+                </div>
+              </div>
+              <div class="ai-metric-item">
+                <div class="ai-metric-label">Confidence</div>
+                <div class="ai-metric-val">
+                  ${d.confidence ? Math.round(d.confidence * 100) + '%' : 'N/A'}
+                </div>
+              </div>
+              <div class="ai-metric-item">
+                <div class="ai-metric-label">Mismatch Flag</div>
+                <div class="ai-metric-val" style="color:${d.possible_mismatch ? 'var(--danger)' : 'var(--success)'};">
+                  ${d.possible_mismatch ? 'FLAGGED' : 'CLEAN'}
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:0.85rem; color:var(--navy); line-height:1.5; margin-bottom:8px;">
+              <strong>AI Findings Summary:</strong> ${d.ai_summary || 'Standard visual assessment completed.'}
+            </div>
+
+            <div style="font-size:0.85rem; color:#0369a1; background:#f0f9ff; padding:8px 12px; border-radius:var(--radius-sm); margin-bottom:8px;">
+              <strong>Recommendation:</strong> ${d.ai_recommendation || 'Proceed with administrative verification.'}
+            </div>
+
+            ${(d.issues && d.issues.length > 0) ? `
+              <div style="background:#fef2f2; border-left:3px solid var(--danger); padding:8px 12px; border-radius:var(--radius-sm); font-size:0.82rem; color:#991b1b; margin-bottom:8px;">
+                <strong>Identified Issues:</strong>
+                <ul style="padding-left:16px; margin-top:4px;">
+                  ${d.issues.map(i => `<li>${i}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
+
+            <div style="font-size:0.75rem; color:var(--text-light); border-top:1px dashed var(--border); padding-top:6px; margin-top:8px;">
+              ⚠️ <em>Disclaimer: AI output is decision-support assistance only. The bank officer must independently review the evidence before approving or rejecting.</em>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function previewDoc(docId) {
+      try {
+        const res = await window.api.get(`/api/documents/${docId}/access`);
+        if (res.url) window.open(res.url, '_blank');
+      } catch (err) {
+        window.showToast('Could not open document preview.', 'error');
+      }
+    }
+
+    async function generateAISummary() {
+      const btn = document.getElementById('aiSummaryBtn');
+      const text = document.getElementById('aiBriefingText');
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Analyzing...';
+        const res = await window.api.get(`/api/ai/requests/${requestId}/summary`);
+        text.innerHTML = `
+          <strong>AI Executive Synthesis:</strong><br>
+          ${res.summary.summary.replace(/\n/g, '<br>')}<br><br>
+          <strong>Advisory Recommendation:</strong> ${res.summary.actionRecommendation}
+        `;
+      } catch (err) {
+        window.showToast('Failed to generate summary.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '✨ Re-generate AI Summary';
+      }
+    }
+
+    async function submitDecision(decision) {
+      const remarks = document.getElementById('adminRemarks').value;
+
+      if (['REJECT', 'CORRECTION_REQUIRED'].includes(decision) && (!remarks || !remarks.trim())) {
+        window.showToast('Please enter mandatory remarks explaining the rejection or requested correction.', 'error');
+        document.getElementById('adminRemarks').focus();
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to proceed with decision: ${decision}?`)) {
+        return;
+      }
+
+      try {
+        const res = await window.api.post(`/api/admin/requests/${requestId}/decision`, {
+          decision,
+          remarks,
+        });
+
+        window.showToast(res.message || 'Decision recorded successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = '/admin/admin-requests.html';
+        }, 800);
+      } catch (err) {
+        window.showToast(err.message || 'Failed to submit decision.', 'error');
+      }
+    }
+
+    loadRequest();
+  </script>
+</body>
+</html>

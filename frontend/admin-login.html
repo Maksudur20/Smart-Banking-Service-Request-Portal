@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin & Officer Login - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-brand">
+        <div class="brand-icon" style="background: linear-gradient(135deg, #10b981, #047857);">SB</div>
+        <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
+      </div>
+      <h2 class="auth-title">Bank Officer Login</h2>
+      <p class="auth-sub">Administrative review, verification, and audit oversight</p>
+    </div>
+
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label class="form-label required">Staff Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="admin@smartbank.com" required autofocus value="admin@smartbank.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required value="Password123!">
+      </div>
+
+      <div style="margin-bottom: 20px; font-size: 0.82rem; background: #ecfdf5; border-left: 4px solid var(--success); padding: 10px; border-radius: var(--radius-sm); color: #064e3b;">
+        <strong>Demo Admin Credentials:</strong><br>
+        Email: <code>admin@smartbank.com</code> (Super Admin)<br>
+        Email: <code>verifier@smartbank.com</code> (Operations Officer)<br>
+        Password: <code>Password123!</code>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-success btn-block btn-lg">
+        Log In to Admin Operations
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="/login.html">&larr; Return to Customer Portal Login</a>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script>
+    window.Auth.redirectIfAuthenticated();
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Authenticating staff credentials...';
+
+        const res = await window.api.post('/api/auth/login', { email, password });
+
+        if (res.user.role !== 'ADMIN') {
+          throw new Error('Access denied. This account does not possess Bank Officer permissions.');
+        }
+
+        window.api.setToken(res.token);
+        window.api.setUser(res.user);
+
+        window.showToast('Officer authentication successful! Redirecting...', 'success');
+
+        setTimeout(() => {
+          window.location.href = '/admin/admin-dashboard.html';
+        }, 500);
+      } catch (err) {
+        window.showToast(err.message || 'Staff login failed.', 'error');
+        btn.disabled = false;
+        btn.innerText = 'Log In to Admin Operations';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Details - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+      margin-top: 16px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -28px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--primary);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+    .timeline-title {
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .timeline-date {
+      color: var(--text-light);
+    }
+    .timeline-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <a href="/customer/requests.html" class="btn btn-secondary btn-sm">&larr; Back to Requests</a>
+          <h1 class="page-heading" id="requestHeading">Request Details</h1>
+        </div>
+        <div class="top-nav-right">
+          <span id="headerStatusBadge"></span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Request Summary Card -->
+        <div class="card">
+          <div class="card-body">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+              <div>
+                <span style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); font-weight:600;">
+                  Service Category:
+                </span>
+                <h2 id="serviceName" style="font-size:1.3rem; font-weight:700; color:var(--navy); margin-top:2px;">Loading...</h2>
+                <p id="requestSubject" style="font-size:0.95rem; color:var(--text-main); margin-top:4px; font-weight:500;"></p>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.8rem; color:var(--text-muted);">Request Reference</div>
+                <div id="requestNumber" style="font-size:1.2rem; font-weight:700; color:var(--primary);">...</div>
+                <div id="submittedDate" style="font-size:0.8rem; color:var(--text-light); margin-top:2px;"></div>
+              </div>
+            </div>
+
+            <div id="requestDetailsBox" style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; font-size:0.88rem; color:var(--text-muted); margin-bottom:16px;">
+              <strong>Customer Notes:</strong> <span id="requestDetailsText">None provided.</span>
+            </div>
+
+            <div id="correctionAlert" style="display:none;" class="ai-warning-box">
+              <strong>⚠️ Action Required by Bank Officer:</strong>
+              <div id="correctionRemarks" style="margin-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Checklist & Upload Section -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Supporting Documents & Verification</h3>
+              <p class="card-subtitle">Upload required documents to satisfy bank compliance checklist</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="documentsListContainer" style="display:flex; flex-direction:column; gap:16px;">
+              <p style="color:var(--text-light);">Loading document checklist...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline / Status History -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Request Status & Audit History</h3>
+          </div>
+          <div class="card-body">
+            <div class="timeline" id="statusTimeline">
+              <p style="color:var(--text-light);">Loading history...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="uploadModalTitle">Upload Supporting Document</h3>
+        <button onclick="closeUploadModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="uploadDocForm">
+        <div class="modal-body">
+          <input type="hidden" id="uploadDocTypeId">
+          <input type="hidden" id="replaceDocId">
+
+          <div class="form-group">
+            <label class="form-label required">Select File from Device</label>
+            <input type="file" id="docFileInput" class="form-control" required accept=".jpg,.jpeg,.png,.pdf">
+            <div class="form-hint" id="fileLimitsHint">Supported: JPG, PNG, PDF. Max Size: 5MB.</div>
+          </div>
+
+          <div style="font-size:0.82rem; background:var(--info-bg); padding:10px; border-radius:var(--radius-sm); color:var(--navy);">
+            ℹ️ Your document will be securely stored in protected cloud storage and automatically analyzed by our AI verification assistant.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="closeUploadModal()" class="btn btn-secondary">Cancel</button>
+          <button type="submit" id="modalUploadBtn" class="btn btn-primary">Upload Document &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('requests');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestId = urlParams.get('id');
+
+    if (!requestId) {
+      window.location.href = '/customer/requests.html';
+    }
+
+    async function loadRequestDetails() {
+      try {
+        const res = await window.api.get(`/api/requests/${requestId}`);
+        const req = res.request;
+        const docs = res.documents || [];
+        const reqs = res.requirements || [];
+        const history = res.statusHistory || [];
+
+        document.getElementById('requestHeading').innerText = `Request ${req.request_number}`;
+        document.getElementById('serviceName').innerText = req.service_name;
+        document.getElementById('requestSubject').innerText = req.subject;
+        document.getElementById('requestNumber').innerText = req.request_number;
+        document.getElementById('submittedDate').innerText = `Submitted on ${window.UI.formatDateTime(req.submitted_at || req.created_at)}`;
+        document.getElementById('requestDetailsText').innerText = req.details || 'None provided.';
+        document.getElementById('headerStatusBadge').innerHTML = window.UI.renderStatusBadge(req.status);
+
+        // Correction warning
+        const correctionBox = document.getElementById('correctionAlert');
+        if (req.status === 'Correction Required') {
+          correctionBox.style.display = 'block';
+          const latestHistory = history.filter(h => h.new_status === 'Correction Required').pop();
+          document.getElementById('correctionRemarks').innerText = latestHistory ? latestHistory.remarks : 'Please re-upload required documents.';
+        } else {
+          correctionBox.style.display = 'none';
+        }
+
+        // Render documents checklist
+        renderDocumentsChecklist(reqs, docs, req.status);
+
+        // Render timeline
+        renderTimeline(history);
+      } catch (err) {
+        console.error(err);
+        window.showToast('Failed to load request details.', 'error');
+      }
+    }
+
+    function renderDocumentsChecklist(requirements, uploadedDocs, requestStatus) {
+      const container = document.getElementById('documentsListContainer');
+      const isEditable = !['Approved', 'Completed', 'Cancelled'].includes(requestStatus);
+
+      if (requirements.length === 0 && uploadedDocs.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);">No supporting documents are needed for this request.</p>';
+        return;
+      }
+
+      container.innerHTML = requirements.map(r => {
+        // Find if this required document has an active upload
+        const uploaded = uploadedDocs.find(d => d.document_type_id === r.document_type_id && d.verification_status !== 'Superseded');
+
+        if (uploaded) {
+          return `
+            <div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; background:#fff; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <strong style="color:var(--navy);">${r.document_name}</strong>
+                  ${window.UI.renderStatusBadge(uploaded.verification_status)}
+                  <span class="badge badge-ai-validation">AI: ${uploaded.ai_validation_status}</span>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
+                  File: <code>${uploaded.original_file_name}</code> (${Math.round(uploaded.file_size_bytes / 1024)} KB) &bull; 
+                  Uploaded ${window.UI.formatDateTime(uploaded.created_at)}
+                </div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button onclick="previewDocument(${uploaded.id})" class="btn btn-secondary btn-sm">
+                  🔍 View Document
+                </button>
+                ${(isEditable && (uploaded.verification_status === 'Rejected' || requestStatus === 'Correction Required')) ? `
+                  <button onclick="openReplaceModal(${uploaded.id}, '${r.document_name}')" class="btn btn-warning btn-sm">
+                    🔄 Replace File
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div style="border:1px dashed var(--border); border-radius:var(--radius-sm); padding:16px; background:#fafafa; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <strong style="color:var(--navy);">${r.document_name}</strong>
+                ${r.is_required ? '<span style="color:var(--danger); font-size:0.75rem; font-weight:700; margin-left:6px;">MANDATORY</span>' : '<span style="color:var(--text-light); font-size:0.75rem;">OPTIONAL</span>'}
+                <div style="font-size:0.8rem; color:var(--text-light); margin-top:2px;">
+                  Allowed formats: <code>${r.allowed_extensions}</code> &bull; Max: ${r.max_size_mb} MB
+                </div>
+              </div>
+              ${isEditable ? `
+                <button onclick="openUploadModal(${r.document_type_id}, '${r.document_name}', '${r.allowed_extensions}', ${r.max_size_mb})" class="btn btn-primary btn-sm">
+                  + Upload ${r.document_name}
+                </button>
+              ` : '<span style="font-size:0.8rem; color:var(--text-light);">Uploads Closed</span>'}
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    function renderTimeline(history) {
+      const container = document.getElementById('statusTimeline');
+      if (history.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-light);">No status history recorded yet.</p>';
+        return;
+      }
+
+      container.innerHTML = history.map(h => `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-header">
+            <span class="timeline-title">${h.new_status}</span>
+            <span class="timeline-date">${window.UI.formatDateTime(h.created_at)}</span>
+          </div>
+          <div class="timeline-desc">
+            ${h.remarks || 'Status updated.'} &mdash; 
+            <small style="color:var(--text-light);">by ${h.changed_by_name} (${h.changed_by_role})</small>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function previewDocument(documentId) {
+      try {
+        const res = await window.api.get(`/api/documents/${documentId}/access`);
+        if (res.url) {
+          window.open(res.url, '_blank');
+        } else {
+          window.showToast('Could not retrieve secure view link.', 'error');
+        }
+      } catch (err) {
+        window.showToast(err.message || 'Access denied to document.', 'error');
+      }
+    }
+
+    function openUploadModal(docTypeId, docName, allowedExt, maxMb) {
+      document.getElementById('uploadDocTypeId').value = docTypeId;
+      document.getElementById('replaceDocId').value = '';
+      document.getElementById('uploadModalTitle').innerText = `Upload ${docName}`;
+      document.getElementById('fileLimitsHint').innerText = `Permitted: ${allowedExt}. Maximum Size: ${maxMb} MB.`;
+      document.getElementById('docFileInput').value = '';
+      document.getElementById('uploadModal').classList.add('open');
+    }
+
+    function openReplaceModal(docId, docName) {
+      document.getElementById('uploadDocTypeId').value = '';
+      document.getElementById('replaceDocId').value = docId;
+      document.getElementById('uploadModalTitle').innerText = `Replace ${docName}`;
+      document.getElementById('docFileInput').value = '';
+      document.getElementById('uploadModal').classList.add('open');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.remove('open');
+    }
+
+    document.getElementById('uploadDocForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('docFileInput');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        window.showToast('Please select a file.', 'error');
+        return;
+      }
+
+      const docTypeId = document.getElementById('uploadDocTypeId').value;
+      const replaceDocId = document.getElementById('replaceDocId').value;
+      const btn = document.getElementById('modalUploadBtn');
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Uploading to Cloudinary & running AI scan...';
+
+        if (replaceDocId) {
+          await window.api.post(`/api/documents/${replaceDocId}/replace`, formData);
+          window.showToast('Document replaced successfully!', 'success');
+        } else {
+          formData.append('document_type_id', docTypeId);
+          await window.api.post(`/api/requests/${requestId}/documents`, formData);
+          window.showToast('Document uploaded successfully!', 'success');
+        }
+
+        closeUploadModal();
+        loadRequestDetails();
+      } catch (err) {
+        window.showToast(err.message || 'Upload failed.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Upload Document →';
+      }
+    });
+
+    loadRequestDetails();
+  </script>
+</body>
+</html>

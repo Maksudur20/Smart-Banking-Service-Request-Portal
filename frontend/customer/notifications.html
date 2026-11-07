@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .notif-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      transition: background 0.15s ease;
+    }
+    .notif-card.unread {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+    }
+    .notif-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .notif-msg {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .notif-time {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Notifications</h1>
+        </div>
+        <div class="top-nav-right">
+          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">Mark All as Read</button>
+        </div>
+      </header>
+
+      <main class="content-container" style="max-width: 860px;">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">In-App Alerts & Updates</h3>
+          </div>
+          <div class="card-body">
+            <div id="notificationsList">
+              <p style="color:var(--text-light); text-align:center; padding:30px;">Loading alerts...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('notifications');
+
+    async function loadNotifications() {
+      try {
+        const res = await window.api.get('/api/notifications', { limit: 30 });
+        const list = res.notifications || [];
+        const container = document.getElementById('notificationsList');
+
+        if (list.length === 0) {
+          container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:30px;">No notifications found.</p>';
+          return;
+        }
+
+        container.innerHTML = list.map(n => `
+          <div class="notif-card ${n.is_read ? '' : 'unread'}">
+            <div>
+              <div class="notif-title">${n.title}</div>
+              <div class="notif-msg">${n.message}</div>
+              <div class="notif-time">${window.UI.formatDateTime(n.created_at)}</div>
+            </div>
+            <div>
+              ${!n.is_read ? `
+                <button onclick="markSingleRead(${n.id})" class="btn btn-secondary btn-sm" title="Mark as read">
+                  ✓
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load notifications.', 'error');
+      }
+    }
+
+    async function markSingleRead(id) {
+      try {
+        await window.api.patch(`/api/notifications/${id}/read`, {});
+        loadNotifications();
+        window.UI.updateNotificationBadge();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function markAllRead() {
+      try {
+        await window.api.patch('/api/notifications/read-all', {});
+        window.showToast('All notifications marked as read.', 'success');
+        loadNotifications();
+        window.UI.updateNotificationBadge();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    loadNotifications();
+  </script>
+</body>
+</html>

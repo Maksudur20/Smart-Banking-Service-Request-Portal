@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <div id="app-sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Customer Dashboard</h1>
+        </div>
+        <div class="top-nav-right">
+          <a href="/customer/notifications.html" class="notification-pill" title="Notifications">
+            🔔
+            <span id="top-notification-dot" class="badge-dot" style="display:none;"></span>
+          </a>
+          <a href="/customer/service-request.html" class="btn btn-primary btn-sm">
+            + New Service Request
+          </a>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Account Summary Banner -->
+        <div class="card" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; margin-bottom: 24px;">
+          <div class="card-body" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <h2 id="welcomeGreeting" style="font-size:1.4rem; font-weight:700; margin-bottom:4px;">Welcome Back!</h2>
+              <p style="font-size:0.9rem; opacity:0.9;">
+                Customer Ref: <strong id="userRef">CUST-2026-0001</strong> &bull; 
+                Primary Account: <strong id="userAcc">202611010001</strong>
+              </p>
+            </div>
+            <div>
+              <a href="/customer/service-request.html" class="btn btn-secondary btn-sm" style="background:#fff; color:var(--primary-dark); font-weight:700;">
+                Apply for New Service &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Total Requests</span>
+              <div class="metric-icon-box metric-icon-blue">📋</div>
+            </div>
+            <div class="metric-value" id="statTotalRequests">0</div>
+            <div class="metric-sub">Submitted online</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Pending Review</span>
+              <div class="metric-icon-box metric-icon-amber">⏳</div>
+            </div>
+            <div class="metric-value" id="statPendingRequests">0</div>
+            <div class="metric-sub">Under officer verification</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Approved Requests</span>
+              <div class="metric-icon-box metric-icon-green">✅</div>
+            </div>
+            <div class="metric-value" id="statApprovedRequests">0</div>
+            <div class="metric-sub">Processed successfully</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Action Required</span>
+              <div class="metric-icon-box metric-icon-red">⚠️</div>
+            </div>
+            <div class="metric-value" id="statCorrectionRequests">0</div>
+            <div class="metric-sub">Document correction needed</div>
+          </div>
+        </div>
+
+        <!-- Recent Service Requests Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">My Recent Service Requests</h3>
+              <p class="card-subtitle">Track real-time progress and document review status</p>
+            </div>
+            <a href="/customer/requests.html" class="btn btn-secondary btn-sm">View All Requests</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Service Category</th>
+                  <th>Subject</th>
+                  <th>Submitted At</th>
+                  <th>Documents</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding: 32px; color:var(--text-light);">
+                    Loading recent requests...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('dashboard');
+
+    async function loadDashboard() {
+      const user = window.Auth.getUser() || {};
+      document.getElementById('welcomeGreeting').innerText = `Welcome Back, ${user.full_name || 'Customer'}!`;
+      document.getElementById('userRef').innerText = user.customer_reference || 'CUST-2026-XXXX';
+      document.getElementById('userAcc').innerText = user.account_number || '20261101XXXX';
+
+      try {
+        const res = await window.api.get('/api/requests', { limit: 5 });
+        const requests = res.requests || [];
+
+        // Count metrics
+        let total = requests.length;
+        let pending = 0;
+        let approved = 0;
+        let correction = 0;
+
+        requests.forEach(r => {
+          if (['Submitted', 'Document Review', 'AI Validation', 'Pending Admin Review'].includes(r.status)) pending++;
+          if (['Approved', 'Completed'].includes(r.status)) approved++;
+          if (r.status === 'Correction Required') correction++;
+        });
+
+        document.getElementById('statTotalRequests').innerText = res.pagination ? res.pagination.total : total;
+        document.getElementById('statPendingRequests').innerText = pending;
+        document.getElementById('statApprovedRequests').innerText = approved;
+        document.getElementById('statCorrectionRequests').innerText = correction;
+
+        const tbody = document.getElementById('requestsTableBody');
+        if (requests.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center; padding: 40px; color:var(--text-muted);">
+                You haven't submitted any banking service requests yet.<br><br>
+                <a href="/customer/service-request.html" class="btn btn-primary btn-sm">+ Submit Your First Request</a>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = requests.map(r => `
+          <tr>
+            <td><strong>${r.request_number}</strong></td>
+            <td>${r.service_name}</td>
+            <td>${r.subject}</td>
+            <td>${window.UI.formatDateTime(r.created_at)}</td>
+            <td><span class="badge badge-submitted">${r.document_count} uploaded</span></td>
+            <td>${window.UI.renderStatusBadge(r.status)}</td>
+            <td>
+              <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn">
+                Details &rarr;
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        window.showToast('Failed to load recent requests.', 'error');
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

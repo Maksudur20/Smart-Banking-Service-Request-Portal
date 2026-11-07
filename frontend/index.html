@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Banking Service Request Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(14, 165, 233, 0.2);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      color: #38bdf8;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: #94a3b8;
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1140px;
+      margin: -40px auto 60px;
+      padding: 0 24px;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <span class="hero-badge">Academic Practicum System Prototype</span>
+    <h1 class="hero-title">Smart Banking Service Request Portal</h1>
+    <p class="hero-sub">
+      Seamless customer banking service requests with AI-assisted document readability & completeness verification and authorized human administrative review.
+    </p>
+    <div class="hero-actions">
+      <a href="/login.html" class="btn btn-primary btn-lg">Customer Portal Login</a>
+      <a href="/register.html" class="btn btn-secondary btn-lg" style="color:var(--navy);">New Customer Registration</a>
+      <a href="/admin-login.html" class="btn btn-success btn-lg">Bank Officer Access</a>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🏦</div>
+      <h3 class="feature-title">Digital Banking Catalogue</h3>
+      <p class="feature-desc">Apply online for 10 banking services including Account Opening, Card Requests, Cheque Books, and KYC updates without visiting branches.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3 class="feature-title">AI Document Validation</h3>
+      <p class="feature-desc">AI vision scans uploaded documents (NID, Passport, Bills) to ensure clarity and completeness before administrative officer review.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3 class="feature-title">Human-in-the-Loop Admin Review</h3>
+      <p class="feature-desc">Bank administrators inspect document evidence and AI notes, with controlled Approve, Reject, or Correction Required decisions.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding: 20px; color:var(--text-light); font-size:0.85rem;">
+    Smart Banking Service Request Portal &copy; 2026. Built with HTML, CSS, Vanilla JS, Node.js, Supabase PostgreSQL, and Cloudinary.
+  </div>
+</body>
+</html>
+

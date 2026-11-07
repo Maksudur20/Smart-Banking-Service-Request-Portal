@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Monitoring - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Transaction Monitoring & Risk Oversight (Demo)</h1>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Academic Disclaimer Banner -->
+        <div class="card" style="background:#fffbeb; border-left:4px solid var(--warning); margin-bottom:20px;">
+          <div class="card-body" style="font-size:0.88rem; color:#78350f;">
+            ⚠️ <strong>Academic Demonstration Notice:</strong> This module showcases automated rule-based transaction monitoring using synthetic seeded records. It does not connect to live banking networks or perform real financial transfers.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 class="card-title">Simulated Transaction Stream</h3>
+              <p class="card-subtitle">Inspect flagged records and update risk compliance monitoring status</p>
+            </div>
+            <div>
+              <select id="monitoringFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
+                <option value="">All Transactions</option>
+                <option value="Suspicious">Suspicious Alerts</option>
+                <option value="Under_Review">Under Review</option>
+                <option value="Normal">Normal</option>
+                <option value="Cleared">Cleared</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Txn Reference</th>
+                  <th>Customer</th>
+                  <th>Account</th>
+                  <th>Amount</th>
+                  <th>Type</th>
+                  <th>Risk Status</th>
+                  <th>Flag Reason / Rule Trigger</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="txTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">Loading transactions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('transactions');
+
+    async function loadTransactions() {
+      const monitoringStatus = document.getElementById('monitoringFilter').value;
+      const params = {};
+      if (monitoringStatus) params.monitoringStatus = monitoringStatus;
+
+      try {
+        const res = await window.api.get('/api/transactions', params);
+        const list = res.transactions || [];
+        const tbody = document.getElementById('txTableBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No transaction records found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(t => `
+          <tr>
+            <td><code>${t.transaction_reference}</code></td>
+            <td>${t.customer_name || 'N/A'}</td>
+            <td>${t.account_number}</td>
+            <td><strong>${window.UI.formatCurrency(t.amount, t.currency)}</strong></td>
+            <td><span class="badge badge-submitted">${t.transaction_type}</span></td>
+            <td>${window.UI.renderStatusBadge(t.monitoring_status)}</td>
+            <td style="font-size:0.82rem; color:${t.flag_reason ? 'var(--danger)' : 'var(--text-light)'};">
+              ${t.flag_reason || 'Standard transaction velocity'}
+            </td>
+            <td>
+              ${t.monitoring_status === 'Suspicious' || t.monitoring_status === 'Under_Review' ? `
+                <button onclick="clearTx(${t.id})" class="btn btn-secondary btn-sm" title="Mark as Cleared">
+                  ✓ Clear
+                </button>
+              ` : `
+                <button onclick="flagTx(${t.id})" class="btn btn-secondary btn-sm" title="Flag as Suspicious" style="color:var(--danger);">
+                  🚩 Flag
+                </button>
+              `}
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load transaction monitoring stream.', 'error');
+      }
+    }
+
+    async function clearTx(id) {
+      try {
+        await window.api.patch(`/api/transactions/${id}/monitoring`, {
+          monitoring_status: 'Cleared',
+          flag_reason: 'Reviewed and cleared by compliance officer',
+        });
+        window.showToast('Transaction cleared.', 'success');
+        loadTransactions();
+      } catch (e) {
+        window.showToast('Failed to update status.', 'error');
+      }
+    }
+
+    async function flagTx(id) {
+      try {
+        await window.api.patch(`/api/transactions/${id}/monitoring`, {
+          monitoring_status: 'Suspicious',
+          flag_reason: 'Flagged manually for AML investigation',
+        });
+        window.showToast('Transaction marked as Suspicious.', 'warning');
+        loadTransactions();
+      } catch (e) {
+        window.showToast('Failed to update status.', 'error');
+      }
+    }
+
+    document.getElementById('monitoringFilter').addEventListener('change', loadTransactions);
+    loadTransactions();
+  </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Request Review Queue - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Service Request Review Queue</h1>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <div class="card">
+          <div class="card-header" style="flex-wrap:wrap; gap:16px;">
+            <div>
+              <h3 class="card-title">All Customer Applications</h3>
+              <p class="card-subtitle">Filter by application status or search by customer name / reference</p>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <input type="text" id="searchInput" class="form-control" placeholder="Search customer or #..." style="width:200px; padding:6px 12px; font-size:0.85rem;">
+              <select id="statusFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
+                <option value="">All Statuses</option>
+                <option value="Pending Admin Review" selected>Pending Admin Review</option>
+                <option value="AI Validation">AI Validation</option>
+                <option value="Document Review">Document Review</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Correction Required">Correction Required</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Customer Name</th>
+                  <th>Customer Ref</th>
+                  <th>Service</th>
+                  <th>Submitted Date</th>
+                  <th>Documents</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminRequestsBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:32px; color:var(--text-light);">Loading requests queue...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('requests');
+
+    async function loadRequests() {
+      const status = document.getElementById('statusFilter').value;
+      const search = document.getElementById('searchInput').value;
+      const params = {};
+      if (status) params.status = status;
+      if (search) params.search = search;
+
+      try {
+        const res = await window.api.get('/api/admin/requests', params);
+        const list = res.requests || [];
+        const tbody = document.getElementById('adminRequestsBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">No requests found matching criteria.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(r => `
+          <tr>
+            <td><strong>${r.request_number}</strong></td>
+            <td>${r.customer_name}</td>
+            <td><code>${r.customer_reference}</code></td>
+            <td>${r.service_name}</td>
+            <td>${window.UI.formatDateTime(r.created_at)}</td>
+            <td>
+              <span class="badge badge-submitted">${r.document_count} files</span>
+              ${r.ai_validated_count > 0 ? `<span class="badge badge-ai-validation" title="AI Scanned">${r.ai_validated_count} AI</span>` : ''}
+            </td>
+            <td>${window.UI.renderStatusBadge(r.status)}</td>
+            <td>
+              <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn">
+                Review & Decide &rarr;
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load request queue.', 'error');
+      }
+    }
+
+    document.getElementById('statusFilter').addEventListener('change', loadRequests);
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(window._searchTimer);
+      window._searchTimer = setTimeout(loadRequests, 350);
+    });
+
+    loadRequests();
+  </script>
+</body>
+</html>

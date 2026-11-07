@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaints & Disputes Desk - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Complaints & Dispute Resolution Desk</h1>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <div class="card">
+          <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 class="card-title">Customer Complaints Queue</h3>
+              <p class="card-subtitle">Manage customer disputes, assign tickets, and record official resolutions</p>
+            </div>
+            <div>
+              <select id="statusFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
+                <option value="">All Complaints</option>
+                <option value="Open">Open</option>
+                <option value="In Review">In Review</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Ticket #</th>
+                  <th>Customer</th>
+                  <th>Category</th>
+                  <th>Subject & Details</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="complaintsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:30px; color:var(--text-light);">Loading complaints...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Resolution Modal -->
+  <div id="resolveModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Resolve Customer Complaint</h3>
+        <button onclick="closeResolveModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="resolveForm">
+        <div class="modal-body">
+          <input type="hidden" id="resolveComplaintId">
+          <div class="form-group">
+            <label class="form-label required">Update Status</label>
+            <select id="newComplaintStatus" class="form-control" required>
+              <option value="In Review">In Review</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Official Resolution / Response to Customer</label>
+            <textarea id="resolutionText" class="form-control" placeholder="Provide the resolution details..." required style="min-height:90px;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="closeResolveModal()" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Resolution &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('complaints');
+
+    async function loadComplaints() {
+      const status = document.getElementById('statusFilter').value;
+      const params = {};
+      if (status) params.status = status;
+
+      try {
+        const res = await window.api.get('/api/complaints/admin', params);
+        const list = res.complaints || [];
+        const tbody = document.getElementById('complaintsTableBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No complaints found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(c => `
+          <tr>
+            <td><strong>${c.complaint_number}</strong></td>
+            <td>
+              <strong>${c.customer_name}</strong><br>
+              <small style="color:var(--text-light);">${c.customer_reference}</small>
+            </td>
+            <td><span class="badge badge-submitted">${c.category}</span></td>
+            <td>
+              <strong>${c.subject}</strong><br>
+              <small style="color:var(--text-muted);">${c.details}</small>
+              ${c.resolution ? `<div style="margin-top:4px; font-size:0.8rem; color:#065f46;"><strong>Resolution:</strong> ${c.resolution}</div>` : ''}
+            </td>
+            <td>${window.UI.formatDateTime(c.created_at)}</td>
+            <td>${window.UI.renderStatusBadge(c.status)}</td>
+            <td>
+              <button onclick="openResolveModal(${c.id}, '${c.status}', '${(c.resolution || '').replace(/'/g, "\\'")}')" class="table-action-btn">
+                Update &rarr;
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load complaints.', 'error');
+      }
+    }
+
+    function openResolveModal(id, currentStatus, currentResolution) {
+      document.getElementById('resolveComplaintId').value = id;
+      document.getElementById('newComplaintStatus').value = currentStatus === 'Open' ? 'In Review' : currentStatus;
+      document.getElementById('resolutionText').value = currentResolution || '';
+      document.getElementById('resolveModal').classList.add('open');
+    }
+
+    function closeResolveModal() {
+      document.getElementById('resolveModal').classList.remove('open');
+    }
+
+    document.getElementById('resolveForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('resolveComplaintId').value;
+      const status = document.getElementById('newComplaintStatus').value;
+      const resolution = document.getElementById('resolutionText').value;
+
+      try {
+        await window.api.patch(`/api/complaints/admin/${id}`, {
+          status,
+          resolution,
+        });
+
+        window.showToast('Complaint status updated successfully!', 'success');
+        closeResolveModal();
+        loadComplaints();
+      } catch (err) {
+        window.showToast(err.message || 'Failed to update complaint.', 'error');
+      }
+    });
+
+    document.getElementById('statusFilter').addEventListener('change', loadComplaints);
+    loadComplaints();
+  </script>
+</body>
+</html>

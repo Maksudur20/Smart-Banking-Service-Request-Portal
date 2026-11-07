@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Catalogue Management - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Banking Services & Document Requirements</h1>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Configured Banking Services Catalogue</h3>
+              <p class="card-subtitle">10 standard banking service categories and attached document verification rules</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Service Name</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>SLA Days</th>
+                  <th>Required Docs</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="servicesTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:30px; color:var(--text-light);">Loading services...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('services');
+
+    async function loadServices() {
+      try {
+        const res = await window.api.get('/api/services');
+        const list = res.services || [];
+        const tbody = document.getElementById('servicesTableBody');
+
+        tbody.innerHTML = list.map(s => `
+          <tr>
+            <td><code>${s.service_code}</code></td>
+            <td><strong>${s.name}</strong></td>
+            <td><span class="badge badge-submitted">${s.category || 'General'}</span></td>
+            <td style="max-width:300px; font-size:0.85rem; color:var(--text-muted);">${s.description}</td>
+            <td>${s.processing_time_days} days</td>
+            <td><span class="badge badge-ai-validation">${s.required_document_count} requirements</span></td>
+            <td><span class="badge badge-approved">Active</span></td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load services catalogue.', 'error');
+      }
+    }
+
+    loadServices();
+  </script>
+</body>
+</html>

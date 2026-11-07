@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Customer Profile & Settings</h1>
+        </div>
+      </header>
+
+      <main class="content-container" style="max-width: 760px;">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Personal Account Information</h3>
+          </div>
+          <div class="card-body">
+            <form id="profileForm">
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div class="form-group">
+                  <label class="form-label">Customer Reference ID</label>
+                  <input type="text" id="profRef" class="form-control" readonly disabled style="background:#f1f5f9;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Primary Account Number</label>
+                  <input type="text" id="profAcc" class="form-control" readonly disabled style="background:#f1f5f9;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label required">Full Legal Name</label>
+                <input type="text" id="profName" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Registered Email</label>
+                <input type="email" id="profEmail" class="form-control" readonly disabled style="background:#f1f5f9;">
+                <div class="form-hint">Email address cannot be changed directly online.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" id="profPhone" class="form-control" placeholder="+8801700000000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Residential Address</label>
+                <textarea id="profAddress" class="form-control" style="min-height:80px;"></textarea>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" id="saveBtn" class="btn btn-primary">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('profile');
+
+    async function loadProfile() {
+      try {
+        const res = await window.api.get('/api/auth/me');
+        const u = res.user || {};
+
+        document.getElementById('profRef').value = u.customer_reference || 'CUST-2026-XXXX';
+        document.getElementById('profAcc').value = u.account_number || '20261101XXXX';
+        document.getElementById('profName').value = u.full_name || '';
+        document.getElementById('profEmail').value = u.email || '';
+        document.getElementById('profPhone').value = u.phone || '';
+        document.getElementById('profAddress').value = u.address || '';
+      } catch (err) {
+        window.showToast('Failed to load profile details.', 'error');
+      }
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('saveBtn');
+
+      const payload = {
+        full_name: document.getElementById('profName').value,
+        phone: document.getElementById('profPhone').value,
+        address: document.getElementById('profAddress').value,
+      };
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Saving changes...';
+
+        const res = await window.api.patch('/api/auth/me', payload);
+        window.showToast(res.message || 'Profile updated successfully!', 'success');
+
+        // Update local session user
+        const currentUser = window.Auth.getUser() || {};
+        currentUser.full_name = payload.full_name;
+        currentUser.phone = payload.phone;
+        currentUser.address = payload.address;
+        window.api.setUser(currentUser);
+      } catch (err) {
+        window.showToast(err.message || 'Failed to update profile.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Save Changes';
+      }
+    });
+
+    loadProfile();
+  </script>
+</body>
+</html>

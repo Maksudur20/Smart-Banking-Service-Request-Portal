@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Service Request - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">New Service Request</h1>
+        </div>
+      </header>
+
+      <main class="content-container" style="max-width: 800px;">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Submit Banking Service Request</h3>
+              <p class="card-subtitle">Fill in the details below. You will attach documents on the next step.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="newRequestForm">
+              <div class="form-group">
+                <label class="form-label required">Select Banking Service</label>
+                <select id="serviceSelect" class="form-control" required>
+                  <option value="">-- Choose a banking service --</option>
+                </select>
+              </div>
+
+              <!-- Dynamic Document Requirement Box -->
+              <div id="docRequirementBox" style="display:none; background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:20px;">
+                <h4 style="font-size:0.88rem; font-weight:700; color:var(--navy); margin-bottom:8px;">
+                  📑 Required Documents for this Service:
+                </h4>
+                <ul id="requirementsList" style="padding-left:20px; font-size:0.85rem; color:var(--text-muted); line-height:1.6;">
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label required">Request Subject</label>
+                <input type="text" id="subject" class="form-control" placeholder="e.g. Application for Savings Account with Debit Card" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Details / Remarks (Optional)</label>
+                <textarea id="details" class="form-control" placeholder="Provide any additional account instructions or notes for the bank officer..." style="min-height:100px;"></textarea>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                <a href="/customer/dashboard.html" class="btn btn-secondary">Cancel</a>
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">
+                  Submit Request & Proceed to Uploads &rarr;
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('new-request');
+
+    let allServices = [];
+
+    async function initPage() {
+      try {
+        const res = await window.api.get('/api/services');
+        allServices = res.services || [];
+        const select = document.getElementById('serviceSelect');
+
+        allServices.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.innerText = `${s.name} (${s.category})`;
+          select.appendChild(opt);
+        });
+
+        // Preselect if query param provided
+        const urlParams = new URLSearchParams(window.location.search);
+        const preselected = urlParams.get('serviceId');
+        if (preselected) {
+          select.value = preselected;
+          onServiceChange(preselected);
+        }
+
+        select.addEventListener('change', (e) => onServiceChange(e.target.value));
+      } catch (err) {
+        window.showToast('Failed to load banking services.', 'error');
+      }
+    }
+
+    async function onServiceChange(serviceId) {
+      const box = document.getElementById('docRequirementBox');
+      const list = document.getElementById('requirementsList');
+      if (!serviceId) {
+        box.style.display = 'none';
+        return;
+      }
+
+      try {
+        const res = await window.api.get(`/api/services/${serviceId}/requirements`);
+        const reqs = res.requirements || [];
+
+        if (reqs.length === 0) {
+          list.innerHTML = '<li>No mandatory documents required for this inquiry.</li>';
+        } else {
+          list.innerHTML = reqs.map(r => `
+            <li>
+              <strong>${r.document_name}</strong> 
+              ${r.is_required ? '<span style="color:var(--danger); font-weight:600;">(Mandatory)</span>' : '<span style="color:var(--text-light);">(Optional)</span>'} &mdash;
+              Formats: <code>${r.allowed_extensions}</code>, Max Size: ${r.max_size_mb} MB
+            </li>
+          `).join('');
+        }
+        box.style.display = 'block';
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById('newRequestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+
+      const service_id = document.getElementById('serviceSelect').value;
+      const subject = document.getElementById('subject').value;
+      const details = document.getElementById('details').value;
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Creating request...';
+
+        const res = await window.api.post('/api/requests', {
+          service_id: parseInt(service_id, 10),
+          subject,
+          details,
+        });
+
+        window.showToast(res.message || 'Request created! Redirecting to document upload...', 'success');
+
+        setTimeout(() => {
+          window.location.href = `/customer/request-details.html?id=${res.request.id}`;
+        }, 600);
+      } catch (err) {
+        window.showToast(err.message || 'Failed to submit service request.', 'error');
+        btn.disabled = false;
+        btn.innerText = 'Submit Request & Proceed to Uploads →';
+      }
+    });
+
+    initPage();
+  </script>
+</body>
+</html>

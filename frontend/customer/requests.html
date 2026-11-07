@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Service Requests - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">My Service Requests</h1>
+        </div>
+        <div class="top-nav-right">
+          <a href="/customer/service-request.html" class="btn btn-primary btn-sm">+ New Request</a>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <div class="card">
+          <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 class="card-title">All Submitted Applications</h3>
+              <p class="card-subtitle">Filter by status to track current progress</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <select id="statusFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size:0.85rem;">
+                <option value="">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="AI Validation">AI Validation</option>
+                <option value="Pending Admin Review">Pending Admin Review</option>
+                <option value="Correction Required">Correction Required</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Service</th>
+                  <th>Subject</th>
+                  <th>Date Submitted</th>
+                  <th>Attached Files</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="requestsListBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:32px; color:var(--text-light);">Loading requests...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('requests');
+
+    async function loadRequests() {
+      const status = document.getElementById('statusFilter').value;
+      const params = {};
+      if (status) params.status = status;
+
+      try {
+        const res = await window.api.get('/api/requests', params);
+        const list = res.requests || [];
+        const tbody = document.getElementById('requestsListBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">
+                No service requests found for this filter.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = list.map(r => `
+          <tr>
+            <td><strong>${r.request_number}</strong></td>
+            <td>${r.service_name}</td>
+            <td>${r.subject}</td>
+            <td>${window.UI.formatDateTime(r.created_at)}</td>
+            <td><span class="badge badge-submitted">${r.document_count} files</span></td>
+            <td>${window.UI.renderStatusBadge(r.status)}</td>
+            <td>
+              <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn">
+                View & Upload &rarr;
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load requests list.', 'error');
+      }
+    }
+
+    document.getElementById('statusFilter').addEventListener('change', loadRequests);
+    loadRequests();
+  </script>
+</body>
+</html>

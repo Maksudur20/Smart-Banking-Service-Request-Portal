@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Registration - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card" style="max-width: 500px;">
+    <div class="auth-header">
+      <div class="auth-brand">
+        <div class="brand-icon">SB</div>
+        <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
+      </div>
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-sub">Register as a new customer to access digital banking services</p>
+    </div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label class="form-label required">Full Legal Name</label>
+        <input type="text" id="full_name" class="form-control" placeholder="e.g. John Doe" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="john.doe@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contact Phone</label>
+        <input type="tel" id="phone" class="form-control" placeholder="+8801700000000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Residential Address</label>
+        <textarea id="address" class="form-control" placeholder="House/Road, City, Postal Code" style="min-height: 70px;"></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg">
+        Create Customer Account
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/login.html">Log in here</a>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script>
+    window.Auth.redirectIfAuthenticated();
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+
+      const payload = {
+        full_name: document.getElementById('full_name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        password: document.getElementById('password').value,
+        address: document.getElementById('address').value,
+      };
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Creating account...';
+
+        const res = await window.api.post('/api/auth/register', payload);
+
+        window.api.setToken(res.token);
+        window.api.setUser(res.user);
+
+        window.showToast('Account created successfully! Welcome to Smart Banking.', 'success');
+
+        setTimeout(() => {
+          window.location.href = '/customer/dashboard.html';
+        }, 600);
+      } catch (err) {
+        window.showToast(err.message || 'Registration failed. Try again.', 'error');
+        btn.disabled = false;
+        btn.innerText = 'Create Customer Account';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Directory - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Customer Directory</h1>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <div class="card">
+          <div class="card-header" style="flex-wrap:wrap; gap:16px;">
+            <div>
+              <h3 class="card-title">All Registered Customers</h3>
+              <p class="card-subtitle">Search customers by legal name, account number, or customer reference</p>
+            </div>
+            <div>
+              <input type="text" id="custSearch" class="form-control" placeholder="Search customer name or ID..." style="width:240px; padding:6px 12px; font-size:0.85rem;">
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Customer Ref</th>
+                  <th>Legal Name</th>
+                  <th>Primary Account</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Total Requests</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:32px; color:var(--text-light);">Loading customer directory...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('customers');
+
+    async function loadCustomers() {
+      const search = document.getElementById('custSearch').value;
+      const params = {};
+      if (search) params.search = search;
+
+      try {
+        const res = await window.api.get('/api/admin/customers', params);
+        const list = res.customers || [];
+        const tbody = document.getElementById('customersTableBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:32px; color:var(--text-muted);">No customers found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(c => `
+          <tr>
+            <td><code>${c.customer_reference}</code></td>
+            <td><strong>${c.full_name}</strong></td>
+            <td>${c.account_number || 'N/A'}</td>
+            <td>${c.email}</td>
+            <td>${c.phone || 'N/A'}</td>
+            <td><span class="badge badge-submitted">${c.total_requests} requests</span></td>
+            <td><span class="badge badge-approved">Active</span></td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load customers.', 'error');
+      }
+    }
+
+    document.getElementById('custSearch').addEventListener('input', () => {
+      clearTimeout(window._searchTimer);
+      window._searchTimer = setTimeout(loadCustomers, 350);
+    });
+
+    loadCustomers();
+  </script>
+</body>
+</html>

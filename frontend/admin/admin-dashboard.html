@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Bank Operations & Review Dashboard</h1>
+        </div>
+        <div class="top-nav-right">
+          <a href="/admin/admin-requests.html" class="btn btn-primary btn-sm">
+            View Request Queue &rarr;
+          </a>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Metric Cards Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Registered Customers</span>
+              <div class="metric-icon-box metric-icon-blue">👥</div>
+            </div>
+            <div class="metric-value" id="mCustCount">0</div>
+            <div class="metric-sub">Active account holders</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Pending Admin Review</span>
+              <div class="metric-icon-box metric-icon-amber">⏳</div>
+            </div>
+            <div class="metric-value" id="mPendingCount">0</div>
+            <div class="metric-sub">Requires officer decision</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Approved Applications</span>
+              <div class="metric-icon-box metric-icon-green">✅</div>
+            </div>
+            <div class="metric-value" id="mApprovedCount">0</div>
+            <div class="metric-sub">Compliance satisfied</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Flagged Transactions</span>
+              <div class="metric-icon-box metric-icon-red">🚩</div>
+            </div>
+            <div class="metric-value" id="mSuspiciousTxCount">0</div>
+            <div class="metric-sub">AML Demo monitoring alerts</div>
+          </div>
+        </div>
+
+        <!-- Pending Review Queue & Quick Summary -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Priority Request Review Queue</h3>
+              <p class="card-subtitle">Applications with AI-reviewed documents awaiting human verification</p>
+            </div>
+            <a href="/admin/admin-requests.html" class="btn btn-secondary btn-sm">Open Full Queue</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Customer</th>
+                  <th>Banking Service</th>
+                  <th>Submitted Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="priorityQueueBody">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding:30px; color:var(--text-light);">Loading priority queue...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('dashboard');
+
+    async function loadDashboard() {
+      try {
+        const res = await window.api.get('/api/admin/dashboard');
+        const summary = res.summary || {};
+
+        document.getElementById('mCustCount').innerText = summary.users?.customer_count || 0;
+        document.getElementById('mPendingCount').innerText = summary.pendingCount || 0;
+        document.getElementById('mApprovedCount').innerText = summary.requests?.approved || 0;
+        document.getElementById('mSuspiciousTxCount').innerText = summary.monitoring?.suspicious_count || 0;
+
+        const tbody = document.getElementById('priorityQueueBody');
+        const recent = summary.recentRequests || [];
+
+        if (recent.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">No pending requests in queue.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = recent.map(r => `
+          <tr>
+            <td><strong>${r.request_number}</strong></td>
+            <td>${r.customer_name}</td>
+            <td>${r.service_name}</td>
+            <td>${window.UI.formatDateTime(r.created_at)}</td>
+            <td>${window.UI.renderStatusBadge(r.status)}</td>
+            <td>
+              <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn">
+                Review Evidence &rarr;
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        window.showToast('Failed to load admin dashboard statistics.', 'error');
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

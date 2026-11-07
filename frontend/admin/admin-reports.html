@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h1 class="page-heading">Reporting & Analytics</h1>
+        </div>
+        <div class="top-nav-right">
+          <button onclick="exportCSV()" class="btn btn-secondary btn-sm">
+            📥 Export CSV Report
+          </button>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Filter Controls -->
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-body" style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
+            <div class="form-group" style="margin-bottom:0; flex:1; min-width:180px;">
+              <label class="form-label">Filter by Status</label>
+              <select id="reportStatus" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="Approved">Approved</option>
+                <option value="Pending Admin Review">Pending Admin Review</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Correction Required">Correction Required</option>
+              </select>
+            </div>
+            <button onclick="loadReport()" class="btn btn-primary" style="height:42px;">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Generated Report Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Service Requests Analytics Data</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Customer Name</th>
+                  <th>Account Number</th>
+                  <th>Service Category</th>
+                  <th>Documents</th>
+                  <th>Status</th>
+                  <th>Submitted Date</th>
+                </tr>
+              </thead>
+              <tbody id="reportBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:30px; color:var(--text-light);">Loading report data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('reports');
+
+    async function loadReport() {
+      const status = document.getElementById('reportStatus').value;
+      const params = {};
+      if (status) params.status = status;
+
+      try {
+        const res = await window.api.get('/api/reports/requests', params);
+        const list = res.data || [];
+        const tbody = document.getElementById('reportBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No report data found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(r => `
+          <tr>
+            <td><strong>${r.request_number}</strong></td>
+            <td>${r.customer_name}</td>
+            <td>${r.account_number || 'N/A'}</td>
+            <td>${r.service_name}</td>
+            <td><span class="badge badge-submitted">${r.document_count} files</span></td>
+            <td>${window.UI.renderStatusBadge(r.status)}</td>
+            <td>${window.UI.formatDateTime(r.created_at)}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        window.showToast('Failed to load report data.', 'error');
+      }
+    }
+
+    async function exportCSV() {
+      const status = document.getElementById('reportStatus').value;
+      const token = window.api.getToken();
+      const url = `/api/reports/requests/export-csv?token=${encodeURIComponent(token)}${status ? '&status=' + status : ''}`;
+      window.open(url, '_blank');
+    }
+
+    loadReport();
+  </script>
+</body>
+</html>

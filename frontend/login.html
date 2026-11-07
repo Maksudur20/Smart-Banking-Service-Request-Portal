@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Login - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-brand">
+        <div class="brand-icon">SB</div>
+        <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
+      </div>
+      <h2 class="auth-title">Customer Login</h2>
+      <p class="auth-sub">Access your personal banking requests & documents</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label required">Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="customer@smartbank.com" required autofocus value="customer@smartbank.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required value="Password123!">
+      </div>
+
+      <div style="margin-bottom: 20px; font-size: 0.82rem; background: var(--info-bg); padding: 10px; border-radius: var(--radius-sm); color: var(--navy);">
+        <strong>Demo Credentials:</strong><br>
+        Email: <code>customer@smartbank.com</code><br>
+        Password: <code>Password123!</code>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg">
+        Log In to Customer Portal
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="/register.html">Register here</a><br><br>
+      <a href="/admin-login.html" style="font-size: 0.8rem; color: var(--text-muted);">Are you a Bank Officer? Admin Login &rarr;</a>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script>
+    // Redirect if already logged in
+    window.Auth.redirectIfAuthenticated();
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'Verifying credentials...';
+
+        const res = await window.api.post('/api/auth/login', { email, password });
+
+        window.api.setToken(res.token);
+        window.api.setUser(res.user);
+
+        window.showToast('Login successful! Redirecting...', 'success');
+
+        setTimeout(() => {
+          if (res.user.role === 'ADMIN') {
+            window.location.href = '/admin/admin-dashboard.html';
+          } else {
+            window.location.href = '/customer/dashboard.html';
+          }
+        }, 500);
+      } catch (err) {
+        window.showToast(err.message || 'Invalid login credentials.', 'error');
+        btn.disabled = false;
+        btn.innerText = 'Log In to Customer Portal';
+      }
+    });
+  </script>
+</body>
+</html>
+
