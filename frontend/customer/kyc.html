@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>আমার কেওয়াইসি ও ডকুমেন্টস - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.5">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.6">
   <style>
     .doc-grid {
       display: grid;
@@ -110,8 +110,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.5"></script>
-  <script src="/assets/js/common.js?v=2.5"></script>
+  <script src="/assets/js/auth.js?v=2.6"></script>
+  <script src="/assets/js/common.js?v=2.6"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('kyc');
@@ -121,16 +121,27 @@
         const res = await window.api.get('/api/kyc/my');
         const cust = res.customer || res.kyc || {};
         const docs = res.documents || (res.kyc && res.kyc.documents) || [];
-        const status = (cust.kyc_status || res.kyc_status || 'Pending').trim();
+        const rawStatus = cust.kyc_status || res.kyc_status || 'Pending';
+        const status = String(rawStatus).trim();
         const isApproved = status.toLowerCase() === 'approved';
         const isRejected = status.toLowerCase() === 'rejected';
+        const isDocsReq = status.toLowerCase().includes('document');
 
         // Status badge
         const badge = document.getElementById('kycStatusBadge');
-        badge.innerText = `KYC: ${isApproved ? 'Approved' : (isRejected ? 'Rejected' : 'Pending')}`;
-        if (isApproved) badge.className = 'badge badge-approved';
-        else if (isRejected) badge.className = 'badge badge-rejected';
-        else badge.className = 'badge badge-submitted';
+        if (isApproved) {
+          badge.innerText = 'KYC: Approved';
+          badge.className = 'badge badge-approved';
+        } else if (isRejected) {
+          badge.innerText = 'KYC: Rejected';
+          badge.className = 'badge badge-rejected';
+        } else if (isDocsReq) {
+          badge.innerText = 'KYC: Documents Required';
+          badge.className = 'badge badge-warning';
+        } else {
+          badge.innerText = 'KYC: Pending';
+          badge.className = 'badge badge-submitted';
+        }
 
         // Banner
         const banner = document.getElementById('kycMessageBanner');
@@ -138,25 +149,35 @@
 
         if (isApproved) {
           banner.innerHTML = `
-            <div style="background:#ecfdf5; border:1px solid #a7f3d0; padding:16px; border-radius:8px; color:#065f46;">
-              <strong>✅ আপনার কেওয়াইসি সম্পন্ন ও অনুমোদিত!</strong> আপনি সকল ডিজিটাল ব্যাংকিং ও আউটগোয়িং ফান্ড ট্রান্সফার সুবিধা সক্রিয়ভাবে ব্যবহার করতে পারবেন।
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; padding:18px; border-radius:8px; color:#065f46; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <div style="font-size:1.05rem; font-weight:800; margin-bottom:4px;">✅ আপনার কেওয়াইসি সম্পন্ন ও অনুমোদিত!</div>
+              <p style="margin:0; font-size:0.9rem; line-height:1.5;">আপনার অ্যাকাউন্ট এখন সম্পূর্ণ সক্রিয়। আপনি অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার এবং সকল ডিজিটাল ব্যাংকিং সুবিধা ব্যবহার করতে পারবেন।</p>
             </div>
           `;
           reuploadCard.style.display = 'none';
         } else if (isRejected) {
           banner.innerHTML = `
-            <div style="background:#fef2f2; border:1px solid #fecaca; padding:16px; border-radius:8px; color:#991b1b;">
-              <strong>❌ আপনার কেওয়াইসি আবেদন বাতিল করা হয়েছে!</strong><br>
-              ব্যাংক অ্যাডমিনের মন্তব্য: <em>${cust.kyc_rejection_reason || 'কাগজপত্রে ত্রুটি পরিলক্ষিত হয়েছে'}</em>।<br>
-              অনুগ্রহ করে নিচের ফর্ম থেকে সঠিক ডকুমেন্ট আবার আপলোড করুন।
+            <div style="background:#fef2f2; border:1px solid #fecaca; padding:18px; border-radius:8px; color:#991b1b; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <div style="font-size:1.05rem; font-weight:800; margin-bottom:4px;">❌ আপনার কেওয়াইসি আবেদন বাতিল করা হয়েছে!</div>
+              <p style="margin:0 0 8px 0; font-size:0.9rem;">ব্যাংক অ্যাডমিনের মন্তব্য: <strong>${cust.kyc_rejection_reason || 'কাগজপত্রে ত্রুটি পরিলক্ষিত হয়েছে'}</strong></p>
+              <div style="font-size:0.85rem; color:#b91c1c;">অনুগ্রহ করে নিচের ফর্ম থেকে সঠিক ডকুমেন্ট আবার আপলোড করুন।</div>
+            </div>
+          `;
+          reuploadCard.style.display = 'block';
+        } else if (isDocsReq) {
+          banner.innerHTML = `
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:18px; border-radius:8px; color:#92400e; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <div style="font-size:1.05rem; font-weight:800; margin-bottom:4px;">⚠️ অতিরিক্ত ডকুমেন্ট আবশ্যক (Documents Required)</div>
+              <p style="margin:0 0 8px 0; font-size:0.9rem;">ব্যাংক অফিসার রিমার্কস: <strong>${cust.kyc_rejection_reason || 'কাগজপত্রের স্পষ্ট কপি আপলোড করুন'}</strong></p>
+              <div style="font-size:0.85rem; color:#b45309;">অনুগ্রহ করে নিচের ফর্ম থেকে প্রয়োজনীয় অতিরিক্ত ডকুমেন্ট আপলোড করুন।</div>
             </div>
           `;
           reuploadCard.style.display = 'block';
         } else {
           banner.innerHTML = `
-            <div style="background:#fffbeb; border:1px solid #fde68a; padding:16px; border-radius:8px; color:#92400e;">
-              <strong>⏳ আপনার কেওয়াইসি ভেরিফিকেশন চলমান রয়েছে (Pending)</strong><br>
-              ব্যাংক অ্যাডমিন আপনার সাবমিট করা ডকুমেন্টস যাচাই করছেন। যাচাই সম্পন্ন হলে ফান্ড ট্রান্সফার চালু হয়ে যাবে।
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:18px; border-radius:8px; color:#92400e; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <div style="font-size:1.05rem; font-weight:800; margin-bottom:4px;">⏳ আপনার কেওয়াইসি ভেরিফিকেশন চলমান রয়েছে (Pending)</div>
+              <p style="margin:0; font-size:0.9rem; line-height:1.5;">ব্যাংক অ্যাডমিন আপনার সাবমিট করা ডকুমেন্টস যাচাই করছেন। যাচাই সম্পন্ন হলে ফান্ড ট্রান্সফার চালু হয়ে যাবে।</p>
             </div>
           `;
           reuploadCard.style.display = 'block';
@@ -199,7 +220,7 @@
             </div>
 
             <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
-              <span class="badge ${d.verification_status === 'Approved' ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">
+              <span class="badge ${['Approved', 'Verified'].includes(d.verification_status) ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">
                 ${d.verification_status || 'Pending'}
               </span>
               <a href="${d.file_url}" target="_blank" class="table-action-btn secondary">বড় করে দেখুন ↗</a>

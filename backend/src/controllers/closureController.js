@@ -645,3 +645,4 @@ module.exports = {
   getFeeSchedules,
   adminUpdateFeeSchedule
 };
+

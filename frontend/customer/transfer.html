@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফান্ড ট্রান্সফার - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.4">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.6">
   <style>
     .transfer-layout {
       display: grid;
@@ -110,8 +110,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.4"></script>
-  <script src="/assets/js/common.js?v=2.4"></script>
+  <script src="/assets/js/auth.js?v=2.6"></script>
+  <script src="/assets/js/common.js?v=2.6"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('transfer');
@@ -127,12 +127,12 @@
         const bal = parseFloat(currentCustomer.balance || 0).toFixed(2);
         document.getElementById('currentBalDisplay').innerText = `${bal} BDT`;
 
-        const kycStatus = currentCustomer.kyc_status || user.kyc_status;
+        const kycStatus = String((currentCustomer && currentCustomer.kyc_status) || (user && user.kyc_status) || '').trim().toLowerCase();
         const kycLock = document.getElementById('kycLockContainer');
         const transferBtn = document.getElementById('transferSubmitBtn');
         const kycBadge = document.getElementById('kycApprovedBadge');
 
-        if (kycStatus !== 'Approved') {
+        if (kycStatus !== 'approved') {
           kycLock.style.display = 'block';
           transferBtn.disabled = true;
           transferBtn.style.opacity = '0.6';
@@ -141,6 +141,8 @@
           kycLock.style.display = 'none';
           kycBadge.style.display = 'inline-block';
           transferBtn.disabled = false;
+          transferBtn.style.opacity = '1';
+          transferBtn.innerText = '📤 তাৎক্ষণিক ট্রান্সফার নিশ্চিত করুন';
         }
 
         loadHistory();
@@ -204,7 +206,8 @@
 
     document.getElementById('transferForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!currentCustomer || currentCustomer.kyc_status !== 'Approved') {
+      const kycStatus = String((currentCustomer && currentCustomer.kyc_status) || '').trim().toLowerCase();
+      if (kycStatus !== 'approved') {
         window.showToast('আপনার KYC অনুমোদিত নয়। ট্রান্সফার সম্পন্ন করা সম্ভব নয়।', 'error');
         return;
       }

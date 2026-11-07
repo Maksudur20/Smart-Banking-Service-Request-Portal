@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ড্যাশবোর্ড - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.4">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.6">
   <style>
     .customer-header-balances {
       display: flex;
@@ -229,8 +229,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.4"></script>
-  <script src="/assets/js/common.js?v=2.4"></script>
+  <script src="/assets/js/auth.js?v=2.6"></script>
+  <script src="/assets/js/common.js?v=2.6"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');
@@ -271,7 +271,9 @@
       const badge = document.getElementById('accountKycBadge');
       if (!banner) return;
 
-      if (status === 'Approved') {
+      const normStatus = String(status || '').trim().toLowerCase();
+
+      if (normStatus === 'approved') {
         badge.className = 'badge badge-approved';
         badge.innerText = 'KYC Approved';
         banner.innerHTML = `
@@ -283,7 +285,7 @@
             <a href="/customer/transfer.html" class="btn btn-primary btn-sm" style="background:#059669; border:none;">টাকা পাঠান</a>
           </div>
         `;
-      } else if (status === 'Rejected') {
+      } else if (normStatus === 'rejected') {
         badge.className = 'badge badge-rejected';
         badge.innerText = 'KYC Rejected';
         banner.innerHTML = `

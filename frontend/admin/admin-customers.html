@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ডিরেক্টরি - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.4">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.6">
 </head>
 <body>
   <div class="app-layout">
@@ -58,8 +58,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.4"></script>
-  <script src="/assets/js/common.js?v=2.4"></script>
+  <script src="/assets/js/auth.js?v=2.6"></script>
+  <script src="/assets/js/common.js?v=2.6"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('customers');
@@ -97,7 +97,7 @@
               <td><span class="badge ${badgeClass}">${c.kyc_status || 'Pending'}</span></td>
               <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(c.created_at).toLocaleDateString()}</td>
               <td>
-                <a href="/admin/admin-kyc.html" class="table-action-btn primary">
+                <a href="/admin/admin-kyc.html?customerId=${c.id}" class="table-action-btn primary">
                   কেওয়াইসি রিভিউ &rarr;
                 </a>
               </td>

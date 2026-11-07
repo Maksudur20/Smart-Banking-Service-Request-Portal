@@ -33,29 +33,49 @@ async function register(req, res, next) {
       address
     } = req.body;
 
-    if (!full_name || !email || !password) {
+    if (!full_name || !email || !password || !phone) {
       return res.status(400).json({
         success: false,
-        message: 'Full name, email, and password are required.',
+        message: 'পূর্ণ নাম, ইমেইল ঠিকানা, মোবাইল নম্বর এবং পাসওয়ার্ড আবশ্যক।',
+      });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanPhone = phone.trim().replace(/[\s-]/g, '');
+
+    if (cleanEmail === cleanPhone) {
+      return res.status(400).json({
+        success: false,
+        message: 'ইমেইল এবং মোবাইল নম্বর একই হতে পারবে না।',
       });
     }
 
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters long.',
+        message: 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।',
       });
     }
 
     await client.query('BEGIN');
 
-    // Check if email already exists
-    const existing = await client.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase().trim()]);
-    if (existing.rows.length > 0) {
+    // 1. Strict Check: Email must be unique across all accounts
+    const existingEmail = await client.query('SELECT id FROM users WHERE email = $1', [cleanEmail]);
+    if (existingEmail.rows.length > 0) {
       await client.query('ROLLBACK');
       return res.status(409).json({
         success: false,
-        message: 'An account with this email address already exists.',
+        message: 'এই ইমেইল ঠিকানাটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। অন্য একটি ইমেইল ঠিকানা ব্যবহার করুন।',
+      });
+    }
+
+    // 2. Strict Check: Phone number must be unique across all accounts
+    const existingPhone = await client.query('SELECT id FROM users WHERE phone = $1', [cleanPhone]);
+    if (existingPhone.rows.length > 0) {
+      await client.query('ROLLBACK');
+      return res.status(409).json({
+        success: false,
+        message: 'এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। একই মোবাইল নম্বর দিয়ে অন্য কেউ অ্যাকাউন্ট খুলতে পারবে না।',
       });
     }
 
@@ -68,7 +88,7 @@ async function register(req, res, next) {
       `INSERT INTO users (full_name, email, phone, password_hash, role, is_active)
        VALUES ($1, $2, $3, $4, 'CUSTOMER', TRUE)
        RETURNING id, full_name, email, phone, role, created_at`,
-      [full_name.trim(), email.toLowerCase().trim(), phone || null, password_hash]
+      [full_name.trim(), cleanEmail, cleanPhone, password_hash]
     );
     const user = userRes.rows[0];
 

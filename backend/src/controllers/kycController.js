@@ -263,9 +263,9 @@ async function reviewKYCApplication(req, res, next) {
       notificationTitle = 'KYC Verification Approved';
       notificationMsg = `Congratulations ${customer.full_name}! Your KYC verification has been approved by bank administration. Outgoing fund transfers and full digital banking privileges are now activated on your account.`;
 
-      // Update all documents to Verified
+      // Update all documents to Approved
       await client.query(
-        `UPDATE kyc_documents SET verification_status = 'Verified' WHERE customer_id = $1`,
+        `UPDATE kyc_documents SET verification_status = 'Approved' WHERE customer_id = $1`,
         [customerId]
       );
     } else if (decision === 'REJECT') {
