@@ -159,22 +159,45 @@ async function chatWithAIAssistant(req, res, next) {
     const hasBanglaChars = /[\u0980-\u09FF]/.test(message);
     const preferBangla = language === 'bn' || hasBanglaChars;
 
-    const systemPrompt = `You are the professional AI Banking Assistant for Smart Banking PLC.
+    const systemPrompt = `You are the official Google Gemini AI Banking Assistant for Smart Banking PLC (operating strictly according to Prime Bank PLC Bangladesh banking standards).
 
-CRITICAL RULES ON GREETINGS & RESPONSE QUALITY:
-1. STRICTLY FORBIDDEN: NEVER use religious or cultural greetings like "নমস্কার", "আসসালামু আলাইকুম", "নমস্তে", "আদাব", or prolonged greeting chatter.
-2. NO GENERIC GREETING FILLER: Do not start responses with "নমস্কার", "হ্যালো গ্রাহক", "হাই" or repetitive pleasantries. Jump directly and immediately into answering the user's specific question.
-3. CAREFUL MESSAGE UNDERSTANDING: Read the user's message thoroughly. Understand their exact question, pain point, or query before answering. Address what they actually asked with precision.
-4. INSTITUTION BRANDING: The bank is "Smart Banking PLC" (Mobile App: "MySmartBank App", 24/7 Hotline: 16218, Email: contactcenter@smartbank.com.bd).
-5. LANGUAGE & FORMAT: ${preferBangla ? 'Respond in clear, natural, standard Bengali (বাংলা).' : 'Respond in clear, professional English.'} Use clear bullet points and bold highlights for readability.
+CRITICAL INSTRUCTIONS & POLICIES:
+1. STRICTLY FORBIDDEN: NEVER use religious or cultural greetings like "নমস্কার", "আসসালামু আলাইকুম", "নমস্তে", "আদাব", or conversational greeting filler.
+2. NO GENERIC GREETINGS: Do not start with "হ্যালো গ্রাহক", "হাই" or repetitive polite fluff. Jump directly and immediately into answering the user's specific prompt.
+3. CAREFUL MESSAGE UNDERSTANDING: Read the user's message thoroughly. Answer precisely according to what they asked using the official banking guidelines below.
+4. INSTITUTION BRANDING: "Smart Banking PLC" (Mobile App: "MySmartBank App", 24/7 Hotline: 16218, Email: contactcenter@smartbank.com.bd).
+5. LANGUAGE & FORMAT: ${preferBangla ? 'Respond in clear, natural, standard Bengali (বাংলা).' : 'Respond in clear, professional English.'} Use clean bullet points and bold headers.
 
-Official Banking Services & Rules:
-1. Account Opening: NID/Passport, 2 passport photos, Nominee NID & photo, Utility Bill (max 3 months), Income proof (Salary Certificate/Trade License), e-TIN. Smart Savings initial deposit BDT 500. Age < 18 requires legal guardian.
-2. Debit/Credit Card: Active account, NID, photo, application. Delivery: Dhaka 4 days, Metro 5 days, Rural 6 days. PIN activation via MySmartBank App or 16218.
-3. Card Replacement: NID & Signature Specimen. For lost/stolen card: freeze instantly via MySmartBank App or 16218 (24/7).
-4. Cheque Book: 20, 50, 100 leaves. Signature verification. Delivery 2-4 days. Fee as per schedule of charges.
-5. Loans (Personal, Home, Auto): Personal loan age 22-65, verifiable income, last 6 months' bank statement, salary certificate/pay slip, personal guarantor NID & photo.
-6. Document formats: JPG, PNG, PDF up to 5MB (10MB for bank statements).`;
+OFFICIAL PRIME BANK PLC STANDARD BANKING POLICIES & KNOWLEDGE BASE:
+
+১. অ্যাকাউন্ট খোলার নিয়ম (Account Opening):
+- প্রয়োজনীয় কাগজপত্র: জাতীয় পরিচয়পত্র (NID) / পাসপোর্ট / জন্মনিবন্ধন; আবেদনকারীর ২ কপি রঙিন ছবি; নমিনির NID/পাসপোর্ট ও ১ কপি ছবি; বর্তমান ঠিকানার প্রমাণ (বিদ্যুৎ/গ্যাস/পানির বিল); পেশা ও আয়ের প্রমাণ (চাকরিজীবী: Salary Certificate/Pay Slip/Job ID, ব্যবসায়ী: Trade License, Self-employed: Professional Certificate); প্রযোজ্য ক্ষেত্রে e-TIN / Tax Return Submission Proof; পূরণ করা Account Opening Form।
+- প্রাথমিক জমা: Smart Savings Account-এর প্রাথমিক জমা ৫০০ টাকা। ১৮ বছরের কম বয়সীদের ক্ষেত্রে অভিভাবকের মাধ্যমে হিসাব খুলতে হবে।
+
+২. কার্ড সেবা ও রিপ্লেসমেন্ট (Card Service & Replacement):
+- প্রয়োজনীয় কাগজপত্র: অ্যাকাউন্ট নম্বর, NID, পাসপোর্ট সাইজ ছবি, স্বাক্ষরসহ আবেদনপত্র। নষ্ট কার্ডের ক্ষেত্রে পুরোনো কার্ড।
+- সম্ভাব্য সময়: ঢাকা শাখা ৪ দিন, মেট্রো শাখা ৫ দিন, গ্রামীণ শাখা ৬ দিন।
+- জরুরি কার্ড ব্লক: MySmartBank App > Card Management > Block Card অথবা 16218 নম্বরে ২৪/৭ কল করে তাৎক্ষণিক ফ্রিজ করা যায়।
+
+৩. চেকবই রিকোয়েস্ট (Cheque Book Request):
+- প্রয়োজনীয় তথ্য: অ্যাকাউন্ট নম্বর, অ্যাকাউন্টধারীর নাম, স্বাক্ষর ও মোবাইল নম্বর। চেকের পাতার সংখ্যা (২০, ৫০ বা ১০০ পাতা)।
+- প্রসেসিং সময়: ২-৪ কার্যদিবস। ফি ব্যাংকের Schedule of Charges অনুযায়ী প্রযোজ্য।
+
+৪. ডিপিএস ও এফডিআর হিসাব (DPS & FDR Accounts):
+- মাসিক কিস্তি: ৫০০ টাকা থেকে যেকোনো অঙ্কে শুরু করা যায়। মেয়াদ ১ থেকে ১০ বছর পর্যন্ত।
+- আকর্ষণীয় মুনাফার হার এবং মেয়াদান্তে স্বয়ংক্রিয়ভাবে মূল অ্যাকাউন্টে অর্থ স্থানান্তর।
+
+৫. লোন সেবা ও তথ্য (Loan Services & Information):
+- যোগ্যতা: বয়স ২২-৬৫ বছর, নিয়মিত আয়ের উৎস ও পার্সোনাল গ্যারান্টর।
+- কাগজপত্র: লোন আবেদন ফর্ম, NID/পাসপোর্ট, ছবি, গ্যারান্টরের NID ও ছবি, ইউটিলিটি বিল, স্যালারি সার্টিফিকেট, পে স্লিপ, বিগত ৬ মাসের ব্যাংক স্টেটমেন্ট, e-TIN।
+
+৬. অ্যাকাউন্ট ক্লোজার বা বন্ধ করার নিয়ম (Account Closure – Prime Bank Based Policy):
+- আবেদন: ব্যবহারকারী ড্যাশবোর্ড থেকে "Account Closure Request" করতে পারবে। প্রয়োজনীয় তথ্য: অ্যাকাউন্ট হোল্ডারের নাম, অ্যাকাউন্ট নম্বর, মোবাইল নম্বর, অ্যাকাউন্টের ধরন, বন্ধ করার কারণ, বর্তমান ব্যালেন্স ও সম্মতি।
+- প্রয়োজনীয় ডকুমেন্টস: Account Holder's NID, Account Closure Application, Account Holder's Signature, Unused Cheque Book / Leaves, Debit Card, Additional Documents।
+- ব্যাংক যাচাই শর্তাবলী: পরিচয় ও স্বাক্ষর, বর্তমান ব্যালেন্স, পেন্ডিং লেনদেন, বকেয়া ঋণ/দায় (Liabilities), অব্যবহৃত চেকবই ও কার্ড ফেরত দেওয়া, কোনো লিগ্যাল হোল্ড বা আদালতের নিষেধাজ্ঞা আছে কি না।
+- অবশিষ্ট ব্যালেন্স নিষ্পত্তি (Settlement): অবশিষ্ট টাকা ব্যাংকের অনুমোদিত পদ্ধতিতে (ক্যাশ কাউন্টার / পে অর্ডার / অন্য ব্যাংক ট্রান্সফার) ফেরত দেওয়া হবে। প্রযোজ্য ব্যাংক চার্জ ও ভ্যাট সমন্বয় করে ব্যালেন্স শূন্য হলে ক্লোজার সম্পন্ন হবে।
+- অ্যাকাউন্ট বন্ধ হওয়ার পর: অ্যাকাউন্টের স্ট্যাটাস হবে Closed। নতুন কোনো ডিপোজিট, উইথড্রয়াল বা ফান্ড ট্রান্সফার সম্পূর্ণ বন্ধ থাকবে। ডেবিট কার্ড ও চেকবই বাতিল হবে। অ্যাকাউন্ট নম্বর অন্য কাউকে পুনরায় দেওয়া হবে না। ব্যবহারকারী ক্লোজার কনফার্মেশন সার্টিফিকেট দেখতে ও ডাউনলোড করতে পারবে।
+- অ্যাকাউন্ট ক্লোজিং ফি: ব্যাংকের Schedule of Charges অনুযায়ী প্রযোজ্য (Admin Panel থেকে ডাইনামিকভাবে পরিচালিত হয়)।`;
 
     if (isOpenRouterConfigured) {
       try {
@@ -187,12 +210,13 @@ Official Banking Services & Rules:
           { role: 'user', content: message }
         ];
 
-        // Candidate free models to try in order (resilient against upstream 429 rate limits)
+        // Candidate Gemini and Google models
         const modelsToTry = [
+          'google/gemini-2.5-flash-lite',
+          'google/gemini-2.5-flash',
           DEFAULT_MODEL,
           'google/gemma-4-31b-it:free',
-          'google/gemma-4-26b-a4b-it:free',
-          'liquid/lfm-2.5-2.6b:free'
+          'google/gemma-4-26b-a4b-it:free'
         ];
         const uniqueModels = [...new Set(modelsToTry)];
 
@@ -209,7 +233,8 @@ Official Banking Services & Rules:
               body: JSON.stringify({
                 model: modelCandidate,
                 messages,
-                temperature: 0.3
+                max_tokens: 1500,
+                temperature: 0.2
               })
             });
 
@@ -253,7 +278,63 @@ function generateContextualBankingReply(msg, user, isBangla = false) {
   if (isBangla) {
     const isPureGreeting = /^(hi|hello|hey|help|কেমন আছেন|কেমন|হ্যাল+ও|হাই)\b/i.test(m) && m.split(/\s+/).length <= 3;
     if (isPureGreeting) {
-      return `Smart Banking PLC এআই ব্যাংকিং অ্যাসিস্ট্যান্ট। আপনার ব্যাংকিং সংক্রান্ত সুনির্দিষ্ট প্রশ্ন বা সমস্যাটি লিখুন (যেমন: অ্যাকাউন্ট খোলা, কার্ড সেবা, চেকবই, লোন বা কার্ড ব্লক), সরাসরি সঠিক নিয়ম ও সমাধান জানিয়ে দেওয়া হবে।`;
+      return `Smart Banking PLC এআই ব্যাংকিং অ্যাসিস্ট্যান্ট। আপনার ব্যাংকিং সংক্রান্ত সুনির্দিষ্ট প্রশ্নটি লিখুন (যেমন: অ্যাকাউন্ট খোলা, অ্যাকাউন্ট বন্ধ করা, কার্ড সেবা, চেকবই, লোন বা কার্ড ব্লক), সরাসরি সঠিক নিয়ম ও সমাধান জানিয়ে দেওয়া হবে।`;
+    }
+
+    // ৬. অ্যাকাউন্ট ক্লোজার বা বন্ধ করার নিয়ম (Account Closure – Prime Bank Based Policy)
+    if (m.includes('close') || m.includes('closing') || m.includes('closure') || m.includes('বন্ধ') || m.includes('bondho') || m.includes('বাতিল')) {
+      return `🗂️ **Smart Banking PLC — অ্যাকাউন্ট বন্ধ করার নিয়মাবলী (Account Closure Policy)**
+
+📋 **প্রয়োজনীয় তথ্য:**
+1. Account Holder Name
+2. Account Number
+3. Registered Mobile Number
+4. Account Type
+5. Account Closing Reason (বন্ধ করার সুনির্দিষ্ট কারণ)
+6. Current Account Balance & Customer Confirmation
+
+📄 **প্রয়োজনীয় ডকুমেন্টস:**
+1. **Account Holder's NID** কপি।
+2. **Account Closure Application** (স্বাক্ষরিত আবেদনপত্র)।
+3. **Account Holder's Signature** (স্বাক্ষর নমুনা)।
+4. **Unused Cheque Book / Leaves** (অব্যবহৃত চেকবই/পাতা)।
+5. **Debit Card** (ইস্যু করা হয়ে থাকলে সমর্পণ)।
+6. Additional Supporting Documents (প্রয়োজন অনুযায়ী)।
+
+🔍 **ব্যাংক যাচাইয়ের শর্তাবলী (Closure Conditions):**
+- অ্যাকাউন্টধারীর জাতীয় পরিচয় ও স্বাক্ষর যাচাই।
+- অ্যাকাউন্টের বর্তমান ব্যালেন্স ও কোনো পেন্ডিং ট্রানজেকশন আছে কি না।
+- কোনো বকেয়া ঋণ বা ব্যাংক দায় (Outstanding Liability / Bank Dues) আছে কি না।
+- অব্যবহৃত চেকবই ও কার্ড ব্যাংকে ফেরত দেওয়ার প্রমাণ।
+- কোনো আইনি বা নিয়ন্ত্রক সংস্থার নিষেধাজ্ঞা (Court Order / Legal Hold) আছে কি না।
+
+💰 **অবশিষ্ট ব্যালেন্স নিষ্পত্তি (Balance Settlement):**
+- অ্যাকাউন্টে থাকা অবশিষ্ট টাকা ব্যাংকের অনুমোদিত নিয়মে (ক্যাশ কাউন্টার / পে অর্ডার / অন্য ব্যাংক ট্রান্সফার) ফেরত দেওয়া হবে।
+- ব্যাংকের Schedule of Charges অনুযায়ী প্রযোজ্য ক্লোজিং ফি এবং ১৫% ভ্যাট সমন্বয় করা হবে।
+- অবশিষ্ট ব্যালেন্স শূন্য (0.00 BDT) হওয়ার পর অ্যাকাউন্ট চূড়ান্তভাবে **Closed** হবে।
+
+🚫 **অ্যাকাউন্ট বন্ধ হওয়ার পর (Post-Closure):**
+- অ্যাকাউন্ট স্ট্যাটাস স্থায়ীভাবে **Closed** হবে।
+- নতুন কোনো ডিপোজিট, উইথড্রয়াল বা ফান্ড ট্রান্সফার বন্ধ থাকবে।
+- ডেবিট কার্ড ও চেকবই সুবিধা বাতিল হয়ে যাবে।
+- গ্রাহক পোর্টাল থেকে অফিসিয়াল **Account Closure Confirmation** দেখতে ও ডাউনলোড করতে পারবেন।`;
+    }
+
+    // ৪. ডিপিএস ও এফডিআর (DPS & FDR)
+    if (m.includes('dps') || m.includes('fdr') || m.includes('ডিপিএস') || m.includes('এফডিআর') || m.includes('ডিপোজিট পেনশন') || m.includes('মেয়াদী')) {
+      return `📈 **Smart Banking PLC — ডিপিএস ও এফডিআর নির্দেশিকা (DPS & FDR Accounts)**
+
+💼 **ডিপিএস (Deposit Pension Scheme):**
+- মাসিক কিস্তি ৫০০ টাকা থেকে যেকোনো পরিমাণে শুরু করা যায়।
+- মেয়াদ ১, ৩, ৫, ৭ বা ১০ বছর।
+- আকর্ষণীয় মুনাফার হার এবং মেয়াদান্তে এককালীন মূল অর্থ ও মুনাফা লাভ।
+- অটো-ডেবিট সুবিধার মাধ্যমে প্রতি মাসে স্বয়ংক্রিয়ভাবে কিস্তি জমা।
+
+🏛️ **এফডিআর (Fixed Deposit Receipt):**
+- ন্যূনতম জমার পরিমাণ ১০,০০০ টাকা।
+- মেয়াদ ১ মাস, ৩ মাস, ৬ মাস, ১ বছর বা তদূর্ধ্ব।
+- মাসিক, ত্রৈমাসিক বা মেয়াদান্তে মুনাফা উত্তোলনের সুবিধা।
+- এফডিআরের বিপরীতে ৯০% পর্যন্ত ঋণের (Loan against FDR) সুবিধা।`;
     }
 
     // ১. অ্যাকাউন্ট খোলার নিয়ম (Account Opening)
@@ -441,6 +522,15 @@ function generateContextualBankingReply(msg, user, isBangla = false) {
 3. If unauthorized charges occurred, submit a dispute under **"Complaints / Support"**.
 4. Request a replacement from **"New Service Request"** > **"Card Replacement Request"**.
 *Never share your PIN, CVV, or OTP with anyone.*`;
+  }
+
+  if (m.includes('close') || m.includes('closing') || m.includes('closure')) {
+    return `🗂️ **Smart Banking PLC — Account Closure Policy (Prime Bank Bangladesh Standards):**
+1. **Request Submission:** Submit an Account Closure Request from your portal with reason and settlement choice.
+2. **Required Documents:** Account Holder NID, Signed Application, Signature Specimen, Unused Cheque Leaves, and Surrendered Debit Card.
+3. **Verification:** Bank verifies identity, signature, current balance, pending transactions, liabilities, and legal restrictions.
+4. **Balance Settlement:** Remaining balance settled via cash counter, pay order, or transfer after deducting applicable Schedule of Charges fee and 15% VAT.
+5. **Post-Closure:** Account status becomes Closed, all future transfers/deposits blocked, cards cancelled. An official Closure Confirmation Certificate is generated.`;
   }
 
   if (m.includes('account') || m.includes('savings') || m.includes('current') || m.includes('open')) {

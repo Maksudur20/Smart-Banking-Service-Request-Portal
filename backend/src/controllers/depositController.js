@@ -53,6 +53,13 @@ async function submitDeposit(req, res, next) {
 
     const customer = custRes.rows[0];
 
+    if (customer.account_operational_status === 'Closed') {
+      return res.status(403).json({
+        success: false,
+        message: 'এই ব্যাংক অ্যাকাউন্টটি স্থায়ীভাবে বন্ধ (Closed) করা হয়েছে। কোনো নতুন ডিপোজিট গ্রহণ করা সম্ভব নয়।'
+      });
+    }
+
     // Check duplicate pending or approved transaction ID
     if (transaction_id && transaction_id.trim()) {
       const dupCheck = await db.query(

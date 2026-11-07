@@ -141,6 +141,9 @@ const UI = {
         <a href="/customer/requests.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
           <span>📋</span> My Requests
         </a>
+        <a href="/customer/account-closure.html" class="nav-item ${activePage === 'account-closure' ? 'active' : ''}">
+          <span>🗂️</span> Account Closure
+        </a>
         
         <span class="nav-section-title">Support & Profile</span>
         <a href="/customer/notifications.html" class="nav-item ${activePage === 'notifications' ? 'active' : ''}">
@@ -199,6 +202,9 @@ const UI = {
         </a>
         <a href="/admin/admin-deposits.html" class="nav-item ${activePage === 'deposits' ? 'active' : ''}">
           <span>💵</span> Deposit Verifications
+        </a>
+        <a href="/admin/admin-account-closure.html" class="nav-item ${activePage === 'account-closure' ? 'active' : ''}">
+          <span>🗂️</span> Account Closure Queue
         </a>
         <a href="/admin/admin-requests.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
           <span>📑</span> Request Review Queue

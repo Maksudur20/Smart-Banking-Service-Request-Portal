@@ -21,6 +21,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const kycRoutes = require('./routes/kycRoutes');
 const depositRoutes = require('./routes/depositRoutes');
 const transferRoutes = require('./routes/transferRoutes');
+const closureRoutes = require('./routes/closureRoutes');
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/deposits', depositRoutes);
 app.use('/api/transfers', transferRoutes);
+app.use('/api/account-closure', closureRoutes);
 
 // Fallback to index.html for frontend root access
 app.get('/', (req, res) => {

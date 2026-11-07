@@ -55,6 +55,15 @@ async function executeTransfer(req, res, next) {
     }
 
     // Check account operational status
+    if (sender.account_operational_status === 'Closed') {
+      await client.query('ROLLBACK');
+      return res.status(403).json({
+        success: false,
+        code: 'ACCOUNT_CLOSED',
+        message: 'এই ব্যাংক অ্যাকাউন্টটি স্থায়ীভাবে বন্ধ (Closed) করা হয়েছে। কোনো লেনদেন বা ফান্ড ট্রান্সফার সম্ভব নয়।'
+      });
+    }
+
     if (sender.account_operational_status === 'Restricted' || sender.account_operational_status === 'Suspended') {
       await client.query('ROLLBACK');
       return res.status(403).json({
@@ -101,6 +110,14 @@ async function executeTransfer(req, res, next) {
     }
 
     const receiver = receiverRes.rows[0];
+
+    if (receiver.account_operational_status === 'Closed') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        success: false,
+        message: `প্রাপক অ্যাকাউন্ট নম্বর '${cleanReceiverAcc}' স্থায়ীভাবে বন্ধ (Closed) রয়েছে। এই অ্যাকাউন্টে কোনো ফান্ড পাঠানো যাবে না।`
+      });
+    }
 
     // Debit Sender
     const senderDebitRes = await client.query(

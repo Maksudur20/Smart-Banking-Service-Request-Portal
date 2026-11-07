@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>অ্যাকাউন্ট ক্লোজার - Smart Banking PLC</title>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.5">
+  <style>
+    .status-tracker {
+      display: flex;
+      justify-content: space-between;
+      margin: 24px 0;
+      position: relative;
+    }
+    .status-tracker::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+    .tracker-step {
+      position: relative;
+      z-index: 2;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 14%;
+      text-align: center;
+    }
+    .tracker-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .tracker-step.active .tracker-dot {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+    }
+    .tracker-step.completed .tracker-dot {
+      background: #10b981;
+      border-color: #10b981;
+      color: #fff;
+    }
+    .tracker-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #475569;
+    }
+    .upload-card-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .upload-card-box:hover {
+      border-color: #0284c7;
+      background: #f0f9ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🗂️ অ্যাকাউন্ট ক্লোজার (Account Closure)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span id="accountStatusBadge" class="badge badge-submitted">অ্যাকাউন্ট স্ট্যাটাস লোড হচ্ছে...</span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Account Overview Bar -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-body" style="padding: 20px 24px;">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+              <div>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">হিসাবধারীর নাম</span>
+                <div style="font-size:1rem; font-weight:700; color:#0f172a;" id="accHolderName">-</div>
+              </div>
+              <div>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">অ্যাকাউন্ট নম্বর</span>
+                <div style="font-size:1rem; font-weight:700; color:#0284c7; font-family:monospace;" id="accNumberDisplay">-</div>
+              </div>
+              <div>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">অ্যাকাউন্টের ধরন</span>
+                <div style="font-size:0.95rem; font-weight:600; color:#334155;" id="accTypeDisplay">-</div>
+              </div>
+              <div>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">বর্তমান ব্যালেন্স</span>
+                <div style="font-size:1.15rem; font-weight:800; color:#059669;" id="accBalanceDisplay">0.00 BDT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Closure Status Banner & Tracker (If an active request exists) -->
+        <div id="activeRequestContainer" style="display:none;" class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" id="activeReqTitle">অ্যাকাউন্ট ক্লোজার আবেদন অগ্রগতি</h3>
+              <p class="card-subtitle" id="activeReqSubtitle">আপনার আবেদনের বর্তমান স্ট্যাটাস ও ব্যাংক যাচাই</p>
+            </div>
+            <span class="badge" id="activeReqBadge">Request Submitted</span>
+          </div>
+          <div class="card-body">
+            <!-- 7-Stage Visual Tracker -->
+            <div class="status-tracker">
+              <div class="tracker-step" id="step-submitted">
+                <div class="tracker-dot">১</div>
+                <div class="tracker-label">আবেদন জমা</div>
+              </div>
+              <div class="tracker-step" id="step-review">
+                <div class="tracker-dot">২</div>
+                <div class="tracker-label">অফিসার যাচাই</div>
+              </div>
+              <div class="tracker-step" id="step-docs">
+                <div class="tracker-dot">৩</div>
+                <div class="tracker-label">ডকুমেন্ট চেক</div>
+              </div>
+              <div class="tracker-step" id="step-settlement">
+                <div class="tracker-dot">৪</div>
+                <div class="tracker-label">ব্যালেন্স নিষ্পত্তি</div>
+              </div>
+              <div class="tracker-step" id="step-approved">
+                <div class="tracker-dot">৫</div>
+                <div class="tracker-label">অনুমোদিত</div>
+              </div>
+              <div class="tracker-step" id="step-closed">
+                <div class="tracker-dot">৬</div>
+                <div class="tracker-label">হিসাব বন্ধ</div>
+              </div>
+            </div>
+
+            <div id="activeReqNotice" style="margin-top:16px;"></div>
+          </div>
+        </div>
+
+        <!-- Closed Account Confirmation View (Shown when account is officially Closed) -->
+        <div id="closedCertificateContainer" style="display:none;" class="card">
+          <div class="card-body" style="text-align:center; padding: 40px 24px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">🏛️</div>
+            <h2 style="color: #0f172a; font-weight: 800; margin-bottom: 8px;">অ্যাকাউন্ট ক্লোজার সম্পন্ন (Account Closed)</h2>
+            <p style="color: #64748b; max-width: 600px; margin: 0 auto 24px; line-height: 1.6;">
+              আপনার অ্যাকাউন্টটি প্রাইম ব্যাংক পিএলসি এবং বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী স্থায়ীভাবে বন্ধ (Closed) করা হয়েছে। অবশিষ্ট ব্যালেন্স সম্পূর্ণ নিষ্পত্তি করা হয়েছে।
+            </p>
+            <div style="display:inline-flex; gap:12px;">
+              <button onclick="printClosureCertificate()" class="btn btn-primary" style="background:#059669; border-color:#059669;">
+                🖨️ ক্লোজার কনফার্মেশন প্রিন্ট / ডাউনলোড
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Account Closure Request Form -->
+        <div class="card" id="closureFormCard">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">অ্যাকাউন্ট বন্ধ করার আবেদনপত্র (Submit Closure Request)</h3>
+              <p class="card-subtitle">প্রাইম ব্যাংক নীতি অনুযায়ী সকল তথ্য পূরণ করুন এবং প্রয়োজনীয় কাগজপত্র আপলোড করুন</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="closureRequestForm">
+              <!-- Reason and Settlement Choice -->
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div class="form-group">
+                  <label class="form-label required">অ্যাকাউন্ট বন্ধের প্রধান কারণ (Closing Reason)</label>
+                  <select id="closureReasonSelect" class="form-control" required>
+                    <option value="">নির্বাচন করুন</option>
+                    <option value="ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ">ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ</option>
+                    <option value="অন্য ব্যাংকে হিসাব পরিচালনা করায়">অন্য ব্যাংকে হিসাব পরিচালনা করায়</option>
+                    <option value="স্থায়ীভাবে প্রবাসে গমন করায়">স্থায়ীভাবে প্রবাসে গমন করায়</option>
+                    <option value="উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি">উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি</option>
+                    <option value="অন্যান্য কারণ">অন্যান্য কারণ</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label required">অবশিষ্ট ব্যালেন্স পাওয়ার মাধ্যম (Settlement Method)</label>
+                  <select id="settlementMethodSelect" class="form-control" required>
+                    <option value="CASH_COUNTER">ব্যাংক শাখা থেকে নগদ গ্রহণ (Cash over Counter)</option>
+                    <option value="TRANSFER_OTHER_BANK">অন্য ব্যাংক অ্যাকাউন্টে ট্রান্সফার (BEFTN/NPSB)</option>
+                    <option value="PAY_ORDER">পে অর্ডার ইস্যু (Pay Order)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label required">বন্ধ করার বিস্তারিত কারণ ও আবেদনকারীর বক্তব্য</label>
+                <textarea id="closureReasonDetails" class="form-control" rows="3" placeholder="যেমন: ব্যক্তিগত প্রয়োজনে অ্যাকাউন্টটি বন্ধ করতে চাচ্ছি। প্রয়োজনীয় সকল নথি প্রদান করলাম..." required></textarea>
+              </div>
+
+              <div class="form-group" id="settlementDetailsGroup" style="display:none;">
+                <label class="form-label required">প্রাপক ব্যাংক অ্যাকাউন্টের বিস্তারিত বিবরণ (অন্য ব্যাংকে ট্রান্সফারের জন্য)</label>
+                <input type="text" id="settlementDetails" class="form-control" placeholder="ব্যাংকের নাম, শাখা, অ্যাকাউন্ট নম্বর এবং অ্যাকাউন্ট হোল্ডারের নাম">
+              </div>
+
+              <!-- Required Documents Upload Section (As per Prime Bank Policy) -->
+              <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 24px 0 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                📎 প্রয়োজনীয় নথিপত্র ও প্রমাণাদি আপলোড (Required Documents)
+              </h4>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div class="upload-card-box">
+                  <label class="form-label required">১. অ্যাকাউন্ট হোল্ডারের এনআইডি (Account Holder's NID)</label>
+                  <input type="file" id="fileNid" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
+                  <small style="color:#64748b;">পরিচয় যাচাইয়ের জন্য বৈধ NID/পাসপোর্ট কপি</small>
+                </div>
+
+                <div class="upload-card-box">
+                  <label class="form-label required">২. স্বাক্ষরিত আবেদনপত্র (Closure Application)</label>
+                  <input type="file" id="fileApp" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
+                  <small style="color:#64748b;">হিসাব বন্ধের জন্য পূরণকৃত ও স্বাক্ষরিত আবেদনপত্র</small>
+                </div>
+
+                <div class="upload-card-box">
+                  <label class="form-label required">৩. গ্রাহকের নমুনা স্বাক্ষর (Signature Specimen)</label>
+                  <input type="file" id="fileSign" class="form-control" accept="image/png,image/jpeg" required>
+                  <small style="color:#64748b;">ব্যাংকের রেকর্ডে থাকা মূল স্বাক্ষরের ছবি</small>
+                </div>
+
+                <div class="upload-card-box">
+                  <label class="form-label required">৪. অব্যবহৃত চেকবই / পাতা (Unused Cheques)</label>
+                  <input type="file" id="fileCheques" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
+                  <small style="color:#64748b;">অব্যবহৃত চেক পাতার ছবি অথবা জমা রসিদ</small>
+                </div>
+
+                <div class="upload-card-box">
+                  <label class="form-label">৫. ডেবিট কার্ড সমর্পণ (Debit Card Surrender)</label>
+                  <input type="file" id="fileCard" class="form-control" accept="image/png,image/jpeg,application/pdf">
+                  <small style="color:#64748b;">ইস্যু করা কার্ড নষ্ট করা বা জমা দেওয়ার প্রমাণ (প্রযোজ্য ক্ষেত্রে)</small>
+                </div>
+
+                <div class="upload-card-box">
+                  <label class="form-label">৬. অতিরিক্ত নথিপত্র (Additional Supporting Documents)</label>
+                  <input type="file" id="fileAdditional" class="form-control" accept="image/png,image/jpeg,application/pdf">
+                  <small style="color:#64748b;">প্রয়োজনীয় অন্য কোনো কাগজপত্র বা অনুমোদন</small>
+                </div>
+              </div>
+
+              <!-- Schedule of Charges Notice -->
+              <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin: 20px 0; font-size:0.85rem; color:#1e40af;">
+                💡 <strong>ব্যাংকের Schedule of Charges ও নীতি নির্দেশিকা:</strong>
+                <ul style="margin:6px 0 0 20px; padding:0; line-height:1.5;">
+                  <li>অ্যাকাউন্ট ক্লোজিং ফি ব্যাংকের সর্বশেষ <strong>Schedule of Charges</strong> অনুযায়ী ধার্য হবে (সঞ্চয়ী হিসাব: ২০০ টাকা + ১৫% ভ্যাট)। কোনো হার্ডকোড ফি প্রযোজ্য নয়।</li>
+                  <li>কোনো বকেয়া ঋণ বা পেন্ডিং লেনদেন থাকলে তা নিষ্পত্তি ছাড়া অ্যাকাউন্ট বন্ধ করা যাবে না।</li>
+                  <li>অবশিষ্ট ব্যালেন্স আপনার পছন্দের মাধ্যমে নিষ্পত্তি শেষে চূড়ান্ত ক্লোজার সম্পন্ন হবে।</li>
+                </ul>
+              </div>
+
+              <!-- Customer Confirmation Checkbox -->
+              <div style="margin: 20px 0; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px;">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+                  <input type="checkbox" id="customerConfirmation" required style="margin-top:3px; transform:scale(1.2);">
+                  <span style="font-size:0.88rem; color:#0f172a; line-height:1.4;">
+                    আমি প্রত্যয়ন করছি যে প্রদত্ত সকল তথ্য ও কাগজপত্র সঠিক। আমি স্বেচ্ছায় আমার এই ব্যাংক অ্যাকাউন্টটি স্থায়ীভাবে বন্ধ করার আবেদন করছি।
+                  </span>
+                </label>
+              </div>
+
+              <button type="submit" id="submitClosureBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700;">
+                📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন (Submit Request)
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Closure Requests History -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">অ্যাকাউন্ট ক্লোজার আবেদনের ইতিহাস (Request History)</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>আবেদন নম্বর</th>
+                  <th>অ্যাকাউন্ট নম্বর</th>
+                  <th>বন্ধের কারণ</th>
+                  <th>নিষ্পত্তি পদ্ধতি</th>
+                  <th>ক্লোজিং ফি</th>
+                  <th>স্ট্যাটাস</th>
+                  <th>তারিখ</th>
+                </tr>
+              </thead>
+              <tbody id="closureHistoryBody">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">আবেদন তালিকা লোড হচ্ছে...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js?v=2.5"></script>
+  <script src="/assets/js/common.js?v=2.5"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('account-closure');
+
+    let currentCustomer = null;
+    let activeRequest = null;
+
+    async function loadAccountData() {
+      try {
+        const res = await window.api.get('/api/account-closure/my');
+        currentCustomer = res.customer || {};
+        const requests = res.requests || [];
+
+        // Update Overview
+        const user = window.Auth.getUser() || {};
+        document.getElementById('accHolderName').innerText = user.full_name || 'গ্রাহক';
+        document.getElementById('accNumberDisplay').innerText = currentCustomer.account_number || '-';
+        document.getElementById('accTypeDisplay').innerText = user.account_type || 'Prime Savings Account';
+        document.getElementById('accBalanceDisplay').innerText = `${parseFloat(currentCustomer.balance || 0).toFixed(2)} BDT`;
+
+        const statusBadge = document.getElementById('accountStatusBadge');
+        if (currentCustomer.account_operational_status === 'Closed') {
+          statusBadge.innerText = 'Account Closed';
+          statusBadge.className = 'badge badge-rejected';
+          document.getElementById('closedCertificateContainer').style.display = 'block';
+          document.getElementById('closureFormCard').style.display = 'none';
+        } else {
+          statusBadge.innerText = 'Account Active';
+          statusBadge.className = 'badge badge-approved';
+        }
+
+        // Check if there is an active (pending/review) request
+        activeRequest = requests.find(r => r.status !== 'Closed' && r.status !== 'Rejected');
+        const activeContainer = document.getElementById('activeRequestContainer');
+
+        if (activeRequest) {
+          activeContainer.style.display = 'block';
+          document.getElementById('activeReqTitle').innerText = `আবেদন নম্বর: ${activeRequest.request_number}`;
+          document.getElementById('activeReqSubtitle').innerText = `বর্তমান স্ট্যাটাস: ${activeRequest.status} | দাখিলকৃত ডকুমেন্টস: ${activeRequest.document_count} টি`;
+          
+          const badge = document.getElementById('activeReqBadge');
+          badge.innerText = activeRequest.status;
+          badge.className = 'badge badge-submitted';
+          if (activeRequest.status === 'Approved') badge.className = 'badge badge-approved';
+          if (activeRequest.status === 'Under Review') badge.className = 'badge badge-in-review';
+
+          updateTrackerSteps(activeRequest.status);
+
+          let noticeHtml = '';
+          if (activeRequest.status === 'Additional Documents Required') {
+            noticeHtml = `
+              <div style="background:#fff1f2; border:1px solid #fecdd3; padding:14px; border-radius:6px; color:#be123c;">
+                <strong>⚠️ ব্যাংক অফিসারের মন্তব্য:</strong> ${activeRequest.rejection_reason || activeRequest.admin_remarks || 'অতিরিক্ত ডকুমেন্ট প্রয়োজন।'}
+              </div>
+            `;
+          } else if (activeRequest.status === 'Pending Settlement') {
+            noticeHtml = `
+              <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:14px; border-radius:6px; color:#1d4ed8;">
+                <strong>ℹ️ ব্যালেন্স নিষ্পত্তি প্রক্রিয়া চলমান:</strong> আপনার অবশিষ্ট ব্যালেন্স থেকে প্রযোজ্য ক্লোজিং ফি ও ভ্যাট সমন্বয় করে অবশিষ্ট টাকা হস্তান্তরের প্রস্তুতি চলছে।
+              </div>
+            `;
+          }
+          document.getElementById('activeReqNotice').innerHTML = noticeHtml;
+
+          // Hide form while request is already processing
+          document.getElementById('closureFormCard').style.display = 'none';
+        }
+
+        renderHistory(requests);
+      } catch (err) {
+        console.error('Failed to load account closure data:', err);
+      }
+    }
+
+    function updateTrackerSteps(status) {
+      const steps = ['submitted', 'review', 'docs', 'settlement', 'approved', 'closed'];
+      steps.forEach(s => {
+        const el = document.getElementById(`step-${s}`);
+        if (el) el.className = 'tracker-step';
+      });
+
+      const order = {
+        'Request Submitted': 1,
+        'Under Review': 2,
+        'Additional Documents Required': 3,
+        'Pending Settlement': 4,
+        'Approved': 5,
+        'Closed': 6
+      };
+
+      const currentIdx = order[status] || 1;
+      for (let i = 0; i < currentIdx; i++) {
+        const el = document.getElementById(`step-${steps[i]}`);
+        if (el) {
+          if (i === currentIdx - 1) el.className = 'tracker-step active';
+          else el.className = 'tracker-step completed';
+        }
+      }
+    }
+
+    function renderHistory(list) {
+      const tbody = document.getElementById('closureHistoryBody');
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">কোনো পূর্ববর্তী ক্লোজার আবেদন নেই।</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(r => `
+        <tr>
+          <td><code>${r.request_number}</code></td>
+          <td><strong style="color:#0284c7; font-family:monospace;">${r.account_number}</strong></td>
+          <td style="max-width:240px; white-space:normal; font-size:0.85rem;">${r.closure_reason}</td>
+          <td><span style="font-weight:600; color:#334155;">${r.settlement_method}</span></td>
+          <td style="font-weight:700; color:#0f172a;">${parseFloat(r.closing_fee || 0).toFixed(2)} BDT</td>
+          <td><span class="badge ${r.status === 'Closed' ? 'badge-rejected' : (r.status === 'Approved' ? 'badge-approved' : 'badge-submitted')}">${r.status}</span></td>
+          <td style="font-size:0.82rem; color:#64748b;">${new Date(r.created_at).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('settlementMethodSelect').addEventListener('change', (e) => {
+      const group = document.getElementById('settlementDetailsGroup');
+      if (e.target.value === 'TRANSFER_OTHER_BANK') {
+        group.style.display = 'block';
+        document.getElementById('settlementDetails').required = true;
+      } else {
+        group.style.display = 'none';
+        document.getElementById('settlementDetails').required = false;
+      }
+    });
+
+    document.getElementById('closureRequestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitClosureBtn');
+
+      const reasonSelect = document.getElementById('closureReasonSelect').value;
+      const reasonDetails = document.getElementById('closureReasonDetails').value.trim();
+      const settlementMethod = document.getElementById('settlementMethodSelect').value;
+      const settlementDetails = document.getElementById('settlementDetails').value.trim();
+      const confirmation = document.getElementById('customerConfirmation').checked;
+
+      const fileNid = document.getElementById('fileNid').files[0];
+      const fileApp = document.getElementById('fileApp').files[0];
+      const fileSign = document.getElementById('fileSign').files[0];
+      const fileCheques = document.getElementById('fileCheques').files[0];
+      const fileCard = document.getElementById('fileCard').files[0];
+      const fileAdditional = document.getElementById('fileAdditional').files[0];
+
+      if (!fileNid || !fileApp || !fileSign || !fileCheques) {
+        window.showToast('অনুগ্রহ করে এনআইডি, আবেদনপত্র, স্বাক্ষর ও অব্যবহৃত চেকের ফাইল আপলোড করুন।', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('closure_reason', `${reasonSelect} — ${reasonDetails}`);
+      formData.append('settlement_method', settlementMethod);
+      if (settlementDetails) formData.append('settlement_account_details', settlementDetails);
+      formData.append('customer_confirmation', confirmation);
+
+      formData.append('doc_nid', fileNid);
+      formData.append('doc_application', fileApp);
+      formData.append('doc_signature', fileSign);
+      formData.append('doc_unused_cheques', fileCheques);
+      if (fileCard) formData.append('doc_debit_card', fileCard);
+      if (fileAdditional) formData.append('doc_additional', fileAdditional);
+
+      try {
+        btn.disabled = true;
+        btn.innerText = 'আবেদন আপলোড ও যাচাই হচ্ছে...';
+
+        const token = window.Auth.getToken();
+        const res = await fetch('/api/account-closure', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'ক্লোজার আবেদন সাবমিট ব্যর্থ হয়েছে।');
+
+        window.showToast('✅ অ্যাকাউন্ট ক্লোজার আবেদন সফলভাবে জমা হয়েছে!', 'success');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err) {
+        window.showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.innerText = '📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন (Submit Request)';
+      }
+    });
+
+    function printClosureCertificate() {
+      window.print();
+    }
+
+    loadAccountData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>অ্যাকাউন্ট ক্লোজার কিউ - Smart Banking PLC Admin</title>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.5">
+  <style>
+    .checklist-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 0.88rem;
+    }
+    .check-item:last-child {
+      border-bottom: none;
+    }
+    .check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+    .doc-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .doc-box {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+    .doc-box img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-box-lg {
+      background: #fff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🗂️ অ্যাকাউন্ট ক্লোজার রিভিউ কিউ (Account Closure Queue)</h2>
+        </div>
+        <div class="top-nav-right">
+          <button onclick="openFeeManagementModal()" class="btn btn-secondary btn-sm" style="font-weight:700;">
+            ⚙️ Schedule of Charges ফি পরিচালনা
+          </button>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Queue Filter & Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">অ্যাকাউন্ট ক্লোজার আবেদনসমূহ</h2>
+              <p class="card-subtitle">প্রাইম ব্যাংক নীতি অনুযায়ী গ্রাহকের পরিচয়, ব্যালেন্স, বকেয়া ঋণ ও ডকুমেন্ট যাচাই</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="searchInput" class="form-control" placeholder="আবেদন নম্বর বা অ্যাকাউন্ট..." style="width:220px; font-size:0.85rem;">
+              <select id="statusFilter" class="form-control" style="width:auto; font-size:0.85rem;">
+                <option value="">সকল স্ট্যাটাস</option>
+                <option value="Request Submitted">Request Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Additional Documents Required">Additional Documents Required</option>
+                <option value="Pending Settlement">Pending Settlement</option>
+                <option value="Approved">Approved</option>
+                <option value="Closed">Closed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>আবেদন আইডি</th>
+                  <th>গ্রাহকের নাম ও রেফারেন্স</th>
+                  <th>অ্যাকাউন্ট নম্বর</th>
+                  <th>বর্তমান ব্যালেন্স</th>
+                  <th>ডকুমেন্টস</th>
+                  <th>স্ট্যাটাস</th>
+                  <th>তারিখ</th>
+                  <th>অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody id="closureQueueBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:32px; color:#94a3b8;">ক্লোজার কিউ লোড হচ্ছে...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Review & Verification Modal -->
+  <div id="reviewModal" class="modal-backdrop">
+    <div class="modal-box-lg">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:1.2rem; color:#0f172a;" id="modalReqNumber">অ্যাকাউন্ট ক্লোজার যাচাই</h3>
+        <button onclick="closeReviewModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- Customer & Account Details Grid -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+          <div><strong>গ্রাহকের নাম:</strong> <span id="mCustomerName">-</span></div>
+          <div><strong>অ্যাকাউন্ট নম্বর:</strong> <span id="mAccountNumber" style="color:#0284c7; font-family:monospace; font-weight:700;">-</span></div>
+          <div><strong>অ্যাকাউন্টের ধরন:</strong> <span id="mAccountType">-</span></div>
+          <div><strong>বর্তমান ব্যালেন্স:</strong> <span id="mCurrentBalance" style="color:#059669; font-weight:800;">-</span></div>
+          <div><strong>মোবাইল নম্বর:</strong> <span id="mCustomerPhone">-</span></div>
+          <div><strong>নিষ্পত্তি পদ্ধতি:</strong> <span id="mSettlementMethod">-</span></div>
+        </div>
+        <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #cbd5e1;">
+          <strong>অ্যাকাউন্ট বন্ধ করার কারণ:</strong> <span id="mClosureReason">-</span>
+        </div>
+      </div>
+
+      <!-- Uploaded Documents Preview -->
+      <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 16px 0 8px;">
+        📄 আপলোডকৃত নথিপত্র ও প্রমাণাদি (Documents Review)
+      </h4>
+      <div id="mDocsContainer" class="doc-preview-grid">
+        <p style="color:#94a3b8; font-size:0.85rem;">ডকুমেন্ট লোড হচ্ছে...</p>
+      </div>
+
+      <!-- 6-Point Verification Checklist (As per Prime Bank Policy) -->
+      <div class="checklist-box">
+        <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 0 0 10px;">
+          🔍 প্রাইম ব্যাংক শর্তাবলী ও ভেরিফিকেশন চেকলিস্ট (Verification Checklist)
+        </h4>
+        <div class="check-item">
+          <input type="checkbox" id="chkIdentity">
+          <label for="chkIdentity">১. অ্যাকাউন্ট হোল্ডারের পরিচয় ও এনআইডি যাচাই সম্পন্ন হয়েছে।</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="chkSignature">
+          <label for="chkSignature">২. ব্যাংকের মূল সিগনেচার কার্ডের সাথে আবেদনপত্রের স্বাক্ষর মিলেছে।</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="chkBalance">
+          <label for="chkBalance">৩. অ্যাকাউন্টের বর্তমান ব্যালেন্স ও কোনো পেন্ডিং ট্রানজেকশন না থাকার বিষয়টি যাচাইকৃত।</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="chkLiabilities">
+          <label for="chkLiabilities">৪. গ্রাহকের কোনো বকেয়া ঋণ বা ব্যাংক দায় (Outstanding Dues / Liabilities) নেই।</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="chkCheques">
+          <label for="chkCheques">৫. অব্যবহৃত চেকবই ও পাতা ব্যাংকে জমা বা বাতিল করা হয়েছে।</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="chkCard">
+          <label for="chkCard">৬. ইস্যুকৃত ডেবিট কার্ড ব্যাংকে সমর্পণ বা সিস্টেমে বাতিল করা হয়েছে।</label>
+        </div>
+        <button onclick="saveChecklist()" class="btn btn-secondary btn-sm" style="margin-top:12px;">
+          💾 চেকলিস্ট সংরক্ষণ করুন
+        </button>
+      </div>
+
+      <!-- Closing Fee & VAT Calculation -->
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>Schedule of Charges ক্লোজিং ফি:</strong> <span id="mFeeDisplay">200.00 BDT</span> (+ ১৫% ভ্যাট: <span id="mVatDisplay">30.00 BDT</span>)
+            <div style="font-size:0.8rem; color:#1e40af; margin-top:2px;">মোট কর্তন: <span id="mTotalDeduction" style="font-weight:700;">230.00 BDT</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label style="font-size:0.8rem; color:#334155;">কাস্টম ফি (যদি প্রযোজ্য):</label>
+            <input type="number" id="customFeeInput" class="form-control" placeholder="ফি BDT" style="width:110px; font-size:0.85rem;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Remarks / Reason Input -->
+      <div class="form-group">
+        <label class="form-label">অফিসার মন্তব্য বা রিজেকশন কারণ (Officer Remarks)</label>
+        <textarea id="modalRemarks" class="form-control" rows="2" placeholder="প্রয়োজনীয় মন্তব্য বা ডকুমেন্ট সংশোধনের কারণ লিখুন..."></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:16px;">
+        <div style="display:flex; gap:8px;">
+          <button onclick="makeClosureDecision('UNDER_REVIEW')" class="btn btn-secondary btn-sm">
+            🔍 Under Review
+          </button>
+          <button onclick="makeClosureDecision('REQUEST_DOCS')" class="btn btn-secondary btn-sm" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">
+            📝 অতিরিক্ত ডকুমেন্ট তলব
+          </button>
+          <button onclick="makeClosureDecision('PENDING_SETTLEMENT')" class="btn btn-secondary btn-sm" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">
+            💵 ব্যালেন্স নিষ্পত্তি কিউ
+          </button>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button onclick="makeClosureDecision('REJECT')" class="btn btn-danger btn-sm">
+            ❌ আবেদন বাতিল
+          </button>
+          <button onclick="makeClosureDecision('CLOSE')" class="btn btn-primary btn-sm" style="background:#059669; border-color:#059669; font-weight:700;">
+            ✅ অ্যাকাউন্ট স্থায়ীভাবে ক্লোজ করুন (Final Close)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Fee Schedule Management Modal -->
+  <div id="feeModal" class="modal-backdrop">
+    <div class="modal-box-lg" style="max-width:650px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:1.15rem; color:#0f172a;">⚙️ Schedule of Charges ক্লোজিং ফি পরিচালনা</h3>
+        <button onclick="closeFeeModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:16px;">
+        অ্যাকাউন্টের ধরন অনুযায়ী ক্লোজিং ফি পরিবর্তন করুন। কোডে কোনো ফিক্সড ফি হার্ডকোড করা নেই।
+      </p>
+
+      <div class="table-responsive" style="margin-bottom:16px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>অ্যাকাউন্টের ধরন</th>
+              <th>ক্লোজিং ফি (BDT)</th>
+              <th>ভ্যাট (%)</th>
+              <th>অ্যাকশন</th>
+            </tr>
+          </thead>
+          <tbody id="feeTableBody">
+            <tr><td colspan="4" style="text-align:center;">ফি লোড হচ্ছে...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px;">
+        <h5 style="margin:0 0 10px; font-size:0.9rem;">ফি আপডেট বা নতুন টাইপ যুক্ত করুন:</h5>
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+          <input type="text" id="newAccType" class="form-control" placeholder="Account Type (যেমন: Savings)">
+          <input type="number" id="newFeeAmount" class="form-control" placeholder="Fee BDT">
+          <input type="number" id="newVatPercent" class="form-control" value="15.00" placeholder="VAT %">
+        </div>
+        <button onclick="saveFeeSchedule()" class="btn btn-primary btn-sm">সংরক্ষণ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js?v=2.5"></script>
+  <script src="/assets/js/common.js?v=2.5"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('account-closure');
+
+    let currentRequests = [];
+    let selectedRequest = null;
+
+    async function loadClosureQueue() {
+      const search = document.getElementById('searchInput').value;
+      const status = document.getElementById('statusFilter').value;
+      const params = {};
+      if (search) params.search = search;
+      if (status) params.status = status;
+
+      try {
+        const res = await window.api.get('/api/account-closure/admin/all', params);
+        currentRequests = res.requests || [];
+        const tbody = document.getElementById('closureQueueBody');
+
+        if (currentRequests.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:#94a3b8;">কোনো অ্যাকাউন্ট ক্লোজার আবেদন পাওয়া যায়নি।</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = currentRequests.map(r => {
+          let badgeClass = 'badge-submitted';
+          if (r.status === 'Approved') badgeClass = 'badge-approved';
+          if (r.status === 'Closed') badgeClass = 'badge-rejected';
+          if (r.status === 'Under Review') badgeClass = 'badge-in-review';
+
+          return `
+            <tr>
+              <td><code>${r.request_number}</code></td>
+              <td>
+                <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">${r.account_holder_name}</div>
+                <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">Ref: ${r.customer_reference || '-'} &bull; ${r.customer_email || ''}</div>
+              </td>
+              <td><span style="font-family:monospace; font-weight:700; color:#0284c7; font-size:0.9rem;">${r.account_number}</span></td>
+              <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(r.current_balance || 0).toLocaleString('en-US', {minimumFractionDigits:2})}</span></td>
+              <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${r.document_count || 0} টি ফাইল</span></td>
+              <td><span class="badge ${badgeClass}">${r.status}</span></td>
+              <td style="font-size:0.82rem; color:#64748b;">${new Date(r.created_at).toLocaleDateString()}</td>
+              <td>
+                <button onclick="openReviewModal(${r.id})" class="table-action-btn primary">
+                  যাচাই ও সিদ্ধান্ত &rarr;
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        window.showToast('ক্লোজার কিউ লোড করা যায়নি।', 'error');
+      }
+    }
+
+    async function openReviewModal(requestId) {
+      try {
+        const res = await window.api.get(`/api/account-closure/${requestId}`);
+        selectedRequest = res.request;
+        const docs = res.documents || [];
+
+        document.getElementById('modalReqNumber').innerText = `ক্লোজার আবেদন — ${selectedRequest.request_number}`;
+        document.getElementById('mCustomerName').innerText = selectedRequest.account_holder_name;
+        document.getElementById('mAccountNumber').innerText = selectedRequest.account_number;
+        document.getElementById('mAccountType').innerText = selectedRequest.account_type;
+        document.getElementById('mCurrentBalance').innerText = `${parseFloat(selectedRequest.current_balance || 0).toFixed(2)} BDT`;
+        document.getElementById('mCustomerPhone').innerText = selectedRequest.registered_mobile;
+        document.getElementById('mSettlementMethod').innerText = selectedRequest.settlement_method;
+        document.getElementById('mClosureReason').innerText = selectedRequest.closure_reason;
+
+        // Populate checklist checkboxes
+        document.getElementById('chkIdentity').checked = Boolean(selectedRequest.identity_verified);
+        document.getElementById('chkSignature').checked = Boolean(selectedRequest.signature_verified);
+        document.getElementById('chkBalance').checked = Boolean(selectedRequest.balance_checked);
+        document.getElementById('chkLiabilities').checked = Boolean(selectedRequest.liabilities_checked);
+        document.getElementById('chkCheques').checked = Boolean(selectedRequest.unused_cheques_returned);
+        document.getElementById('chkCard').checked = Boolean(selectedRequest.card_returned);
+
+        // Fees
+        const fee = parseFloat(selectedRequest.closing_fee || 0);
+        const vat = parseFloat(selectedRequest.vat_amount || 0);
+        document.getElementById('mFeeDisplay').innerText = `${fee.toFixed(2)} BDT`;
+        document.getElementById('mVatDisplay').innerText = `${vat.toFixed(2)} BDT`;
+        document.getElementById('mTotalDeduction').innerText = `${(fee + vat).toFixed(2)} BDT`;
+        document.getElementById('customFeeInput').value = fee > 0 ? fee : '';
+        document.getElementById('modalRemarks').value = selectedRequest.admin_remarks || '';
+
+        // Render Docs
+        const docsContainer = document.getElementById('mDocsContainer');
+        if (docs.length === 0) {
+          docsContainer.innerHTML = '<p style="color:#94a3b8; font-size:0.85rem;">কোনো ডকুমেন্ট আপলোড করা হয়নি।</p>';
+        } else {
+          docsContainer.innerHTML = docs.map(d => {
+            const isPdf = (d.mime_type || '').includes('pdf') || (d.file_name || '').endsWith('.pdf');
+            return `
+              <div class="doc-box">
+                <div style="font-weight:700; font-size:0.82rem; color:#0f172a; margin-bottom:4px;">${d.document_type}</div>
+                ${isPdf ? `
+                  <div style="height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8fafc; border-radius:4px; margin-bottom:8px;">
+                    <span style="font-size:2rem;">📄</span>
+                    <span style="font-size:0.75rem;">PDF ফাইল</span>
+                  </div>
+                ` : `
+                  <img src="${d.file_url}" alt="${d.document_type}">
+                `}
+                <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem; padding:4px 10px;">
+                  পূর্ণাঙ্গ ফাইল দেখুন ↗
+                </a>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('reviewModal').classList.add('open');
+      } catch (err) {
+        window.showToast(err.message || 'আবেদন বিবরণ লোড ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').classList.remove('open');
+      selectedRequest = null;
+    }
+
+    async function saveChecklist() {
+      if (!selectedRequest) return;
+      try {
+        const payload = {
+          identity_verified: document.getElementById('chkIdentity').checked,
+          signature_verified: document.getElementById('chkSignature').checked,
+          balance_checked: document.getElementById('chkBalance').checked,
+          liabilities_checked: document.getElementById('chkLiabilities').checked,
+          unused_cheques_returned: document.getElementById('chkCheques').checked,
+          card_returned: document.getElementById('chkCard').checked,
+          admin_remarks: document.getElementById('modalRemarks').value.trim()
+        };
+
+        await window.api.patch(`/api/account-closure/admin/${selectedRequest.id}/checklist`, payload);
+        window.showToast('✅ চেকলিস্ট সফলভাবে সংরক্ষিত হয়েছে।', 'success');
+      } catch (err) {
+        window.showToast(err.message || 'চেকলিস্ট সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    async function makeClosureDecision(action) {
+      if (!selectedRequest) return;
+      const remarks = document.getElementById('modalRemarks').value.trim();
+      const customFee = document.getElementById('customFeeInput').value;
+
+      if ((action === 'REJECT' || action === 'REQUEST_DOCS') && !remarks) {
+        window.showToast('বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ বাধ্যতামূলক।', 'error');
+        return;
+      }
+
+      if (action === 'CLOSE') {
+        const idChecked = document.getElementById('chkIdentity').checked;
+        const sigChecked = document.getElementById('chkSignature').checked;
+        const balChecked = document.getElementById('chkBalance').checked;
+        const liabChecked = document.getElementById('chkLiabilities').checked;
+
+        if (!idChecked || !sigChecked || !balChecked || !liabChecked) {
+          window.showToast('অ্যাকাউন্ট স্থায়ীভাবে ক্লোজ করতে হলে পরিচয়, স্বাক্ষর, ব্যালেন্স ও দায়-দেনার চেকলিস্ট সম্পন্ন করতে হবে।', 'error');
+          return;
+        }
+
+        if (!confirm(`আপনি কি নিশ্চিতভাবে এই অ্যাকাউন্টটি (${selectedRequest.account_number}) স্থায়ীভাবে বন্ধ (Closed) করতে চান? ক্লোজ করার পর ব্যালেন্স শূন্য হবে এবং সকল লেনদেন স্থায়ীভাবে বন্ধ হয়ে যাবে।`)) {
+          return;
+        }
+      }
+
+      try {
+        // Auto-save checklist first
+        await saveChecklist();
+
+        const res = await window.api.post(`/api/account-closure/admin/${selectedRequest.id}/decision`, {
+          action,
+          remarks,
+          custom_fee: customFee ? parseFloat(customFee) : undefined
+        });
+
+        window.showToast(`✅ সিদ্ধান্ত কার্যকর হয়েছে: ${res.new_status}`, 'success');
+        closeReviewModal();
+        loadClosureQueue();
+      } catch (err) {
+        window.showToast(err.message || 'সিদ্ধান্ত সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    async function openFeeManagementModal() {
+      try {
+        const res = await window.api.get('/api/account-closure/fee-schedules');
+        const list = res.schedules || [];
+        const tbody = document.getElementById('feeTableBody');
+
+        tbody.innerHTML = list.map(s => `
+          <tr>
+            <td><strong>${s.account_type}</strong></td>
+            <td>৳${parseFloat(s.fee_amount).toFixed(2)}</td>
+            <td>${parseFloat(s.vat_percentage).toFixed(2)}%</td>
+            <td>
+              <button onclick="editFee('${s.account_type}', ${s.fee_amount}, ${s.vat_percentage})" class="table-action-btn secondary" style="font-size:0.75rem; padding:4px 8px;">
+                সম্পাদনা
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        document.getElementById('feeModal').classList.add('open');
+      } catch (err) {
+        window.showToast('ফি তালিকা লোড ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    function editFee(accType, fee, vat) {
+      document.getElementById('newAccType').value = accType;
+      document.getElementById('newFeeAmount').value = fee;
+      document.getElementById('newVatPercent').value = vat;
+    }
+
+    function closeFeeModal() {
+      document.getElementById('feeModal').classList.remove('open');
+    }
+
+    async function saveFeeSchedule() {
+      const account_type = document.getElementById('newAccType').value.trim();
+      const fee_amount = parseFloat(document.getElementById('newFeeAmount').value);
+      const vat_percentage = parseFloat(document.getElementById('newVatPercent').value || 15);
+
+      if (!account_type || isNaN(fee_amount)) {
+        window.showToast('Account Type এবং Fee Amount প্রদান করুন।', 'error');
+        return;
+      }
+
+      try {
+        await window.api.put('/api/account-closure/admin/fee-schedules', {
+          account_type,
+          fee_amount,
+          vat_percentage
+        });
+
+        window.showToast('✅ Schedule of Charges ফি সফলভাবে সংরক্ষিত হয়েছে।', 'success');
+        openFeeManagementModal();
+      } catch (err) {
+        window.showToast(err.message || 'ফি সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(window._searchTimer);
+      window._searchTimer = setTimeout(loadClosureQueue, 350);
+    });
+    document.getElementById('statusFilter').addEventListener('change', loadClosureQueue);
+
+    loadClosureQueue();
+  </script>
+</body>
+</html>
