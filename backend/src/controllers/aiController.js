@@ -190,30 +190,46 @@ Tone: Professional, courteous, helpful, concise. Mention that AI recommendations
           { role: 'user', content: message }
         ];
 
-        const openRouterRes = await fetch(OPENROUTER_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'http://localhost:5000',
-            'X-Title': 'Smart Banking Service Request Portal'
-          },
-          body: JSON.stringify({
-            model: DEFAULT_MODEL,
-            messages,
-            temperature: 0.3
-          })
-        });
+        // Candidate free models to try in order (resilient against upstream 429 rate limits)
+        const modelsToTry = [
+          DEFAULT_MODEL,
+          'liquid/lfm-2.5-2.6b:free',
+          'google/gemma-4-31b-it:free',
+          'google/gemma-4-26b-a4b-it:free'
+        ];
+        // Deduplicate
+        const uniqueModels = [...new Set(modelsToTry)];
 
-        if (openRouterRes.ok) {
-          const aiData = await openRouterRes.json();
-          const reply = aiData.choices?.[0]?.message?.content;
-          if (reply && reply.trim()) {
-            return res.json({
-              success: true,
-              reply: reply.trim(),
-              model: DEFAULT_MODEL
+        for (const modelCandidate of uniqueModels) {
+          try {
+            const openRouterRes = await fetch(OPENROUTER_API_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'HTTP-Referer': 'http://localhost:5000',
+                'X-Title': 'Smart Banking Service Request Portal'
+              },
+              body: JSON.stringify({
+                model: modelCandidate,
+                messages,
+                temperature: 0.3
+              })
             });
+
+            if (openRouterRes.ok) {
+              const aiData = await openRouterRes.json();
+              const reply = aiData.choices?.[0]?.message?.content;
+              if (reply && reply.trim()) {
+                return res.json({
+                  success: true,
+                  reply: reply.trim(),
+                  model: modelCandidate
+                });
+              }
+            }
+          } catch (modelErr) {
+            console.warn(`[OpenRouter] Failed model ${modelCandidate}:`, modelErr.message);
           }
         }
       } catch (err) {
@@ -235,51 +251,89 @@ Tone: Professional, courteous, helpful, concise. Mention that AI recommendations
 
 function generateContextualBankingReply(msg, user) {
   const m = msg.toLowerCase();
-  const userName = user.full_name.split(' ')[0] || 'Customer';
+  const userName = user.full_name ? user.full_name.split(' ')[0] : 'Customer';
 
-  if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help')) {
-    return `Hello ${userName}! 👋 I am your Smart Banking AI Assistant. I can help you check required documents for any service, explain application status rules, or guide you through submitting requests and complaints. How can I assist you today?`;
+  if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu')) {
+    return `Hello ${userName}! 👋 I am your Smart Banking AI Assistant. You can ask me any banking questions, document requirements, loan queries, card lost/block procedures, or portal navigation. How may I assist you today?`;
   }
 
-  if (m.includes('nid') || m.includes('national id') || m.includes('document') || m.includes('file') || m.includes('upload')) {
+  if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen')) {
+    return `🚨 **Emergency Card Block Procedure:**
+1. Please call our 24/7 emergency hotline at **16234** or **+880-9612345678** immediately to freeze your card instantly.
+2. In this portal, navigate to **"Complaints / Support"** and submit a high-priority dispute ticket.
+3. Once blocked, you can request a replacement card from **"New Service Request"** > **"Card Replacement Request"** (requires your NID and Signature specimen).`;
+  }
+
+  if (m.includes('nid') || m.includes('national id') || m.includes('document') || m.includes('file') || m.includes('upload') || m.includes('doc')) {
     return `📄 **Document Upload Guidelines:**
-- **Supported Formats:** JPG, JPEG, PNG, and PDF files.
-- **Size Limit:** Up to 5 MB per document (10 MB for Bank Statements).
-- **Clarity:** Ensure all four corners are visible, text is crisp and legible without motion blur or glare.
-- **AI Validation:** Our vision assistant automatically scans uploaded documents for readability and completeness before officer verification!`;
+- **Supported Formats:** JPG, JPEG, PNG, and PDF.
+- **File Size Limit:** Up to 5 MB per document (10 MB for Bank Statements).
+- **Quality Check:** Ensure all four corners are visible, text is crisp, clear, and without glare or motion blur.
+- **AI Validation:** Our vision AI assistant automatically validates document clarity, completeness, and NID authenticity upon upload!`;
   }
 
-  if (m.includes('account open') || m.includes('savings') || m.includes('current')) {
-    return `🏦 **Account Opening Request:**
-To open a new account online, you need:
-1. National ID (NID) Smart Card (Front & Back)
-2. Recent Color Passport-sized Photograph (White background)
-3. Recent Utility Bill (Electricity/Gas/Water not older than 3 months)
-Go to **"New Service Request"** > select **"Account Opening Request"** to apply now!`;
+  if (m.includes('account') || m.includes('savings') || m.includes('current') || m.includes('open')) {
+    return `🏦 **Account Opening Requirements:**
+To open a Savings or Current Account online, please have ready:
+1. **National ID (NID) Smart Card** (Color Front & Back)
+2. **Recent Passport-size Photograph** (White background)
+3. **Recent Utility Bill** (Electricity / Gas / Water not older than 3 months for address verification)
+Click **"New Service Request"** > select **"Account Opening Request"** to apply!`;
+  }
+
+  if (m.includes('cheque') || m.includes('check') || m.includes('bohi')) {
+    return `📑 **Cheque Book Request:**
+- Available leaf options: 20, 50, or 100 leaves.
+- **Required Document:** Signature Specimen Card.
+- You can collect it from your branch or have it delivered via registered postal courier within 3–5 business days.`;
+  }
+
+  if (m.includes('loan') || m.includes('rin') || m.includes('emi') || m.includes('interest')) {
+    return `💰 **Loan Service Inquiry:**
+We offer Personal Loans, Home Loans, and Auto Loans at competitive interest rates.
+**Required Documents for Eligibility:**
+1. National ID (NID)
+2. Last 6 months' Bank Statement
+3. Latest 3 months' Salary Certificate / Proof of Income
+Submit an inquiry via **"New Service Request"** > **"Loan Service Inquiry"** to receive an officer callback.`;
   }
 
   if (m.includes('card') || m.includes('debit') || m.includes('credit') || m.includes('replacement')) {
-    return `💳 **Card Services:**
-- **New Debit/Credit Card:** Requires NID and latest Salary Certificate / Income Proof.
-- **Card Replacement:** Requires NID and Signature Specimen.
-Standard processing turnaround is 2 to 3 business days following administrative review.`;
+    return `💳 **Debit & Credit Card Services:**
+- **New Card:** Requires NID and latest Salary Certificate / Income Proof.
+- **Replacement Card:** Requires NID and Signature Specimen.
+Standard issuance turnaround is 2 to 3 business days following administrative approval.`;
+  }
+
+  if (m.includes('internet') || m.includes('app') || m.includes('mobile') || m.includes('login') || m.includes('password')) {
+    return `🌐 **Digital Banking Activation:**
+- You can activate 24/7 Internet Banking & Mobile App access.
+- Requires your registered Phone Number, Account Number, and NID copy.
+- Go to **"New Service Request"** > **"Internet Banking Activation"** to submit your verification!`;
   }
 
   if (m.includes('status') || m.includes('pending') || m.includes('correction') || m.includes('review')) {
-    return `📊 **Request Status Lifecycle:**
-1. **Submitted:** Request registered in system.
-2. **Document Review & AI Validation:** Vision scan evaluates clarity.
-3. **Pending Admin Review:** A human bank officer verifies evidence.
-4. **Correction Required:** Officer requested a clearer copy of an uploaded file.
-5. **Approved / Completed:** Application successfully approved!`;
+    return `📊 **Service Request Lifecycle:**
+1. **Submitted:** Your request is received.
+2. **AI Validation:** Automated scan inspects document readability & authenticity.
+3. **Pending Admin Review:** A human bank officer verifies the compliance details.
+4. **Correction Required:** Officer requested a clearer re-upload of a specific document.
+5. **Approved / Completed:** Request successfully approved and processed!`;
   }
 
-  if (m.includes('complaint') || m.includes('dispute') || m.includes('atm')) {
+  if (m.includes('complaint') || m.includes('dispute') || m.includes('atm') || m.includes('problem')) {
     return `⚠️ **Dispute & Complaint Assistance:**
-You can file a formal complaint under the **Complaints / Support** tab. Categories include ATM transaction disputes, card delivery inquiries, and fund transfer queries. Our operations team reviews and records official resolutions within 24–48 hours.`;
+You can lodge an official complaint under the **Complaints / Support** menu. Categories include ATM cash dispensing issues, unauthorized charges, card delivery delays, and transaction queries. Our grievance team resolves tickets within 24–48 hours.`;
   }
 
-  return `Thank you for your question, ${userName}. For digital banking requests, please browse our **Banking Services** catalogue or submit a request directly from your dashboard. Our AI will automatically evaluate your document uploads to speed up administrative review. Let me know if you need specific document checklists!`;
+  return `Thank you for contacting Smart Banking AI Assistant, ${userName}. 
+I can assist you with:
+- **Document requirements** for Account Opening, Cards, Cheque Books, or Loans
+- **AI Document Verification guidelines** & upload troubleshooting
+- **Application status tracking** and correction advice
+- **Emergency card blocking** and dispute resolution
+
+Please feel free to ask your specific question, or click **"New Service Request"** in the sidebar to begin your application!`;
 }
 
 module.exports = {
