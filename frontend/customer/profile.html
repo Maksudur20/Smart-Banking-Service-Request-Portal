@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
@@ -127,10 +127,11 @@
         document.getElementById('profMother').value = cust.mother_name || 'N/A';
         document.getElementById('profAddress').value = cust.address || '';
 
+        const status = cust.kyc_status || u.kyc_status || 'Pending';
         const badge = document.getElementById('profKycBadge');
-        badge.innerText = `KYC: ${cust.kyc_status || 'Pending'}`;
-        if (cust.kyc_status === 'Approved') badge.className = 'badge badge-approved';
-        else if (cust.kyc_status === 'Rejected') badge.className = 'badge badge-rejected';
+        badge.innerText = `KYC: ${status}`;
+        if (status === 'Approved') badge.className = 'badge badge-approved';
+        else if (status === 'Rejected') badge.className = 'badge badge-rejected';
         else badge.className = 'badge badge-submitted';
       } catch (err) {
         window.showToast('প্রোফাইল লোড করা যায়নি।', 'error');
