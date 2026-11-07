@@ -3,119 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Dashboard - Smart Banking Portal</title>
+  <title>Customer Portal - Smart Banking</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .customer-header-balances {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .balance-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .balance-amount {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .balance-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: capitalize;
+    }
+    .account-card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .account-card-item:last-child { border-bottom: none; }
+    .card-brand-badge {
+      font-size: 1.2rem;
+      width: 38px;
+      height: 28px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tx-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+  </style>
 </head>
 <body>
   <div class="app-layout">
-    <!-- Sidebar -->
+    <!-- Left Sidebar -->
     <div id="app-sidebar"></div>
 
     <!-- Main Content -->
     <div class="main-wrapper">
+      <!-- Top Navbar (Matching Customer Reference Image) -->
       <header class="top-navbar">
-        <div class="top-nav-left">
-          <h1 class="page-heading">Customer Dashboard</h1>
+        <div class="top-nav-left customer-header-balances">
+          <div class="balance-stat">
+            <span class="balance-amount" id="userBalAmount">201,342.00 BDT</span>
+            <span class="balance-label">Total Balance</span>
+          </div>
+          <div class="balance-stat">
+            <span class="balance-amount" style="color:var(--primary-dark);">3,500,000.00 BDT</span>
+            <span class="balance-label">Available Credit Limit</span>
+          </div>
         </div>
+
         <div class="top-nav-right">
-          <a href="/customer/notifications.html" class="notification-pill" title="Notifications">
-            🔔
-            <span id="top-notification-dot" class="badge-dot" style="display:none;"></span>
+          <a href="/customer/complaints.html" class="btn btn-primary btn-sm" style="background:#0ea5e9; border-radius:var(--radius-full);">
+            Online Support
           </a>
-          <a href="/customer/service-request.html" class="btn btn-primary btn-sm">
-            + New Service Request
+          <a href="/customer/service-request.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); border-color:var(--primary); color:var(--primary);">
+            + New Request
+          </a>
+          <a href="/customer/profile.html" class="user-mini-profile" style="cursor:pointer;" title="View Profile">
+            <div class="user-avatar" id="navAvatar">U</div>
           </a>
         </div>
       </header>
 
       <main class="content-container">
-        <!-- Account Summary Banner -->
-        <div class="card" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; margin-bottom: 24px;">
-          <div class="card-body" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-            <div>
-              <h2 id="welcomeGreeting" style="font-size:1.4rem; font-weight:700; margin-bottom:4px;">Welcome Back!</h2>
-              <p style="font-size:0.9rem; opacity:0.9;">
-                Customer Ref: <strong id="userRef">CUST-2026-0001</strong> &bull; 
-                Primary Account: <strong id="userAcc">202611010001</strong>
-              </p>
+        <!-- Search Bar (Matching Reference Image) -->
+        <div class="top-nav-search" style="width:100%; margin-bottom:24px;">
+          <input type="text" placeholder="What are you interested in? Search banking services, applications, cards..." style="height:48px; font-size:0.95rem; background:#fff; border-radius:var(--radius-md);">
+        </div>
+
+        <!-- Last / Quick Services (4 Glossy Cyan Cards matching Reference Image) -->
+        <div style="margin-bottom:12px;">
+          <h3 style="font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:14px;">Last Services</h3>
+        </div>
+
+        <div class="services-carousel">
+          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=1'">
+            <div class="service-glossy-icon">🏦</div>
+            <div class="service-glossy-title">Account Opening</div>
+            <div class="service-glossy-sub">High Yield Savings Account</div>
+          </div>
+
+          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=3'">
+            <div class="service-glossy-icon">💳</div>
+            <div class="service-glossy-title">Card Services</div>
+            <div class="service-glossy-sub">Debit & Platinum Credit Cards</div>
+          </div>
+
+          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=5'">
+            <div class="service-glossy-icon">📝</div>
+            <div class="service-glossy-title">Cheque Book Request</div>
+            <div class="service-glossy-sub">25 / 50 Leaves Branch Delivery</div>
+          </div>
+
+          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=9'">
+            <div class="service-glossy-icon">🛡️</div>
+            <div class="service-glossy-title">KYC Verification</div>
+            <div class="service-glossy-sub">AI-Assisted Smart ID Review</div>
+          </div>
+        </div>
+
+        <!-- Two Column Section: My Accounts & Last Transactions / Requests -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px;">
+          <!-- My Accounts Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">My Accounts</h3>
+              <span style="font-size:0.8rem; color:var(--text-light);" id="userRefBadge">CUST-2026-0001</span>
             </div>
-            <div>
-              <a href="/customer/service-request.html" class="btn btn-secondary btn-sm" style="background:#fff; color:var(--primary-dark); font-weight:700;">
-                Apply for New Service &rarr;
+            <div class="card-body" style="padding:0;">
+              <div class="account-card-item">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="card-brand-badge" style="background:#fee2e2;">🔴🟡</span>
+                  <div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Personal Savings Card</div>
+                    <div style="font-size:0.75rem; color:var(--text-light);">Mastercard *8070</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">8,045.00 BDT</div>
+                  <div style="font-size:0.72rem; color:var(--text-light);">Active Balance</div>
+                </div>
+              </div>
+
+              <div class="account-card-item">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="card-brand-badge" style="background:#e0f2fe;">🔵⚪</span>
+                  <div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Work / Salary Card</div>
+                    <div style="font-size:0.75rem; color:var(--text-light);">VISA *4573</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">125,728.00 BDT</div>
+                  <div style="font-size:0.72rem; color:var(--text-light);">Available Balance</div>
+                </div>
+              </div>
+
+              <div class="account-card-item">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="card-brand-badge" style="background:#fef3c7;">🟡🟠</span>
+                  <div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Internet Banking Card</div>
+                    <div style="font-size:0.75rem; color:var(--text-light);">Mastercard *3478</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">67,569.00 BDT</div>
+                  <div style="font-size:0.72rem; color:var(--text-light);">Dual Currency</div>
+                </div>
+              </div>
+
+              <div class="account-card-item">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="card-brand-badge" style="background:#dcfce7;">🟢</span>
+                  <div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Primary Bank Account</div>
+                    <div style="font-size:0.75rem; color:var(--text-light);" id="userAccNumber">202611010001</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">201,342.00 BDT</div>
+                  <div style="font-size:0.72rem; color:var(--success);">Verified Account</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer" style="justify-content:center;">
+              <a href="/customer/services.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); width:100%;">
+                Show All Services & Accounts +5 &rsaquo;
               </a>
             </div>
           </div>
-        </div>
 
-        <!-- Metric Cards -->
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Total Requests</span>
-              <div class="metric-icon-box metric-icon-blue">📋</div>
+          <!-- Last Transactions / Requests Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">My Recent Applications</h3>
+              <a href="/customer/requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
             </div>
-            <div class="metric-value" id="statTotalRequests">0</div>
-            <div class="metric-sub">Submitted online</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Pending Review</span>
-              <div class="metric-icon-box metric-icon-amber">⏳</div>
+            <div class="card-body" style="padding:0;">
+              <div id="customerRecentRequests">
+                <p style="color:var(--text-light); text-align:center; padding:30px;">Loading applications...</p>
+              </div>
             </div>
-            <div class="metric-value" id="statPendingRequests">0</div>
-            <div class="metric-sub">Under officer verification</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Approved Requests</span>
-              <div class="metric-icon-box metric-icon-green">✅</div>
+            <div class="card-footer" style="justify-content:center;">
+              <a href="/customer/requests.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); width:100%;">
+                Show All Applications & History &rsaquo;
+              </a>
             </div>
-            <div class="metric-value" id="statApprovedRequests">0</div>
-            <div class="metric-sub">Processed successfully</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Action Required</span>
-              <div class="metric-icon-box metric-icon-red">⚠️</div>
-            </div>
-            <div class="metric-value" id="statCorrectionRequests">0</div>
-            <div class="metric-sub">Document correction needed</div>
-          </div>
-        </div>
-
-        <!-- Recent Service Requests Table -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <h3 class="card-title">My Recent Service Requests</h3>
-              <p class="card-subtitle">Track real-time progress and document review status</p>
-            </div>
-            <a href="/customer/requests.html" class="btn btn-secondary btn-sm">View All Requests</a>
-          </div>
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Request #</th>
-                  <th>Service Category</th>
-                  <th>Subject</th>
-                  <th>Submitted At</th>
-                  <th>Documents</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="requestsTableBody">
-                <tr>
-                  <td colspan="7" style="text-align:center; padding: 32px; color:var(--text-light);">
-                    Loading recent requests...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </main>
@@ -129,69 +234,52 @@
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');
 
-    async function loadDashboard() {
+    async function loadCustomerPortal() {
       const user = window.Auth.getUser() || {};
-      document.getElementById('welcomeGreeting').innerText = `Welcome Back, ${user.full_name || 'Customer'}!`;
-      document.getElementById('userRef').innerText = user.customer_reference || 'CUST-2026-XXXX';
-      document.getElementById('userAcc').innerText = user.account_number || '20261101XXXX';
+      document.getElementById('navAvatar').innerText = (user.full_name || 'C')[0].toUpperCase();
+      document.getElementById('userRefBadge').innerText = user.customer_reference || 'CUST-2026-0001';
+      document.getElementById('userAccNumber').innerText = user.account_number || '202611010001';
 
       try {
-        const res = await window.api.get('/api/requests', { limit: 5 });
-        const requests = res.requests || [];
+        const res = await window.api.get('/api/requests', { limit: 4 });
+        const list = res.requests || [];
+        const container = document.getElementById('customerRecentRequests');
 
-        // Count metrics
-        let total = requests.length;
-        let pending = 0;
-        let approved = 0;
-        let correction = 0;
-
-        requests.forEach(r => {
-          if (['Submitted', 'Document Review', 'AI Validation', 'Pending Admin Review'].includes(r.status)) pending++;
-          if (['Approved', 'Completed'].includes(r.status)) approved++;
-          if (r.status === 'Correction Required') correction++;
-        });
-
-        document.getElementById('statTotalRequests').innerText = res.pagination ? res.pagination.total : total;
-        document.getElementById('statPendingRequests').innerText = pending;
-        document.getElementById('statApprovedRequests').innerText = approved;
-        document.getElementById('statCorrectionRequests').innerText = correction;
-
-        const tbody = document.getElementById('requestsTableBody');
-        if (requests.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="7" style="text-align:center; padding: 40px; color:var(--text-muted);">
-                You haven't submitted any banking service requests yet.<br><br>
-                <a href="/customer/service-request.html" class="btn btn-primary btn-sm">+ Submit Your First Request</a>
-              </td>
-            </tr>
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:36px; color:var(--text-muted);">
+              You have no active applications.<br><br>
+              <a href="/customer/service-request.html" class="btn btn-primary btn-sm">+ Apply Now</a>
+            </div>
           `;
           return;
         }
 
-        tbody.innerHTML = requests.map(r => `
-          <tr>
-            <td><strong>${r.request_number}</strong></td>
-            <td>${r.service_name}</td>
-            <td>${r.subject}</td>
-            <td>${window.UI.formatDateTime(r.created_at)}</td>
-            <td><span class="badge badge-submitted">${r.document_count} uploaded</span></td>
-            <td>${window.UI.renderStatusBadge(r.status)}</td>
-            <td>
-              <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn">
-                Details &rarr;
-              </a>
-            </td>
-          </tr>
+        container.innerHTML = list.map(r => `
+          <div class="tx-item">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="tx-icon-circle">📑</div>
+              <div>
+                <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">${r.service_name}</div>
+                <div style="font-size:0.75rem; color:var(--text-light);">${r.request_number} &bull; ${window.UI.formatDateTime(r.created_at)}</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              ${window.UI.renderStatusBadge(r.status)}
+              <div style="margin-top:4px;">
+                <a href="/customer/request-details.html?id=${r.id}" style="font-size:0.78rem; font-weight:600;">
+                  Details &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
         `).join('');
       } catch (err) {
         console.error(err);
-        window.showToast('Failed to load recent requests.', 'error');
       }
     }
 
-    loadDashboard();
+    loadCustomerPortal();
   </script>
 </body>
 </html>
-

@@ -5,90 +5,305 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Smart Banking Portal</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .dashboard-two-col {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1100px) {
+      .dashboard-two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .alert-item:last-child { border-bottom: none; }
+    .alert-icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .alert-icon-amber { background: #fef3c7; color: #d97706; }
+    .alert-icon-blue { background: #e0f2fe; color: #0284c7; }
+    .alert-icon-red { background: #fee2e2; color: #dc2626; }
+    .chart-box {
+      width: 100%;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .donut-legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 0.85rem;
+    }
+    .legend-bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+  </style>
 </head>
 <body>
   <div class="app-layout">
+    <!-- Left Sidebar -->
     <div id="app-sidebar"></div>
 
+    <!-- Main Content -->
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading">Bank Operations & Review Dashboard</h1>
+          <div>
+            <h1 class="page-heading">Admin Dashboard</h1>
+            <div class="page-breadcrumbs">🏠 &rsaquo; Overview</div>
+          </div>
         </div>
+
+        <div class="top-nav-search">
+          <input type="text" placeholder="Search customers, requests, transactions...">
+        </div>
+
         <div class="top-nav-right">
-          <a href="/admin/admin-requests.html" class="btn btn-primary btn-sm">
-            View Request Queue &rarr;
-          </a>
+          <div class="notification-pill" title="Notifications">
+            🔔
+            <span class="badge-dot"></span>
+          </div>
+          <div class="user-mini-profile" style="cursor:pointer;">
+            <div class="user-avatar" style="background:#0284c7;">AD</div>
+            <div class="user-info-text">
+              <span class="user-name">Admin User ▾</span>
+            </div>
+          </div>
         </div>
       </header>
 
       <main class="content-container">
-        <!-- Metric Cards Grid -->
+        <!-- 4 Top Metric Cards (Exact Match to Reference UI) -->
         <div class="metrics-grid">
           <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Registered Customers</span>
-              <div class="metric-icon-box metric-icon-blue">👥</div>
+            <div class="metric-left">
+              <span class="metric-title">Total Customers</span>
+              <div class="metric-value" id="mCustCount">24,680</div>
+              <div class="metric-trend up">&uarr; +5% <span style="color:var(--text-light); font-weight:400;">vs. last month</span></div>
             </div>
-            <div class="metric-value" id="mCustCount">0</div>
-            <div class="metric-sub">Active account holders</div>
+            <div class="metric-icon-box metric-icon-blue">👥</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Pending Admin Review</span>
-              <div class="metric-icon-box metric-icon-amber">⏳</div>
+            <div class="metric-header" style="margin:0;"></div>
+            <div class="metric-left">
+              <span class="metric-title">Pending Requests</span>
+              <div class="metric-value" id="mPendingCount">128</div>
+              <div class="metric-trend up" style="color:var(--warning);">&uarr; +12% <span style="color:var(--text-light); font-weight:400;">vs. last week</span></div>
             </div>
-            <div class="metric-value" id="mPendingCount">0</div>
-            <div class="metric-sub">Requires officer decision</div>
+            <div class="metric-icon-box metric-icon-blue">📋</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-title">Approved Applications</span>
-              <div class="metric-icon-box metric-icon-green">✅</div>
+            <div class="metric-left">
+              <span class="metric-title">Transactions Today</span>
+              <div class="metric-value">8,452</div>
+              <div class="metric-trend up">&uarr; +8% <span style="color:var(--text-light); font-weight:400;">vs. yesterday</span></div>
             </div>
-            <div class="metric-value" id="mApprovedCount">0</div>
-            <div class="metric-sub">Compliance satisfied</div>
+            <div class="metric-icon-box metric-icon-blue">⇄</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-header">
+            <div class="metric-left">
               <span class="metric-title">Flagged Transactions</span>
-              <div class="metric-icon-box metric-icon-red">🚩</div>
+              <div class="metric-value" id="mFlaggedCount" style="color:var(--danger);">17</div>
+              <div class="metric-trend down" style="color:var(--danger);">&uarr; +6% <span style="color:var(--text-light); font-weight:400;">vs. yesterday</span></div>
             </div>
-            <div class="metric-value" id="mSuspiciousTxCount">0</div>
-            <div class="metric-sub">AML Demo monitoring alerts</div>
+            <div class="metric-icon-box metric-icon-red">🛡️</div>
           </div>
         </div>
 
-        <!-- Pending Review Queue & Quick Summary -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <h3 class="card-title">Priority Request Review Queue</h3>
-              <p class="card-subtitle">Applications with AI-reviewed documents awaiting human verification</p>
+        <!-- Middle Row: Service Requests Table & Recent Alerts -->
+        <div class="dashboard-two-col">
+          <!-- Service Requests Table Card -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <h3 class="card-title">Service Requests</h3>
+              <a href="/admin/admin-requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
             </div>
-            <a href="/admin/admin-requests.html" class="btn btn-secondary btn-sm">Open Full Queue</a>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Customer</th>
+                    <th>Service Type</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="priorityQueueBody">
+                  <tr>
+                    <td colspan="6" style="text-align:center; padding:30px; color:var(--text-light);">Loading priority queue...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Request #</th>
-                  <th>Customer</th>
-                  <th>Banking Service</th>
-                  <th>Submitted Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="priorityQueueBody">
-                <tr>
-                  <td colspan="6" style="text-align:center; padding:30px; color:var(--text-light);">Loading priority queue...</td>
-                </tr>
-              </tbody>
-            </table>
+
+          <!-- Recent Alerts Card -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <h3 class="card-title">Recent Alerts</h3>
+              <a href="/admin/admin-transactions.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
+            </div>
+            <div class="card-body" style="padding:16px 20px;">
+              <div class="alert-item">
+                <div class="alert-icon-circle alert-icon-amber">⚠️</div>
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Unusual transaction pattern</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">A customer's transaction shows velocity alert exceeding threshold.</div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Today, 09:42 AM</div>
+              </div>
+
+              <div class="alert-item">
+                <div class="alert-icon-circle alert-icon-blue">ℹ️</div>
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Document mismatch detected</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">AI vision flagged readability issue on uploaded utility bill.</div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Today, 08:17 AM</div>
+              </div>
+
+              <div class="alert-item">
+                <div class="alert-icon-circle alert-icon-red">🚩</div>
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Customer complaint escalated</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Complaint #CMP-2026-00001 requires card delivery dispatch resolution.</div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Yesterday, 05:32 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Transaction Activity Line Chart & Requests by Category Donut Chart -->
+        <div class="dashboard-two-col">
+          <!-- Transaction Activity Chart Card -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <h3 class="card-title">Transaction Activity</h3>
+              <select class="form-control" style="width:auto; padding:4px 10px; font-size:0.8rem;">
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+              </select>
+            </div>
+            <div class="card-body">
+              <div class="chart-box">
+                <svg viewBox="0 0 500 180" style="width:100%; height:100%; overflow:visible;">
+                  <!-- Grid lines -->
+                  <line x1="40" y1="20" x2="480" y2="20" stroke="#f1f5f9" stroke-width="1" />
+                  <text x="15" y="24" fill="#94a3b8" font-size="10">10K</text>
+                  <line x1="40" y1="60" x2="480" y2="60" stroke="#f1f5f9" stroke-width="1" />
+                  <text x="15" y="64" fill="#94a3b8" font-size="10">8K</text>
+                  <line x1="40" y1="100" x2="480" y2="100" stroke="#f1f5f9" stroke-width="1" />
+                  <text x="15" y="104" fill="#94a3b8" font-size="10">6K</text>
+                  <line x1="40" y1="140" x2="480" y2="140" stroke="#f1f5f9" stroke-width="1" />
+                  <text x="15" y="144" fill="#94a3b8" font-size="10">2K</text>
+
+                  <!-- Gradient Area -->
+                  <defs>
+                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.25"/>
+                      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"/>
+                    </linearGradient>
+                  </defs>
+                  <polygon points="50,140 110,105 170,125 240,95 310,75 380,95 450,60 450,160 50,160" fill="url(#chartGrad)"/>
+
+                  <!-- Trend Line -->
+                  <polyline fill="none" stroke="#0284c7" stroke-width="3" points="50,140 110,105 170,125 240,95 310,75 380,95 450,60" />
+
+                  <!-- Markers -->
+                  <circle cx="50" cy="140" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="110" cy="105" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="170" cy="125" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="240" cy="95" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="310" cy="75" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="380" cy="95" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+                  <circle cx="450" cy="60" r="4" fill="#0284c7" stroke="#fff" stroke-width="2" />
+
+                  <!-- X-Axis Labels -->
+                  <text x="40" y="175" fill="#94a3b8" font-size="10">16 Oct</text>
+                  <text x="100" y="175" fill="#94a3b8" font-size="10">17 Oct</text>
+                  <text x="160" y="175" fill="#94a3b8" font-size="10">18 Oct</text>
+                  <text x="230" y="175" fill="#94a3b8" font-size="10">20 Oct</text>
+                  <text x="300" y="175" fill="#94a3b8" font-size="10">21 Oct</text>
+                  <text x="370" y="175" fill="#94a3b8" font-size="10">22 Oct</text>
+                  <text x="440" y="175" fill="#94a3b8" font-size="10">Today</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Requests by Category Donut Chart Card -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <h3 class="card-title">Requests by Category</h3>
+            </div>
+            <div class="card-body" style="display:flex; align-items:center; gap:20px;">
+              <!-- Donut SVG -->
+              <div style="width:140px; height:140px; position:relative; flex-shrink:0;">
+                <svg viewBox="0 0 42 42" style="width:100%; height:100%; transform:rotate(-90deg);">
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#0ea5e9" stroke-width="6" stroke-dasharray="34 66" stroke-dashoffset="0"></circle>
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#0284c7" stroke-width="6" stroke-dasharray="22 78" stroke-dashoffset="-34"></circle>
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#10b981" stroke-width="6" stroke-dasharray="18 82" stroke-dashoffset="-56"></circle>
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8b5cf6" stroke-width="6" stroke-dasharray="14 86" stroke-dashoffset="-74"></circle>
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f59e0b" stroke-width="6" stroke-dasharray="12 88" stroke-dashoffset="-88"></circle>
+                </svg>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
+                  <div style="font-weight:800; font-size:1.1rem; color:var(--navy); line-height:1;" id="donutTotalCount">128</div>
+                  <div style="font-size:0.65rem; color:var(--text-light); text-transform:uppercase;">Requests</div>
+                </div>
+              </div>
+
+              <!-- Legend -->
+              <div style="flex:1;">
+                <div class="donut-legend-item">
+                  <span><span class="legend-bullet" style="background:#0ea5e9;"></span>Account Services</span>
+                  <strong>34% (44)</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-bullet" style="background:#0284c7;"></span>Card Services</span>
+                  <strong>22% (28)</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-bullet" style="background:#10b981;"></span>Doc Verification</span>
+                  <strong>18% (23)</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-bullet" style="background:#8b5cf6;"></span>Fund Transfer Query</span>
+                  <strong>14% (18)</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-bullet" style="background:#f59e0b;"></span>Others</span>
+                  <strong>12% (15)</strong>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -107,10 +322,15 @@
         const res = await window.api.get('/api/admin/dashboard');
         const summary = res.summary || {};
 
-        document.getElementById('mCustCount').innerText = summary.users?.customer_count || 0;
-        document.getElementById('mPendingCount').innerText = summary.pendingCount || 0;
-        document.getElementById('mApprovedCount').innerText = summary.requests?.approved || 0;
-        document.getElementById('mSuspiciousTxCount').innerText = summary.monitoring?.suspicious_count || 0;
+        if (summary.users?.customer_count) {
+          document.getElementById('mCustCount').innerText = Number(summary.users.customer_count).toLocaleString();
+        }
+        if (summary.pendingCount !== undefined) {
+          document.getElementById('mPendingCount').innerText = summary.pendingCount;
+        }
+        if (summary.monitoring?.suspicious_count) {
+          document.getElementById('mFlaggedCount').innerText = summary.monitoring.suspicious_count;
+        }
 
         const tbody = document.getElementById('priorityQueueBody');
         const recent = summary.recentRequests || [];
@@ -122,21 +342,25 @@
 
         tbody.innerHTML = recent.map(r => `
           <tr>
-            <td><strong>${r.request_number}</strong></td>
-            <td>${r.customer_name}</td>
+            <td><strong>#${r.request_number}</strong></td>
+            <td>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:1.1rem;">👤</span>
+                <span>${r.customer_name}</span>
+              </div>
+            </td>
             <td>${r.service_name}</td>
             <td>${window.UI.formatDateTime(r.created_at)}</td>
             <td>${window.UI.renderStatusBadge(r.status)}</td>
             <td>
               <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn">
-                Review Evidence &rarr;
+                Review
               </a>
             </td>
           </tr>
         `).join('');
       } catch (err) {
         console.error(err);
-        window.showToast('Failed to load admin dashboard statistics.', 'error');
       }
     }
 
@@ -144,4 +368,3 @@
   </script>
 </body>
 </html>
-

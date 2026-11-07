@@ -1,6 +1,6 @@
 /* ====================================================================
    SMART BANKING SERVICE REQUEST PORTAL - COMMON UI UTILITIES
-   Sidebar, Navigation, Status Badges, and Formatters
+   Sidebar, Navigation, Status Badges, and Floating AI Assistant
    ==================================================================== */
 
 const UI = {
@@ -60,6 +60,9 @@ const UI = {
       case 'Normal':
         badgeClass = 'badge-approved';
         break;
+      case 'Cleared':
+        badgeClass = 'badge-completed';
+        break;
       default:
         badgeClass = 'badge-draft';
     }
@@ -67,9 +70,6 @@ const UI = {
     return `<span class="badge ${badgeClass}">${s}</span>`;
   },
 
-  /**
-   * Format ISO date string into readable format: "Nov 7, 2026, 03:30 PM"
-   */
   formatDateTime(isoString) {
     if (!isoString) return 'N/A';
     const d = new Date(isoString);
@@ -94,9 +94,6 @@ const UI = {
     });
   },
 
-  /**
-   * Format currency amount: "BDT 25,000.00"
-   */
   formatCurrency(amount, currency = 'BDT') {
     const num = parseFloat(amount || 0);
     return `${currency} ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -161,6 +158,7 @@ const UI = {
     `;
 
     this.updateNotificationBadge();
+    this.initFloatingAIAssistant();
   },
 
   /**
@@ -174,7 +172,7 @@ const UI = {
     sidebar.className = 'sidebar';
     sidebar.innerHTML = `
       <div class="sidebar-header">
-        <div class="brand-icon" style="background: linear-gradient(135deg, #10b981, #047857);">SB</div>
+        <div class="brand-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">SB</div>
         <div>
           <span class="brand-text">Smart Banking</span>
           <span class="brand-sub">Admin Operations</span>
@@ -211,7 +209,7 @@ const UI = {
       </div>
       <div class="sidebar-footer">
         <div class="user-mini-profile">
-          <div class="user-avatar" style="background:#047857;">${(user.full_name || 'A')[0].toUpperCase()}</div>
+          <div class="user-avatar">${(user.full_name || 'A')[0].toUpperCase()}</div>
           <div class="user-info-text">
             <div class="user-name">${user.full_name || 'Officer'}</div>
             <div class="user-role-badge">Administrator</div>
@@ -222,11 +220,10 @@ const UI = {
         </button>
       </div>
     `;
+
+    this.initFloatingAIAssistant();
   },
 
-  /**
-   * Updates unread notification count
-   */
   async updateNotificationBadge() {
     try {
       if (!window.Auth.isLoggedIn()) return;
@@ -247,11 +244,125 @@ const UI = {
       if (topDot) {
         topDot.style.display = count > 0 ? 'block' : 'none';
       }
-    } catch (e) {
-      // Ignore background notification count check errors
+    } catch (e) {}
+  },
+
+  /**
+   * Initializes the Floating AI Assistant at the Bottom-Right Corner
+   */
+  initFloatingAIAssistant() {
+    if (document.getElementById('floatingAIWidget')) return;
+
+    const user = window.Auth.getUser() || {};
+    const firstName = (user.full_name || 'there').split(' ')[0];
+
+    const widget = document.createElement('div');
+    widget.id = 'floatingAIWidget';
+    widget.innerHTML = `
+      <!-- Floating Bottom-Right AI Button -->
+      <button id="aiToggleBtn" class="ai-floating-btn" title="Ask Smart Banking AI Assistant">
+        <span style="font-size:1.2rem;">🤖</span>
+        <span>AI Assistant</span>
+      </button>
+
+      <!-- Popup AI Chat Window -->
+      <div id="aiChatWindow" class="ai-chat-window">
+        <div class="ai-chat-header">
+          <div class="ai-chat-title">
+            <span>✨</span>
+            <span>Smart Banking AI Assistant</span>
+          </div>
+          <button id="aiCloseBtn" class="ai-chat-close">&times;</button>
+        </div>
+
+        <div id="aiChatBody" class="ai-chat-body">
+          <div class="ai-msg bot">
+            Hello ${firstName}! 👋 I am your AI Banking Assistant. Ask me about required documents, application rules, or service guides!
+            <div class="ai-prompt-chips">
+              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What documents are required to open a savings account?')">Account Opening Docs</span>
+              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('How does AI document verification work?')">AI Verification Guide</span>
+              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the card replacement requirements?')">Card Replacement</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="aiChatForm" class="ai-chat-footer">
+          <input type="text" id="aiInputText" placeholder="Ask AI banking assistant..." autocomplete="off">
+          <button type="submit" id="aiSendBtn">➤</button>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(widget);
+
+    const toggleBtn = document.getElementById('aiToggleBtn');
+    const closeBtn = document.getElementById('aiCloseBtn');
+    const chatWindow = document.getElementById('aiChatWindow');
+    const chatForm = document.getElementById('aiChatForm');
+    const input = document.getElementById('aiInputText');
+
+    toggleBtn.addEventListener('click', () => {
+      chatWindow.classList.toggle('open');
+      if (chatWindow.classList.contains('open')) {
+        input.focus();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      chatWindow.classList.remove('open');
+    });
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      this.sendAIMessage(text);
+      input.value = '';
+    });
+  },
+
+  sendQuickAIQuestion(text) {
+    this.sendAIMessage(text);
+  },
+
+  async sendAIMessage(userText) {
+    const chatBody = document.getElementById('aiChatBody');
+    if (!chatBody) return;
+
+    // Append user message bubble
+    const userDiv = document.createElement('div');
+    userDiv.className = 'ai-msg user';
+    userDiv.innerText = userText;
+    chatBody.appendChild(userDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Append typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'ai-msg bot';
+    typingDiv.id = 'aiTypingBubble';
+    typingDiv.innerHTML = '<em>Thinking... 🤖</em>';
+    chatBody.appendChild(typingDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    try {
+      const res = await window.api.post('/api/ai/chat', {
+        message: userText
+      });
+
+      typingDiv.remove();
+
+      const botDiv = document.createElement('div');
+      botDiv.className = 'ai-msg bot';
+      // Format markdown bold & linebreaks
+      botDiv.innerHTML = (res.reply || 'I am ready to help with your banking inquiries.')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+      chatBody.appendChild(botDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    } catch (err) {
+      typingDiv.innerHTML = '<span style="color:var(--danger);">Sorry, could not connect to AI service. Please try again.</span>';
     }
   }
 };
 
 window.UI = UI;
-
