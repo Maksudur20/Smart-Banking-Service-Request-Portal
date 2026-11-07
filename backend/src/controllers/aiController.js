@@ -149,14 +149,19 @@ async function getRequestAISummary(req, res, next) {
  */
 async function chatWithAIAssistant(req, res, next) {
   try {
-    const { message, conversationHistory = [] } = req.body;
+    const { message, conversationHistory = [], language = 'en' } = req.body;
     const user = req.user;
 
     if (!message || !message.trim()) {
       return res.status(400).json({ success: false, message: 'Message is required.' });
     }
 
+    const hasBanglaChars = /[\u0980-\u09FF]/.test(message);
+    const preferBangla = language === 'bn' || hasBanglaChars;
+
     const systemPrompt = `You are the Smart Banking Portal AI Assistant. You help retail banking customers and bank officers with service requests, document guidelines, compliance rules, and portal navigation.
+${preferBangla ? 'IMPORTANT: The user prefers BENGALI (বাংলা). Respond completely in natural, polite, and clear Bengali (বাংলা ভাষা).' : 'Respond in clear, professional English unless the user writes in Bengali.'}
+
 Bank Services Available:
 1. Account Opening Request (Requires NID, Photo, Utility Bill)
 2. Account Information Update (Requires NID, Utility Bill)
@@ -197,7 +202,6 @@ Tone: Professional, courteous, helpful, concise. Mention that AI recommendations
           'google/gemma-4-31b-it:free',
           'google/gemma-4-26b-a4b-it:free'
         ];
-        // Deduplicate
         const uniqueModels = [...new Set(modelsToTry)];
 
         for (const modelCandidate of uniqueModels) {
@@ -238,7 +242,7 @@ Tone: Professional, courteous, helpful, concise. Mention that AI recommendations
     }
 
     // High quality contextual banking assistant fallback
-    const reply = generateContextualBankingReply(message, user);
+    const reply = generateContextualBankingReply(message, user, preferBangla);
     res.json({
       success: true,
       reply,
@@ -249,10 +253,85 @@ Tone: Professional, courteous, helpful, concise. Mention that AI recommendations
   }
 }
 
-function generateContextualBankingReply(msg, user) {
+function generateContextualBankingReply(msg, user, isBangla = false) {
   const m = msg.toLowerCase();
   const userName = user.full_name ? user.full_name.split(' ')[0] : 'Customer';
 
+  // BANGLA REPLIES
+  if (isBangla) {
+    if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu') || m.includes('নমস্কার') || m.includes('সালাম') || m.includes('কেমন')) {
+      return `স্বাগতম ${userName}! 👋 আমি আপনার স্মার্ট ব্যাংকিং এআই সহকারী। প্রয়োজনীয় ডকুমেন্টস, অ্যাকাউন্ট খোলার নিয়ম, কার্ড সেবা, চেক বই রিকোয়েস্ট বা যেকোনো সমস্যার বিষয়ে আমাকে বাংলায় জিজ্ঞাসা করতে পারেন। আমি কীভাবে সহায়তা করতে পারি?`;
+    }
+
+    if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen') || m.includes('হারিয়ে') || m.includes('চুরি') || m.includes('ব্লক')) {
+      return `🚨 **জরুরি কার্ড ব্লক করার নিয়মাবলী:**
+1. কার্ডের তাৎক্ষণিক অপব্যবহার রোধে আমাদের ২৪/৭ জরুরি হটলাইন **১৬২৩৪** অথবা **+৮৮০-৯৬১২৩৪৫৬৭৮** এ এখনই কল করে কার্ড ফ্রিজ করুন।
+2. এই পোর্টালে **"Complaints / Support"** অপশনে গিয়ে জরুরি ডিসপিউট টিকিট সাবমিট করুন।
+3. পরবর্তীতে নতুন কার্ড পাওয়ার জন্য **"New Service Request"** > **"Card Replacement Request"** থেকে আবেদন করুন (প্রয়োজনীয় ডকুমেন্ট: NID এবং স্বাক্ষর কার্ড)।`;
+    }
+
+    if (m.includes('account') || m.includes('savings') || m.includes('current') || m.includes('open') || m.includes('অ্যাকাউন্ট') || m.includes('খুলতে') || m.includes('খোলা')) {
+      return `🏦 **অনলাইন অ্যাকাউন্ট খোলার নিয়ম:**
+সেভিংস বা কারেন্ট অ্যাকাউন্ট খুলতে নিম্নোক্ত ৩টি ডকুমেন্ট স্ক্যান কপি প্রয়োজন:
+1. **জাতীয় পরিচয়পত্র (NID Smart Card)** - সামনের ও পেছনের স্পষ্ট রঙিন ছবি।
+2. **পাসপোর্ট সাইজ ছবি** - সদ্য তোলা রঙিন ছবি (সাদা ব্যাকগ্রাউন্ড)।
+3. **ইউটিলিটি বিলের কপি** - গ্যাস, বিদ্যুৎ বা পানির বিল (সর্বোচ্চ ৩ মাসের পুরানো) ঠিকানার প্রমাণের জন্য।
+আবেদন করতে মেন্যুর **"New Service Request"** > **"Account Opening Request"** নির্বাচন করুন!`;
+    }
+
+    if (m.includes('cheque') || m.includes('check') || m.includes('bohi') || m.includes('চেক') || m.includes('বই')) {
+      return `📑 **চেক বই (Cheque Book) রিকোয়েস্ট:**
+- আপনি ২০, ৫০ বা ১০০ পাতার চেক বইয়ের জন্য আবেদন করতে পারবেন।
+- **প্রয়োজনীয় ডকুমেন্ট:** আপনার স্বাক্ষর কার্ড (Signature Specimen)।
+- আবেদন অনুমোদনের পর ৩–৫ কার্যদিবসের মধ্যে নিকটস্থ শাখা থেকে অথবা কুরিয়ারে সংগ্রহ করতে পারবেন।`;
+    }
+
+    if (m.includes('loan') || m.includes('rin') || m.includes('emi') || m.includes('interest') || m.includes('লোন') || m.includes('ঋণ')) {
+      return `💰 **লোন সেবা ও আবেদন নির্দেশিকা:**
+আমরা সহজ শর্তে পার্সোনাল লোন, গৃহ ঋণ (Home Loan) এবং গাড়ি ঋণ দিয়ে থাকি।
+**লোন পাওয়ার জন্য প্রয়োজনীয় কাগজপত্র:**
+1. জাতীয় পরিচয়পত্র (NID)
+2. বিগত ৬ মাসের ব্যাংক স্টেটমেন্ট
+3. শেষ ৩ মাসের বেতন সার্টিফিকেট (Salary Certificate) বা আয়ের প্রমাণপত্র
+অনলাইনে আবেদন করতে **"New Service Request"** > **"Loan Service Inquiry"** ফর্মটি পূরণ করুন।`;
+    }
+
+    if (m.includes('card') || m.includes('debit') || m.includes('credit') || m.includes('replacement') || m.includes('কার্ড')) {
+      return `💳 **ডেবিট ও ক্রেডিট কার্ড সেবা:**
+- **নতুন কার্ডের আবেদন:** NID এবং স্যালারি সার্টিফিকেট প্রয়োজন।
+- **কার্ড রিপ্লেসমেন্ট (Replacement):** NID এবং সিগনেচার স্পেসিমেন প্রয়োজন।
+অফিসার অনুমোদনের পর ২ থেকে ৩ কার্যদিবসের মধ্যে কার্ড প্রস্তুত হয়ে যাবে।`;
+    }
+
+    if (m.includes('nid') || m.includes('national id') || m.includes('document') || m.includes('file') || m.includes('upload') || m.includes('ডকুমেন্ট') || m.includes('কাগজ') || m.includes('আপলোড')) {
+      return `📄 **ডকুমেন্ট আপলোড করার নিয়ম ও নির্দেশিকা:**
+- **সমর্থিত ফরম্যাট:** JPG, JPEG, PNG এবং PDF।
+- **সর্বোচ্চ সাইজ:** প্রতি ডকুমেন্টে ৫ মেগাবাইট (ব্যাংক স্টেটমেন্টের ক্ষেত্রে ১০ মেগাবাইট)।
+- **স্পষ্টতা:** ডকুমেন্টের চার কোণ স্পষ্ট দেখা যেতে হবে, কোনো ঝাপসা বা অতিরিক্ত আলো থাকা যাবে না।
+- **এআই ভ্যালিডেশন:** ডকুমেন্ট আপলোড করার সাথে সাথে আমাদের এআই ইঞ্জিন স্বয়ংক্রিয়ভাবে লেখার স্পষ্টতা ও সত্যতা যাচাই করে দ্রুত অ্যাপ্রুভাল সহায়তা প্রদান করে!`;
+    }
+
+    if (m.includes('internet') || m.includes('app') || m.includes('mobile') || m.includes('login') || m.includes('ইন্টারনেট') || m.includes('অ্যাপ')) {
+      return `🌐 **ডিজিটাল ইন্টারনেট ব্যাংকিং অ্যাক্টিভেশন:**
+- ২৪/৭ ইন্টারনেট ব্যাংকিং ও মোবাইল অ্যাপে ফান্ড ট্রান্সফার ও ব্যালেন্স চেক করতে পারবেন।
+- **প্রয়োজনীয় তথ্য:** আপনার নিবন্ধিত মোবাইল নম্বর, অ্যাকাউন্ট নম্বর এবং এনআইডি স্ক্যান।
+- **"New Service Request"** > **"Internet Banking Activation"** এ গিয়ে এখনই অ্যাক্টিভেশনের আবেদন জমা দিন!`;
+    }
+
+    if (m.includes('complaint') || m.includes('dispute') || m.includes('atm') || m.includes('problem') || m.includes('সমস্যা') || m.includes('অভিযোগ')) {
+      return `⚠️ **অভিযোগ বা বিরোধ প্রতিকার:**
+কোনো সমস্যা বা অভিযোগ থাকলে পোর্টালের **"Complaints / Support"** অপশনে গিয়ে টিকিট ওপেন করতে পারেন। এটিএম লেনদেন সমস্যা, কার্ড ডেলিভারি বিলম্ব বা ফান্ড ট্রান্সফার সংক্রান্ত অভিযোগ ২৪ থেকে ৪৮ ঘণ্টার মধ্যে সমাধান করা হয়।`;
+    }
+
+    return `ধন্যবাদ ${userName}। আমি আপনার স্মার্ট ব্যাংকিং সহকারী।
+আমি আপনাকে সহায়তা করতে পারি:
+- অ্যাকাউন্ট খোলা, কার্ড, চেক বই ও লোনের প্রয়োজনীয় ডকুমেন্টস জানাতে
+- এআই ডকুমেন্ট ভেরিফিকেশন নিয়মাবলীতে
+- আবেদনের স্ট্যাটাস ও জরুরি কার্ড ব্লক সংক্রান্ত তথ্যে
+আপনি নির্দিষ্ট যেকোনো প্রশ্ন বাংলায় লিখতে পারেন অথবা সাইডবার থেকে **"New Service Request"** নির্বাচন করে সেবা নিতে পারেন!`;
+  }
+
+  // ENGLISH REPLIES
   if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu')) {
     return `Hello ${userName}! 👋 I am your Smart Banking AI Assistant. You can ask me any banking questions, document requirements, loan queries, card lost/block procedures, or portal navigation. How may I assist you today?`;
   }

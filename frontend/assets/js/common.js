@@ -247,6 +247,8 @@ const UI = {
     } catch (e) {}
   },
 
+  aiLang: localStorage.getItem('smartbank_ai_lang') || 'bn',
+
   /**
    * Initializes the Floating AI Assistant at the Bottom-Right Corner
    */
@@ -260,7 +262,7 @@ const UI = {
     widget.id = 'floatingAIWidget';
     widget.innerHTML = `
       <!-- Floating Bottom-Right AI Button -->
-      <button id="aiToggleBtn" class="ai-floating-btn" title="Ask Smart Banking AI Assistant">
+      <button id="aiToggleBtn" class="ai-floating-btn" title="Smart Banking AI Assistant / এআই সহকারী">
         <span style="font-size:1.2rem;">🤖</span>
         <span>AI Assistant</span>
       </button>
@@ -270,36 +272,40 @@ const UI = {
         <div class="ai-chat-header">
           <div class="ai-chat-title">
             <span>✨</span>
-            <span>Smart Banking AI Assistant</span>
+            <span id="aiHeaderTitle">Smart Banking AI</span>
           </div>
-          <button id="aiCloseBtn" class="ai-chat-close">&times;</button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <!-- Language Switcher Toggle -->
+            <div class="ai-lang-toggle" id="aiLangToggle" title="Language / ভাষা পরিবর্তন">
+              <button type="button" class="ai-lang-btn ${this.aiLang === 'en' ? 'active' : ''}" data-lang="en">EN</button>
+              <button type="button" class="ai-lang-btn ${this.aiLang === 'bn' ? 'active' : ''}" data-lang="bn">বাংলা</button>
+            </div>
+            <button id="aiCloseBtn" class="ai-chat-close" title="Close">&times;</button>
+          </div>
         </div>
 
         <div id="aiChatBody" class="ai-chat-body">
-          <div class="ai-msg bot">
-            Hello ${firstName}! 👋 I am your AI Banking Assistant. Ask me about required documents, application rules, or service guides!
-            <div class="ai-prompt-chips">
-              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What documents are required to open a savings account?')">Account Opening Docs</span>
-              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('How does AI document verification work?')">AI Verification Guide</span>
-              <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the card replacement requirements?')">Card Replacement</span>
-            </div>
-          </div>
+          <!-- Populated by renderAIWelcomeMessage() -->
         </div>
 
         <form id="aiChatForm" class="ai-chat-footer">
-          <input type="text" id="aiInputText" placeholder="Ask AI banking assistant..." autocomplete="off">
-          <button type="submit" id="aiSendBtn">➤</button>
+          <input type="text" id="aiInputText" placeholder="ব্যাংকিং সংক্রান্ত প্রশ্ন বাংলায় লিখুন..." autocomplete="off">
+          <button type="submit" id="aiSendBtn" title="Send / পাঠান">➤</button>
         </form>
       </div>
     `;
 
     document.body.appendChild(widget);
 
+    // Render initial welcome message based on saved language
+    this.renderAIWelcomeMessage(firstName);
+
     const toggleBtn = document.getElementById('aiToggleBtn');
     const closeBtn = document.getElementById('aiCloseBtn');
     const chatWindow = document.getElementById('aiChatWindow');
     const chatForm = document.getElementById('aiChatForm');
     const input = document.getElementById('aiInputText');
+    const langBtns = widget.querySelectorAll('.ai-lang-btn');
 
     toggleBtn.addEventListener('click', () => {
       chatWindow.classList.toggle('open');
@@ -312,6 +318,13 @@ const UI = {
       chatWindow.classList.remove('open');
     });
 
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selectedLang = btn.dataset.lang;
+        this.setAILanguage(selectedLang, firstName);
+      });
+    });
+
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const text = input.value.trim();
@@ -319,6 +332,65 @@ const UI = {
       this.sendAIMessage(text);
       input.value = '';
     });
+  },
+
+  setAILanguage(lang, firstName) {
+    this.aiLang = lang;
+    localStorage.setItem('smartbank_ai_lang', lang);
+
+    const widget = document.getElementById('floatingAIWidget');
+    if (!widget) return;
+
+    widget.querySelectorAll('.ai-lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    const user = window.Auth.getUser() || {};
+    const name = firstName || (user.full_name || 'there').split(' ')[0];
+    this.renderAIWelcomeMessage(name);
+  },
+
+  renderAIWelcomeMessage(firstName) {
+    const chatBody = document.getElementById('aiChatBody');
+    const input = document.getElementById('aiInputText');
+    const headerTitle = document.getElementById('aiHeaderTitle');
+    if (!chatBody) return;
+
+    if (this.aiLang === 'bn') {
+      if (headerTitle) headerTitle.innerText = 'স্মার্ট ব্যাংকিং এআই';
+      if (input) input.placeholder = 'ব্যাংকিং সংক্রান্ত প্রশ্ন বাংলায় লিখুন...';
+
+      chatBody.innerHTML = `
+        <div class="ai-msg bot">
+          স্বাগতম ${firstName}! 👋 আমি আপনার <strong>স্মার্ট ব্যাংকিং এআই সহকারী</strong>। 
+          প্রয়োজনীয় ডকুমেন্টস, সেবার নিয়ম বা যেকোনো সহায়তার জন্য আমাকে বাংলায় প্রশ্ন করতে পারেন।
+          <div class="ai-prompt-chips">
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('সেভিংস অ্যাকাউন্ট খুলতে কী কী ডকুমেন্ট ও নিয়ম দরকার?')">🏦 অ্যাকাউন্ট খোলার নিয়ম</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('কার্ড হারিয়ে গেলে বা রিপ্লেসমেন্ট পেতে কী করতে হবে?')">💳 কার্ড সেবা ও রিপ্লেসমেন্ট</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('নতুন চেকবই নেওয়ার নিয়ম ও কত পাতা পাওয়া যায়?')">📑 চেকবই রিকোয়েস্ট</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('লোন পাওয়ার যোগ্যতা ও প্রয়োজনীয় ডকুমেন্টস কী কী?')">💰 লোন আবেদন</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('আমার এটিএম কার্ড হারিয়ে গেছে, জরুরি ব্লক করব কীভাবে?')">🚨 কার্ড হারানো / ব্লক</span>
+          </div>
+        </div>
+      `;
+    } else {
+      if (headerTitle) headerTitle.innerText = 'Smart Banking AI';
+      if (input) input.placeholder = 'Ask AI banking assistant...';
+
+      chatBody.innerHTML = `
+        <div class="ai-msg bot">
+          Hello ${firstName}! 👋 I am your <strong>AI Banking Assistant</strong>. 
+          Ask me about required documents, application rules, or service guides!
+          <div class="ai-prompt-chips">
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What documents are required to open a savings account?')">Account Opening Docs</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('How does AI document verification work?')">AI Verification Guide</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the card replacement requirements?')">Card Replacement</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the documents and eligibility for a personal loan?')">Loan Service Inquiry</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('My ATM card is lost, how can I block it immediately?')">Lost Card / Block</span>
+          </div>
+        </div>
+      `;
+    }
   },
 
   sendQuickAIQuestion(text) {
@@ -340,13 +412,14 @@ const UI = {
     const typingDiv = document.createElement('div');
     typingDiv.className = 'ai-msg bot';
     typingDiv.id = 'aiTypingBubble';
-    typingDiv.innerHTML = '<em>Thinking... 🤖</em>';
+    typingDiv.innerHTML = this.aiLang === 'bn' ? '<em>উত্তর তৈরি হচ্ছে... 🤖</em>' : '<em>Thinking... 🤖</em>';
     chatBody.appendChild(typingDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
 
     try {
       const res = await window.api.post('/api/ai/chat', {
-        message: userText
+        message: userText,
+        language: this.aiLang
       });
 
       typingDiv.remove();
@@ -354,13 +427,13 @@ const UI = {
       const botDiv = document.createElement('div');
       botDiv.className = 'ai-msg bot';
       // Format markdown bold & linebreaks
-      botDiv.innerHTML = (res.reply || 'I am ready to help with your banking inquiries.')
+      botDiv.innerHTML = (res.reply || (this.aiLang === 'bn' ? 'আমি আপনার ব্যাংকিং সহায়তায় প্রস্তুত।' : 'I am ready to help with your banking inquiries.'))
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
       chatBody.appendChild(botDiv);
       chatBody.scrollTop = chatBody.scrollHeight;
     } catch (err) {
-      typingDiv.innerHTML = '<span style="color:var(--danger);">Sorry, could not connect to AI service. Please try again.</span>';
+      typingDiv.innerHTML = `<span style="color:var(--danger);">${this.aiLang === 'bn' ? 'দুঃখিত, এআই সার্ভিসের সাথে সংযোগ করা যায়নি। আবার চেষ্টা করুন।' : 'Sorry, could not connect to AI service. Please try again.'}</span>`;
     }
   }
 };
