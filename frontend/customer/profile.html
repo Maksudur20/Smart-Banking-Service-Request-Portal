@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Profile - Smart Banking Portal</title>
+  <title>গ্রাহক প্রোফাইল ও সেটিংস - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
@@ -13,52 +13,85 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading">Customer Profile & Settings</h1>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">👤 গ্রাহক প্রোফাইল ও কেওয়াইসি তথ্য (My Profile)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span class="badge" id="profKycBadge">Loading...</span>
         </div>
       </header>
 
-      <main class="content-container" style="max-width: 760px;">
+      <main class="content-container" style="max-width: 820px;">
+        <!-- Banking Account Summary Box -->
+        <div style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff; border-radius:12px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 12px rgba(2,132,199,0.2);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <div style="font-size:0.8rem; opacity:0.85;">অ্যাকাউন্ট নম্বর:</div>
+              <div style="font-size:1.4rem; font-weight:800; letter-spacing:1px;" id="topAccDisplay">Loading...</div>
+              <div style="font-size:0.85rem; opacity:0.9; margin-top:2px;" id="topAccType">Prime Savings Account</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.8rem; opacity:0.85;">মোট ব্যালেন্স:</div>
+              <div style="font-size:1.5rem; font-weight:800;" id="topBalDisplay">0.00 BDT</div>
+              <div style="margin-top:6px;">
+                <a href="/customer/deposit.html" class="btn btn-secondary btn-sm" style="background:#fff; color:#0284c7; font-weight:700;">+ ডিপোজিট জমা দিন</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Personal Account Information</h3>
+            <h3 class="card-title">ব্যক্তিগত ও ব্যাংকিং তথ্যাবলী</h3>
+            <a href="/customer/kyc.html" class="table-action-btn secondary">🪪 কেওয়াইসি ডকুমেন্টস দেখুন &rsaquo;</a>
           </div>
           <div class="card-body">
             <form id="profileForm">
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="form-group">
-                  <label class="form-label">Customer Reference ID</label>
+                  <label class="form-label">গ্রাহক রেফারেন্স আইডি</label>
                   <input type="text" id="profRef" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Primary Account Number</label>
+                  <label class="form-label">অ্যাকাউন্ট নম্বর</label>
                   <input type="text" id="profAcc" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label required">Full Legal Name</label>
+                <label class="form-label required">আবেদনকারীর পূর্ণ নাম</label>
                 <input type="text" id="profName" class="form-control" required>
               </div>
 
-              <div class="form-group">
-                <label class="form-label">Registered Email</label>
-                <input type="email" id="profEmail" class="form-control" readonly disabled style="background:#f1f5f9;">
-                <div class="form-hint">Email address cannot be changed directly online.</div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div class="form-group">
+                  <label class="form-label">নিবন্ধিত ইমেইল</label>
+                  <input type="email" id="profEmail" class="form-control" readonly disabled style="background:#f1f5f9;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">মোবাইল নম্বর</label>
+                  <input type="tel" id="profPhone" class="form-control" placeholder="017XXXXXXXX">
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div class="form-group">
+                  <label class="form-label">পিতার নাম</label>
+                  <input type="text" id="profFather" class="form-control" readonly disabled style="background:#f1f5f9;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">মাতার নাম</label>
+                  <input type="text" id="profMother" class="form-control" readonly disabled style="background:#f1f5f9;">
+                </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" id="profPhone" class="form-control" placeholder="+8801700000000">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Residential Address</label>
+                <label class="form-label">বর্তমান বসবাসের ঠিকানা</label>
                 <textarea id="profAddress" class="form-control" style="min-height:80px;"></textarea>
               </div>
 
               <div style="display:flex; justify-content:flex-end;">
                 <button type="submit" id="saveBtn" class="btn btn-primary">
-                  Save Changes
+                  তথ্য সংরক্ষণ করুন (Save Changes)
                 </button>
               </div>
             </form>
@@ -79,15 +112,28 @@
       try {
         const res = await window.api.get('/api/auth/me');
         const u = res.user || {};
+        const cust = u.customer || u;
 
-        document.getElementById('profRef').value = u.customer_reference || 'CUST-2026-XXXX';
-        document.getElementById('profAcc').value = u.account_number || '20261101XXXX';
+        document.getElementById('topAccDisplay').innerText = cust.account_number || 'N/A';
+        document.getElementById('topAccType').innerText = cust.account_type || 'Prime Savings Account';
+        document.getElementById('topBalDisplay').innerText = `${parseFloat(cust.balance || 0).toFixed(2)} BDT`;
+
+        document.getElementById('profRef').value = cust.customer_reference || '-';
+        document.getElementById('profAcc').value = cust.account_number || '-';
         document.getElementById('profName').value = u.full_name || '';
         document.getElementById('profEmail').value = u.email || '';
         document.getElementById('profPhone').value = u.phone || '';
-        document.getElementById('profAddress').value = u.address || '';
+        document.getElementById('profFather').value = cust.father_name || 'N/A';
+        document.getElementById('profMother').value = cust.mother_name || 'N/A';
+        document.getElementById('profAddress').value = cust.address || '';
+
+        const badge = document.getElementById('profKycBadge');
+        badge.innerText = `KYC: ${cust.kyc_status || 'Pending'}`;
+        if (cust.kyc_status === 'Approved') badge.className = 'badge badge-approved';
+        else if (cust.kyc_status === 'Rejected') badge.className = 'badge badge-rejected';
+        else badge.className = 'badge badge-submitted';
       } catch (err) {
-        window.showToast('Failed to load profile details.', 'error');
+        window.showToast('প্রোফাইল লোড করা যায়নি।', 'error');
       }
     }
 
@@ -103,22 +149,15 @@
 
       try {
         btn.disabled = true;
-        btn.innerText = 'Saving changes...';
+        btn.innerText = 'সংরক্ষণ হচ্ছে...';
 
-        const res = await window.api.patch('/api/auth/me', payload);
-        window.showToast(res.message || 'Profile updated successfully!', 'success');
-
-        // Update local session user
-        const currentUser = window.Auth.getUser() || {};
-        currentUser.full_name = payload.full_name;
-        currentUser.phone = payload.phone;
-        currentUser.address = payload.address;
-        window.api.setUser(currentUser);
+        await window.api.patch('/api/auth/me', payload);
+        window.showToast('✅ প্রোফাইল সফলভাবে আপডেট করা হয়েছে।', 'success');
       } catch (err) {
-        window.showToast(err.message || 'Failed to update profile.', 'error');
+        window.showToast(err.message || 'আপডেট ব্যর্থ হয়েছে।', 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = 'Save Changes';
+        btn.innerText = 'তথ্য সংরক্ষণ করুন (Save Changes)';
       }
     });
 
@@ -126,4 +165,3 @@
   </script>
 </body>
 </html>
-
