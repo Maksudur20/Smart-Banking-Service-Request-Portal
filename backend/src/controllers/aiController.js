@@ -159,30 +159,22 @@ async function chatWithAIAssistant(req, res, next) {
     const hasBanglaChars = /[\u0980-\u09FF]/.test(message);
     const preferBangla = language === 'bn' || hasBanglaChars;
 
-    const systemPrompt = `You are the Smart Banking Portal AI Assistant. You help retail banking customers and bank officers with service requests, document guidelines, compliance rules, and portal navigation.
-${preferBangla ? 'IMPORTANT: The user prefers BENGALI (বাংলা). Respond completely in natural, polite, and clear Bengali (বাংলা ভাষা).' : 'Respond in clear, professional English unless the user writes in Bengali.'}
+    const systemPrompt = `You are the professional AI Banking Assistant for Smart Banking PLC.
 
-Bank Services Available:
-1. Account Opening Request (Requires NID, Photo, Utility Bill)
-2. Account Information Update (Requires NID, Utility Bill)
-3. Debit/Credit Card Request (Requires NID, Salary Certificate)
-4. Card Replacement Request (Requires NID, Signature Specimen)
-5. Cheque Book Request (Requires Signature Specimen)
-6. Internet Banking Activation (Requires NID)
-7. Mobile Banking Service Request (Requires NID, Photo)
-8. Loan Service Inquiry (Requires NID, Salary Certificate, Bank Statement)
-9. KYC / Document Verification (Requires NID, Photo)
-10. Fund Transfer Query (Requires Bank Statement)
+CRITICAL RULES ON GREETINGS & RESPONSE QUALITY:
+1. STRICTLY FORBIDDEN: NEVER use religious or cultural greetings like "নমস্কার", "আসসালামু আলাইকুম", "নমস্তে", "আদাব", or prolonged greeting chatter.
+2. NO GENERIC GREETING FILLER: Do not start responses with "নমস্কার", "হ্যালো গ্রাহক", "হাই" or repetitive pleasantries. Jump directly and immediately into answering the user's specific question.
+3. CAREFUL MESSAGE UNDERSTANDING: Read the user's message thoroughly. Understand their exact question, pain point, or query before answering. Address what they actually asked with precision.
+4. INSTITUTION BRANDING: The bank is "Smart Banking PLC" (Mobile App: "MySmartBank App", 24/7 Hotline: 16218, Email: contactcenter@smartbank.com.bd).
+5. LANGUAGE & FORMAT: ${preferBangla ? 'Respond in clear, natural, standard Bengali (বাংলা).' : 'Respond in clear, professional English.'} Use clear bullet points and bold highlights for readability.
 
-Document rules:
-- Supported formats: JPG, PNG, PDF. Maximum size: 5MB to 10MB.
-- Ensure document images are clear, uncropped, and free of motion blur.
-User Context:
-- User: ${user.full_name} (${user.role})
-${user.customer_reference ? `- Customer Ref: ${user.customer_reference}` : ''}
-${user.account_number ? `- Primary Account: ${user.account_number}` : ''}
-
-Tone: Professional, courteous, helpful, concise. Mention that AI recommendations are decision-support assistance only.`;
+Official Banking Services & Rules:
+1. Account Opening: NID/Passport, 2 passport photos, Nominee NID & photo, Utility Bill (max 3 months), Income proof (Salary Certificate/Trade License), e-TIN. Smart Savings initial deposit BDT 500. Age < 18 requires legal guardian.
+2. Debit/Credit Card: Active account, NID, photo, application. Delivery: Dhaka 4 days, Metro 5 days, Rural 6 days. PIN activation via MySmartBank App or 16218.
+3. Card Replacement: NID & Signature Specimen. For lost/stolen card: freeze instantly via MySmartBank App or 16218 (24/7).
+4. Cheque Book: 20, 50, 100 leaves. Signature verification. Delivery 2-4 days. Fee as per schedule of charges.
+5. Loans (Personal, Home, Auto): Personal loan age 22-65, verifiable income, last 6 months' bank statement, salary certificate/pay slip, personal guarantor NID & photo.
+6. Document formats: JPG, PNG, PDF up to 5MB (10MB for bank statements).`;
 
     if (isOpenRouterConfigured) {
       try {
@@ -257,11 +249,11 @@ function generateContextualBankingReply(msg, user, isBangla = false) {
   const m = msg.toLowerCase();
   const userName = user.full_name ? user.full_name.split(' ')[0] : 'Customer';
 
-  // BANGLA REPLIES (Customized according to Smart Banking PLC Banking Regulations)
+  // BANGLA REPLIES (Strictly no religious/filler greetings, direct factual banking answers)
   if (isBangla) {
-    if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu') || m.includes('নমস্কার') || m.includes('সালাম') || m.includes('কেমন')) {
-      return `স্বাগতম ${userName}! 👋 আমি আপনার **Smart Banking PLC**-এর এআই সহকারী।
-প্রয়োজনীয় কাগজপত্র, অ্যাকাউন্ট খোলার নিয়ম, কার্ড সেবা, চেক বই রিকোয়েস্ট, লোন আবেদন বা কার্ড ব্লক করার জরুরি নির্দেশিকার জন্য নিচে যে কোনো অপশনে চাপ দিন অথবা আপনার প্রশ্ন লিখুন!`;
+    const isPureGreeting = /^(hi|hello|hey|help|কেমন আছেন|কেমন|হ্যাল+ও|হাই)\b/i.test(m) && m.split(/\s+/).length <= 3;
+    if (isPureGreeting) {
+      return `Smart Banking PLC এআই ব্যাংকিং অ্যাসিস্ট্যান্ট। আপনার ব্যাংকিং সংক্রান্ত সুনির্দিষ্ট প্রশ্ন বা সমস্যাটি লিখুন (যেমন: অ্যাকাউন্ট খোলা, কার্ড সেবা, চেকবই, লোন বা কার্ড ব্লক), সরাসরি সঠিক নিয়ম ও সমাধান জানিয়ে দেওয়া হবে।`;
     }
 
     // ১. অ্যাকাউন্ট খোলার নিয়ম (Account Opening)
@@ -436,9 +428,10 @@ function generateContextualBankingReply(msg, user, isBangla = false) {
 উপরে দেওয়া অপশনগুলোর যেকোনোটিতে ক্লিক করতে পারেন অথবা সরাসরি প্রশ্ন লিখতে পারেন!`;
   }
 
-  // ENGLISH REPLIES (Smart Banking PLC Regulations)
-  if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu')) {
-    return `Hello ${userName}! 👋 I am your **Smart Banking PLC** AI Assistant. You can ask me any questions about Account Opening, Card Services, Cheque Books, Loan Applications, or Emergency Card Blocking!`;
+  // ENGLISH REPLIES (Strictly professional, direct banking solutions)
+  const isPureGreetingEn = /^(hi|hello|hey|help)\b/i.test(m) && m.split(/\s+/).length <= 2;
+  if (isPureGreetingEn) {
+    return `Smart Banking PLC AI Assistant. Please state your specific banking query or issue (e.g. Account Opening, Card Services, Cheque Book, Loan Application, or Lost Card Block) for an immediate solution.`;
   }
 
   if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen')) {

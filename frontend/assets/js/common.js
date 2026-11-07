@@ -362,8 +362,8 @@ const UI = {
 
       chatBody.innerHTML = `
         <div class="ai-msg bot">
-          স্বাগতম ${firstName}! 👋 আমি আপনার <strong>স্মার্ট ব্যাংকিং এআই সহকারী</strong>। 
-          প্রয়োজনীয় ডকুমেন্টস, সেবার নিয়ম বা যেকোনো সহায়তার জন্য আমাকে বাংলায় প্রশ্ন করতে পারেন।
+          <strong>Smart Banking PLC এআই ব্যাংকিং সহকারী</strong>।<br>
+          প্রয়োজনীয় ডকুমেন্টস, সেবার নিয়ম বা যেকোনো সহায়তার জন্য সরাসরি প্রশ্ন লিখুন বা নিচের অপশন নির্বাচন করুন:
           <div class="ai-prompt-chips">
             <span class="ai-chip" onclick="UI.sendQuickAIQuestion('account')">🏦 অ্যাকাউন্ট খোলার নিয়ম</span>
             <span class="ai-chip" onclick="UI.sendQuickAIQuestion('card')">💳 কার্ড সেবা ও রিপ্লেসমেন্ট</span>
@@ -379,14 +379,14 @@ const UI = {
 
       chatBody.innerHTML = `
         <div class="ai-msg bot">
-          Hello ${firstName}! 👋 I am your <strong>AI Banking Assistant</strong>. 
-          Ask me about required documents, application rules, or service guides!
+          <strong>Smart Banking PLC AI Banking Assistant</strong>.<br>
+          Please type your specific banking question or select a service option below:
           <div class="ai-prompt-chips">
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What documents are required to open a savings account?')">Account Opening Docs</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('How does AI document verification work?')">AI Verification Guide</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the card replacement requirements?')">Card Replacement</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('What are the documents and eligibility for a personal loan?')">Loan Service Inquiry</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('My ATM card is lost, how can I block it immediately?')">Lost Card / Block</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('account')">Account Opening Docs</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('card')">Card Replacement</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('cheque')">Cheque Book</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('loan')">Loan Inquiry</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('block')">Lost Card / Block</span>
           </div>
         </div>
       `;
