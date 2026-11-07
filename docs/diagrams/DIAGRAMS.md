@@ -455,3 +455,362 @@ sequenceDiagram
     Backend-->>Frontend: Return decision success
 ```
 
+
+
+---
+
+## 9. Use Case Diagrams (Section 15 — All 9 Modules)
+
+### 9.1 Authentication & Profile Management
+```mermaid
+graph LR
+    subgraph SystemBoundary["Smart Banking Portal"]
+        UC1((Register Account))
+        UC2((Login with Credentials))
+        UC3((Logout / Invalidate Token))
+        UC4((View Profile))
+        UC5((Update Contact Info))
+        UC6((Admin Authenticated Access))
+    end
+    Customer((Customer)) --> UC1
+    Customer --> UC2
+    Customer --> UC3
+    Customer --> UC4
+    Customer --> UC5
+    Admin((Bank Officer)) --> UC6
+    Admin --> UC3
+```
+
+### 9.2 Service Catalogue & Service Requests
+```mermaid
+graph LR
+    subgraph SystemBoundary["Service Requests Engine"]
+        UC7((View 10 Banking Services))
+        UC8((Inspect Document Checklist))
+        UC9((Create Service Request))
+        UC10((Generate Request Number))
+        UC11((Track Request Status))
+        UC12((View Request History))
+        UC13((Cancel Pending Request))
+    end
+    Customer((Customer)) --> UC7
+    Customer --> UC8
+    Customer --> UC9
+    UC9 -.->|<<include>>| UC10
+    Customer --> UC11
+    Customer --> UC12
+    Customer --> UC13
+```
+
+### 9.3 Document Management & Cloudinary Storage
+```mermaid
+graph LR
+    subgraph SystemBoundary["Document Subsystem"]
+        UC14((Select File for Request))
+        UC15((Validate MIME & Size Limits))
+        UC16((Upload to Cloudinary))
+        UC17((Save PostgreSQL Metadata))
+        UC18((Replace Correction File))
+        UC19((Authorized Document Preview))
+    end
+    Customer((Customer)) --> UC14
+    UC14 -.->|<<include>>| UC15
+    UC15 -.->|<<include>>| UC16
+    UC16 -.->|<<include>>| UC17
+    Customer --> UC18
+    Admin((Bank Officer)) --> UC19
+```
+
+### 9.4 AI-Assisted Document Validation
+```mermaid
+graph LR
+    subgraph SystemBoundary["AI Vision Intelligence"]
+        UC20((Prepare Minimal Document Payload))
+        UC21((Invoke OpenRouter Vision API))
+        UC22((Validate Structured Findings JSON))
+        UC23((Store Validation Results))
+        UC24((View AI Advisory Report))
+        UC25((Retry Failed AI Validation))
+    end
+    SystemComponent((System Engine)) --> UC20
+    UC20 -.->|<<include>>| UC21
+    UC21 -.->|<<include>>| UC22
+    UC22 -.->|<<include>>| UC23
+    Admin((Bank Officer)) --> UC24
+    Admin --> UC25
+```
+
+### 9.5 Admin Review & Human Decision
+```mermaid
+graph LR
+    subgraph SystemBoundary["Administrative Decisioning"]
+        UC26((View Pending Requests Queue))
+        UC27((Inspect Document Evidence))
+        UC28((Review AI Advisory Notes))
+        UC29((Approve Request))
+        UC30((Reject Request with Remarks))
+        UC31((Request Document Correction))
+        UC32((Record Decision Audit Log))
+    end
+    Admin((Bank Officer)) --> UC26
+    Admin --> UC27
+    Admin --> UC28
+    Admin --> UC29
+    Admin --> UC30
+    Admin --> UC31
+    UC29 -.->|<<include>>| UC32
+    UC30 -.->|<<include>>| UC32
+    UC31 -.->|<<include>>| UC32
+```
+
+### 9.6 Notifications Subsystem
+```mermaid
+graph LR
+    subgraph SystemBoundary["Notification Service"]
+        UC33((Detect State Change Event))
+        UC34((Generate In-App Notification))
+        UC35((View Unread Notifications))
+        UC36((Mark Notification as Read))
+    end
+    SystemEngine((System Engine)) --> UC33
+    UC33 -.->|<<include>>| UC34
+    Customer((Customer)) --> UC35
+    Customer --> UC36
+```
+
+### 9.7 Complaint Management
+```mermaid
+graph LR
+    subgraph SystemBoundary["Complaints & Support"]
+        UC37((Submit Dispute / Complaint))
+        UC38((Track Complaint Resolution))
+        UC39((Assign Complaint Officer))
+        UC40((Update Status & Resolution))
+    end
+    Customer((Customer)) --> UC37
+    Customer --> UC38
+    Admin((Bank Officer)) --> UC39
+    Admin --> UC40
+```
+
+### 9.8 Transaction Monitoring (Academic Demo)
+```mermaid
+graph LR
+    subgraph SystemBoundary["Demo AML Monitoring"]
+        UC41((Read Synthetic Seeded Transactions))
+        UC42((Apply Rule-Based Flags))
+        UC43((Inspect Flag Reasons))
+        UC44((Update Monitoring Status))
+    end
+    SystemEngine((System Engine)) --> UC41
+    UC41 -.->|<<include>>| UC42
+    Admin((Bank Officer)) --> UC43
+    Admin --> UC44
+```
+
+### 9.9 Reports & Audit Logs
+```mermaid
+graph LR
+    subgraph SystemBoundary["Reporting & Auditing"]
+        UC45((View Dashboard Metric Cards))
+        UC46((Filter by Date, Service & Status))
+        UC47((Generate Request & Service Reports))
+        UC48((Inspect Security Audit Logs))
+    end
+    Admin((Bank Officer)) --> UC45
+    Admin --> UC46
+    Admin --> UC47
+    Admin --> UC48
+```
+
+---
+
+## 10. Activity Diagrams (Section 16 — Major Workflows)
+
+### 10.1 Customer Registration & Login Workflow
+```mermaid
+flowchart TD
+    Start([Customer Starts]) --> InputForm[Enter Registration Details]
+    InputForm --> ValidateInput{Valid Email & Password?}
+    ValidateInput -- No --> ShowError[Display Validation Error] --> InputForm
+    ValidateInput -- Yes --> HashPass[Hash Password with bcrypt]
+    HashPass --> SaveDB[(Insert into users & customers)]
+    SaveDB --> LoginPrompt[Customer Enters Login Credentials]
+    LoginPrompt --> CheckCreds{Credentials Match?}
+    CheckCreds -- No --> BadLogin[Invalid Credentials Warning] --> LoginPrompt
+    CheckCreds -- Yes --> IssueJWT[Generate Signed JWT Token]
+    IssueJWT --> RedirectDash[Redirect to Customer Dashboard] --> Done([Session Active])
+```
+
+### 10.2 Service Selection & Request Submission
+```mermaid
+flowchart TD
+    Start([Customer on Portal]) --> Browse[Browse 10 Banking Services]
+    Browse --> Select[Select Service e.g. Account Opening]
+    Select --> ViewDocs[Inspect Required Document Checklist]
+    ViewDocs --> FillForm[Fill Subject & Request Details]
+    FillForm --> Validate{All Mandatory Fields Present?}
+    Validate -- No --> ErrorMsg[Show Incomplete Fields Alert] --> FillForm
+    Validate -- Yes --> GenNumber[Generate Request Number SBR-2026-XXXXX]
+    GenNumber --> SaveReq[(Insert service_requests with status: Submitted)]
+    SaveReq --> Notify[Dispatch Customer Notification]
+    Notify --> UploadPrompt[Prompt Supporting Document Upload] --> End([Request Ready])
+```
+
+### 10.3 Document Upload & Cloudinary Storage
+```mermaid
+flowchart TD
+    Start([Upload Triggered]) --> SelectFile[Select File: JPG, PNG or PDF]
+    SelectFile --> SizeCheck{File Size <= Configured Limit?}
+    SizeCheck -- No --> RejectSize[Reject: File Exceeds Limit] --> SelectFile
+    SizeCheck -- Yes --> MIMECheck{Allowed MIME Type?}
+    MIMECheck -- No --> RejectMIME[Reject: Unsupported File Type] --> SelectFile
+    MIMECheck -- Yes --> StreamCloudinary[Stream Upload Buffer to Cloudinary]
+    StreamCloudinary --> CloudinaryResp{Upload Succeeded?}
+    CloudinaryResp -- No --> RetryUpload[Return Storage Error] --> SelectFile
+    CloudinaryResp -- Yes --> SaveMeta[(Save public_id & URL in request_documents)]
+    SaveMeta --> QueueAI[Queue Document for AI Vision Validation] --> Done([Upload Complete])
+```
+
+### 10.4 AI-Assisted Document Validation Workflow
+```mermaid
+flowchart TD
+    Start([Document Uploaded]) --> UpdateStatus[(Set ai_validation_status: Processing)]
+    UpdateStatus --> PrepPayload[Prepare Secure URL & Structured JSON Schema]
+    PrepPayload --> CallAI[POST Call to OpenRouter Vision Model]
+    CallAI --> CheckAIResponse{HTTP 200 & Valid JSON?}
+    CheckAIResponse -- No --> AIError[Log Provider Error & Set Status: Failed]
+    AIError --> Fallback[Enable Manual Review Flag for Admin]
+    CheckAIResponse -- Yes --> ValidateSchema[Verify readability, completeness, issues]
+    ValidateSchema --> SaveAI[(Store findings in ai_validations table)]
+    SaveAI --> UpdateReq[(Update request status to Pending Admin Review)]
+    UpdateReq --> Done([Advisory Report Ready for Officer])
+    Fallback --> Done
+```
+
+### 10.5 Admin Review, Correction, Approval & Rejection
+```mermaid
+flowchart TD
+    Start([Admin Opens Request]) --> ViewEvidence[Inspect Customer Info, Files & AI Notes]
+    ViewEvidence --> HumanDecision{Officer Decision?}
+    HumanDecision -- Approve --> EnterApproveRemarks[Enter Approval Remarks]
+    EnterApproveRemarks --> SetApproved[(Update status: Approved / Completed)]
+    HumanDecision -- Correction Required --> EnterFixRemarks[Specify Document Needing Re-upload]
+    EnterFixRemarks --> SetCorrection[(Update status: Correction Required)]
+    HumanDecision -- Reject --> EnterRejectRemarks[Enter Formal Reason for Rejection]
+    EnterRejectRemarks --> SetRejected[(Update status: Rejected)]
+    SetApproved --> LogAudit[(Record in audit_logs & status_history)]
+    SetCorrection --> LogAudit
+    SetRejected --> LogAudit
+    LogAudit --> DispatchNotification[Send Immediate In-App Alert to Customer]
+    DispatchNotification --> End([Review Concluded])
+```
+
+---
+
+## 11. Swimlane Diagrams (Section 17 — Major Workflows)
+
+### 11.1 Document Upload, Cloudinary Storage & AI Review Swimlane
+```mermaid
+flowchart LR
+    subgraph Customer["Customer Lane"]
+        C1[Select File & Submit]
+        C2[View Upload Progress]
+        C3[Receive Status Update]
+    end
+
+    subgraph Backend["Express API Backend Lane"]
+        B1[Verify User & Ownership]
+        B2[Check Extension, MIME & Size]
+        B3[Stream File to Cloudinary]
+        B4[Save Metadata in Database]
+        B5[Call OpenRouter Vision API]
+        B6[Validate Structured Findings]
+        B7[Notify Admin & Customer]
+    end
+
+    subgraph CloudinaryStorage["Cloudinary Storage Lane"]
+        S1[Receive Image Stream]
+        S2[Store in Protected Folder]
+        S3[Return public_id & Secure URL]
+    end
+
+    subgraph OpenRouter["OpenRouter AI Lane"]
+        A1[Receive Image & Rules Prompt]
+        A2[Perform Vision Inspection]
+        A3[Return Structured JSON Findings]
+    end
+
+    subgraph Database["Supabase PostgreSQL Lane"]
+        D1[(Save request_documents)]
+        D2[(Save ai_validations)]
+        D3[(Update service_requests status)]
+    end
+
+    C1 --> B1
+    B1 --> B2
+    B2 --> B3
+    B3 --> S1
+    S1 --> S2
+    S2 --> S3
+    S3 --> B4
+    B4 --> D1
+    B4 --> B5
+    B5 --> A1
+    A1 --> A2
+    A2 --> A3
+    A3 --> B6
+    B6 --> D2
+    D2 --> D3
+    D3 --> B7
+    B7 --> C3
+```
+
+### 11.2 Admin Review and Decision Swimlane
+```mermaid
+flowchart LR
+    subgraph AdminLane["Bank Administrator Lane"]
+        AD1[Open Admin Queue]
+        AD2[Inspect Request & Preview Docs]
+        AD3[Review AI Uncertainty Report]
+        AD4[Submit Decision & Remarks]
+    end
+
+    subgraph BackendLane["Express Backend Lane"]
+        BK1[Authorize Admin Role]
+        BK2[Fetch Application Details & Evidence]
+        BK3[Validate Decision Input]
+        BK4[Persist Status & Create Audit Entry]
+        BK5[Trigger Customer Notification]
+    end
+
+    subgraph DBLane["Supabase PostgreSQL Lane"]
+        DB1[(Query Requests, Documents & AI)]
+        DB2[(Update service_requests status)]
+        DB3[(Insert request_status_history)]
+        DB4[(Insert audit_logs)]
+        DB5[(Insert notifications queue)]
+    end
+
+    subgraph CustomerLane["Customer Lane"]
+        CU1[Receive In-App Notification]
+        CU2[View Updated Application Status]
+    end
+
+    AD1 --> BK1
+    BK1 --> BK2
+    BK2 --> DB1
+    DB1 --> BK2
+    BK2 --> AD2
+    AD2 --> AD3
+    AD3 --> AD4
+    AD4 --> BK3
+    BK3 --> BK4
+    BK4 --> DB2
+    BK4 --> DB3
+    BK4 --> DB4
+    BK4 --> DB5
+    DB5 --> BK5
+    BK5 --> CU1
+    CU1 --> CU2
+```
