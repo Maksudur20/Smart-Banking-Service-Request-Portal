@@ -315,3 +315,4 @@ CREATE TRIGGER trg_services_updated_at BEFORE UPDATE ON services FOR EACH ROW EX
 CREATE TRIGGER trg_service_requests_updated_at BEFORE UPDATE ON service_requests FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER trg_request_documents_updated_at BEFORE UPDATE ON request_documents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER trg_complaints_updated_at BEFORE UPDATE ON complaints FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+

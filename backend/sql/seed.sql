@@ -177,3 +177,4 @@ INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, details, 
 (2, 'REQUEST_STATUS_UPDATE', 'service_requests', '1', '{"from": "AI Validation", "to": "Pending Admin Review"}'::jsonb, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'),
 (1, 'REQUEST_APPROVAL', 'service_requests', '2', '{"decision": "Approved", "remarks": "Eligible"}'::jsonb, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'),
 (2, 'DOCUMENT_CORRECTION_REQUEST', 'service_requests', '4', '{"document": "Utility Bill", "reason": "Blurred image"}'::jsonb, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
+
