@@ -7,3 +7,4 @@ router.get('/document-types', serviceController.getDocumentTypes);
 router.get('/:serviceId/requirements', serviceController.getServiceRequirements);
 
 module.exports = router;
+

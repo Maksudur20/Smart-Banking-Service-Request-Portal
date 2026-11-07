@@ -15,3 +15,4 @@ router.get('/admin', requireAdmin, complaintController.getAdminComplaints);
 router.patch('/admin/:complaintId', requireAdmin, complaintController.updateComplaint);
 
 module.exports = router;
+

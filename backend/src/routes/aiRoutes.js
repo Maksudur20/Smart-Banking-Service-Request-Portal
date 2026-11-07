@@ -11,3 +11,4 @@ router.get('/documents/:documentId/results', aiController.getDocumentAIResults);
 router.get('/requests/:requestId/summary', aiLimiter, aiController.getRequestAISummary);
 
 module.exports = router;
+

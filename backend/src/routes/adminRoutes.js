@@ -15,3 +15,4 @@ router.get('/requests/:requestId', adminController.getAdminRequestDetails);
 router.post('/requests/:requestId/decision', adminController.makeDecision);
 
 module.exports = router;
+

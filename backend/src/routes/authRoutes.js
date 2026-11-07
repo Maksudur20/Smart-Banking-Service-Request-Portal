@@ -11,3 +11,4 @@ router.get('/me', authenticateToken, authController.getMe);
 router.patch('/me', authenticateToken, authController.updateProfile);
 
 module.exports = router;
+
