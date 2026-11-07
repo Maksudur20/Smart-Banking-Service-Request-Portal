@@ -125,6 +125,27 @@
             </li>
           `).join('');
         }
+
+        const sId = parseInt(serviceId, 10);
+        const serviceGuidelines = {
+          1: '💡 <strong>Smart Banking PLC নিয়ম:</strong> আবেদনকারীর NID/পাসপোর্ট, ২ কপি ছবি, নমিনির NID ও ছবি, ইউটিলিটি বিল এবং আয়ের প্রমাণ (Salary Certificate / Trade License)। প্রাথমিক জমা ৫০০ টাকা। ১৮ বছরের নিচে অভিভাবকের মাধ্যমে অ্যাকাউন্ট খুলতে হবে।',
+          3: '💡 <strong>কার্ড সেবা নিয়ম:</strong> ঢাকা ৪ দিন, মেট্রো ৫ দিন, গ্রামীণ ৬ দিনের মধ্যে ডেলিভারি। MySmartBank App বা 16218 দিয়ে PIN সেট করুন।',
+          4: '💡 <strong>কার্ড রিপ্লেসমেন্ট নিয়ম:</strong> পুরোনো কার্ড, NID ও স্বাক্ষর জমা দিন। জরুরি কার্ড ব্লকিংয়ের জন্য অবিলম্বে কল করুন 16218 নম্বরে।',
+          5: '💡 <strong>চেকবই রিকোয়েস্ট নিয়ম:</strong> চেকের পাতা অপশন: ২০, ৫০ বা ১০০ পাতা। ব্যাংক স্বাক্ষর যাচাই শেষে ২–৪ কার্যদিবসে প্রস্তুত হবে।',
+          8: '💡 <strong>লোন আবেদন নিয়ম:</strong> আবেদনকারীর বয়স ২২–৬৫ বছর, নিয়মিত আয়, শেষ ৬ মাসের ব্যাংক স্টেটমেন্ট, পে-স্লিপ এবং Personal Guarantor-এর NID ও ছবি আবশ্যক।'
+        };
+
+        const existingNote = box.querySelector('.service-official-note');
+        if (existingNote) existingNote.remove();
+
+        if (serviceGuidelines[sId]) {
+          const noteDiv = document.createElement('div');
+          noteDiv.className = 'service-official-note';
+          noteDiv.style.cssText = 'margin-top:12px; padding:10px 14px; background:#eff6ff; border-left:4px solid #0284c7; border-radius:4px; font-size:0.83rem; color:#1e3a8a; line-height:1.5;';
+          noteDiv.innerHTML = serviceGuidelines[sId];
+          box.appendChild(noteDiv);
+        }
+
         box.style.display = 'block';
       } catch (err) {
         console.error(err);
