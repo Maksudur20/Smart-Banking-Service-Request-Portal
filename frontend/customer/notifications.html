@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notifications - Smart Banking Portal</title>
+  <title>নোটিফিকেশন ও অ্যালার্ট - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
   <style>
     .notif-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
       padding: 16px 20px;
       margin-bottom: 12px;
       background: #fff;
@@ -16,26 +16,30 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
-      transition: background 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .notif-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
     .notif-card.unread {
       background: #f0f9ff;
-      border-left: 4px solid var(--primary);
+      border-left: 4px solid #0284c7;
     }
     .notif-title {
       font-size: 0.95rem;
       font-weight: 700;
-      color: var(--navy);
+      color: #0f172a;
       margin-bottom: 4px;
     }
     .notif-msg {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: #475569;
       line-height: 1.5;
     }
     .notif-time {
       font-size: 0.78rem;
-      color: var(--text-light);
+      color: #94a3b8;
       margin-top: 6px;
     }
   </style>
@@ -47,21 +51,21 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading">Notifications</h1>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🔔 ইন-অ্যাপ নোটিফিকেশন ও অ্যালার্ট (Notifications)</h2>
         </div>
         <div class="top-nav-right">
-          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">Mark All as Read</button>
+          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">সকল পঠিত হিসেবে চিহ্নিত করুন</button>
         </div>
       </header>
 
-      <main class="content-container" style="max-width: 860px;">
+      <main class="content-container" style="max-width: 880px;">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">In-App Alerts & Updates</h3>
+            <h3 class="card-title">ব্যাংকিং লেনদেন, কেওয়াইসি ও স্ট্যাটাস আপডেট</h3>
           </div>
           <div class="card-body">
             <div id="notificationsList">
-              <p style="color:var(--text-light); text-align:center; padding:30px;">Loading alerts...</p>
+              <p style="color:#94a3b8; text-align:center; padding:30px;">নোটিফিকেশন লোড হচ্ছে...</p>
             </div>
           </div>
         </div>
@@ -83,28 +87,28 @@
         const container = document.getElementById('notificationsList');
 
         if (list.length === 0) {
-          container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:30px;">No notifications found.</p>';
+          container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:30px;">কোনো নতুন নোটিফিকেশন নেই।</p>';
           return;
         }
 
         container.innerHTML = list.map(n => `
           <div class="notif-card ${n.is_read ? '' : 'unread'}">
-            <div>
+            <div style="flex:1;">
               <div class="notif-title">${n.title}</div>
               <div class="notif-msg">${n.message}</div>
               <div class="notif-time">${window.UI.formatDateTime(n.created_at)}</div>
             </div>
             <div>
               ${!n.is_read ? `
-                <button onclick="markSingleRead(${n.id})" class="btn btn-secondary btn-sm" title="Mark as read">
-                  ✓
+                <button onclick="markSingleRead(${n.id})" class="table-action-btn primary" title="Mark as read" style="font-size:0.75rem;">
+                  ✓ পঠিত
                 </button>
               ` : ''}
             </div>
           </div>
         `).join('');
       } catch (err) {
-        window.showToast('Failed to load notifications.', 'error');
+        window.showToast('নোটিফিকেশন লোড করা যায়নি।', 'error');
       }
     }
 
@@ -121,11 +125,11 @@
     async function markAllRead() {
       try {
         await window.api.patch('/api/notifications/read-all', {});
-        window.showToast('All notifications marked as read.', 'success');
+        window.showToast('✅ সকল নোটিফিকেশন পঠিত হিসেবে চিহ্নিত হয়েছে।', 'success');
         loadNotifications();
         window.UI.updateNotificationBadge();
       } catch (e) {
-        console.error(e);
+        window.showToast('ব্যর্থ হয়েছে।', 'error');
       }
     }
 
@@ -133,4 +137,3 @@
   </script>
 </body>
 </html>
-

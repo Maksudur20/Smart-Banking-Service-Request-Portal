@@ -1,123 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Banking Service Request Portal</title>
+  <title>Smart Banking PLC - নিরাপদ ডিজিটাল ব্যাংকিং ও গ্রাহক সেবা</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
   <style>
-    .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    .landing-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .landing-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo-sq {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
       color: #fff;
-      padding: 80px 24px;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(14, 165, 233, 0.2);
-      border: 1px solid rgba(14, 165, 233, 0.4);
-      color: #38bdf8;
-      padding: 6px 16px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-    .hero-title {
-      font-size: 2.8rem;
       font-weight: 800;
+      font-size: 1.25rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    }
+    .brand-name-text {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
       letter-spacing: -0.02em;
-      margin-bottom: 16px;
-      line-height: 1.2;
     }
-    .hero-sub {
+    .brand-tag {
+      font-size: 0.72rem;
+      color: #0284c7;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: block;
+    }
+    .landing-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%);
+      color: #ffffff;
+      padding: 90px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 140%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      max-width: 840px;
+      margin: 0 auto;
+    }
+    .hero-headline {
+      font-size: 2.9rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .hero-headline span {
+      background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-description {
       font-size: 1.15rem;
-      color: #94a3b8;
-      max-width: 680px;
-      margin: 0 auto 36px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .hero-actions {
+    .hero-btn-group {
       display: flex;
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
     }
-    .features-grid {
+    .services-showcase {
+      max-width: 1180px;
+      margin: -50px auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .services-card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      max-width: 1140px;
-      margin: -40px auto 60px;
-      padding: 0 24px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
-    .feature-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 28px;
-      box-shadow: var(--shadow);
+    .service-item-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 26px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .feature-icon {
-      font-size: 2rem;
-      margin-bottom: 14px;
+    .service-item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -6px rgba(15, 23, 42, 0.14);
+      border-color: #0284c7;
     }
-    .feature-title {
+    .service-item-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 16px;
+    }
+    .service-item-title {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--navy);
+      color: #0f172a;
       margin-bottom: 8px;
     }
-    .feature-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
+    .service-item-desc {
+      font-size: 0.88rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .service-item-link {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0284c7;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .service-item-link:hover {
+      color: #0369a1;
+      text-decoration: underline;
+    }
+    .support-bar {
+      max-width: 1180px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+    .support-box {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 30px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.25);
+    }
+    .landing-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 40px 24px;
+      border-top: 1px solid #1e293b;
+      text-align: center;
+      font-size: 0.88rem;
     }
   </style>
 </head>
-<body>
-  <div class="hero">
-    <span class="hero-badge">Academic Practicum System Prototype</span>
-    <h1 class="hero-title">Smart Banking Service Request Portal</h1>
-    <p class="hero-sub">
-      Seamless customer banking service requests with AI-assisted document readability & completeness verification and authorized human administrative review.
-    </p>
-    <div class="hero-actions">
-      <a href="/login.html" class="btn btn-primary btn-lg">Customer Portal Login</a>
-      <a href="/register.html" class="btn btn-secondary btn-lg" style="color:var(--navy);">New Customer Registration</a>
-      <a href="/admin-login.html" class="btn btn-success btn-lg">Bank Officer Access</a>
+<body style="background:#f8fafc; margin:0;">
+  <!-- Top Navigation Bar -->
+  <header class="landing-header">
+    <a href="/" class="landing-brand">
+      <div class="brand-logo-sq">SB</div>
+      <div>
+        <span class="brand-name-text">Smart Banking</span>
+        <span class="brand-tag">PLC BANGLADESH</span>
+      </div>
+    </a>
+    <div class="landing-nav-actions">
+      <span style="font-size:0.85rem; color:#64748b; font-weight:600; display:flex; align-items:center; gap:6px;">
+        📞 হেল্পলাইন: <strong style="color:#0284c7;">16218</strong>
+      </span>
+      <a href="/login.html" class="btn btn-secondary btn-sm" style="font-weight:700;">লগইন করুন</a>
+      <a href="/register.html" class="btn btn-primary btn-sm" style="font-weight:700;">+ নতুন অ্যাকাউন্ট খুলুন</a>
     </div>
-  </div>
+  </header>
 
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🏦</div>
-      <h3 class="feature-title">Digital Banking Catalogue</h3>
-      <p class="feature-desc">Apply online for 10 banking services including Account Opening, Card Requests, Cheque Books, and KYC updates without visiting branches.</p>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-headline">
+        স্মার্ট ও নিরাপদ ব্যাংকিংয়ের <span>নতুন দিগন্ত</span>
+      </h1>
+      <p class="hero-description">
+        ঘরে বসেই সহজে অ্যাকাউন্ট ওপেনিং, তাৎক্ষণিক ই-কেওয়াইসি ভেরিফিকেশন, স্লিপ ডিপোজিট এবং নিরাপদ ডিজিটাল ফান্ড ট্রান্সফার সুবিধা।
+      </p>
+      <div class="hero-btn-group">
+        <a href="/register.html" class="btn btn-primary btn-lg" style="background:#0284c7; padding:14px 28px; font-weight:700; font-size:1.05rem;">
+          🏦 অনলাইনে অ্যাকাউন্ট খুলুন
+        </a>
+        <a href="/login.html" class="btn btn-secondary btn-lg" style="background:#ffffff; color:#0f172a; padding:14px 28px; font-weight:700; font-size:1.05rem;">
+          🔑 ইন্টারনেট ব্যাংকিং লগইন
+        </a>
+        <a href="/admin-login.html" class="btn btn-secondary btn-lg" style="background:rgba(255,255,255,0.12); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:14px 24px; font-size:0.95rem;">
+          🛡️ ব্যাংক অফিসার পোর্টাল
+        </a>
+      </div>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🤖</div>
-      <h3 class="feature-title">AI Document Validation</h3>
-      <p class="feature-desc">AI vision scans uploaded documents (NID, Passport, Bills) to ensure clarity and completeness before administrative officer review.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🛡️</div>
-      <h3 class="feature-title">Human-in-the-Loop Admin Review</h3>
-      <p class="feature-desc">Bank administrators inspect document evidence and AI notes, with controlled Approve, Reject, or Correction Required decisions.</p>
-    </div>
-  </div>
+  </section>
 
-  <div style="text-align:center; padding: 20px; color:var(--text-light); font-size:0.85rem;">
-    Smart Banking Service Request Portal &copy; 2026. Built with HTML, CSS, Vanilla JS, Node.js, Supabase PostgreSQL, and Cloudinary.
-  </div>
+  <!-- Services Showcase (Replacing the 3 old cards with real Prime Bank services) -->
+  <section class="services-showcase">
+    <div class="services-card-grid">
+      <!-- 1. Account Opening -->
+      <div class="service-item-card">
+        <div>
+          <div class="service-item-icon" style="background:#e0f2fe; color:#0284c7;">🏦</div>
+          <h3 class="service-item-title">অ্যাকাউন্ট ও ডিপোজিট সেবা</h3>
+          <p class="service-item-desc">
+            প্রাইম সেভিংস, কারেন্ট ও সেলারি অ্যাকাউন্ট। মাত্র ৫০০ টাকা প্রাথমিক জমায় তাৎক্ষণিক ডিজিটাল আবেদন।
+          </p>
+        </div>
+        <a href="/customer/service-request.html?serviceId=1" class="service-item-link">আবেদন করুন &rarr;</a>
+      </div>
+
+      <!-- 2. Card Services -->
+      <div class="service-item-card">
+        <div>
+          <div class="service-item-icon" style="background:#fef3c7; color:#b45309;">💳</div>
+          <h3 class="service-item-title">কার্ড সেবা ও রিপ্লেসমেন্ট</h3>
+          <p class="service-item-desc">
+            ডুয়াল কারেন্সি ডেবিট ও ক্রেডিট কার্ড। ঢাকা বিভাগে ৪ দিন এবং ঢাকার বাইরে ৫-৬ দিনের মধ্যে শাখা ডেলিভারি।
+          </p>
+        </div>
+        <a href="/customer/service-request.html?serviceId=3" class="service-item-link">কার্ড সেবা দেখুন &rarr;</a>
+      </div>
+
+      <!-- 3. Cheque Book -->
+      <div class="service-item-card">
+        <div>
+          <div class="service-item-icon" style="background:#dcfce7; color:#15803d;">📝</div>
+          <h3 class="service-item-title">চেকবই রিকোয়েস্ট</h3>
+          <p class="service-item-desc">
+            স্বাক্ষর ভেরিফিকেশনের মাধ্যমে ২০, ৫০ বা ১০০ পাতার চেকবই অর্ডার করুন এবং নির্ধারিত শাখায় গ্রহণ করুন।
+          </p>
+        </div>
+        <a href="/customer/service-request.html?serviceId=5" class="service-item-link">চেকবই অর্ডার &rarr;</a>
+      </div>
+
+      <!-- 4. Loans -->
+      <div class="service-item-card">
+        <div>
+          <div class="service-item-icon" style="background:#ede9fe; color:#6d28d9;">💰</div>
+          <h3 class="service-item-title">রিটেইল ও পার্সোনাল লোন</h3>
+          <p class="service-item-desc">
+            চাকরিজীবী ও ব্যবসায়ীদের জন্য সহজ শর্তে পার্সোনাল লোন, অটো লোন ও হোম লোন সুবিধা।
+          </p>
+        </div>
+        <a href="/customer/service-request.html?serviceId=8" class="service-item-link">লোন যোগ্যতা যাচাই &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24/7 Support Banner -->
+  <section class="support-bar">
+    <div class="support-box">
+      <div>
+        <h3 style="margin:0 0 6px 0; font-size:1.35rem; font-weight:800;">জরুরি কার্ড ব্লকিং বা কাস্টমার সাপোর্ট?</h3>
+        <p style="margin:0; opacity:0.9; font-size:0.95rem;">কার্ড হারিয়ে গেলে বা অননুমোদিত লেনদেনের ক্ষেত্রে অবিলম্বে আমাদের কল সেন্টারে যোগাযোগ করুন।</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="font-size:1.6rem; font-weight:800; background:#fff; color:#0284c7; padding:8px 20px; border-radius:30px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+          📞 16218
+        </span>
+        <a href="/customer/complaints.html" class="btn btn-secondary" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.4); font-weight:700;">
+          অভিযোগ দাখিল করুন
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div style="max-width:1140px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <strong>Smart Banking PLC Bangladesh</strong> &mdash; লাইসেন্সপ্রাপ্ত আধুনিক ডিজিটাল ব্যাংকিং পোর্টাল।
+      </div>
+      <div style="font-size:0.82rem; color:#64748b;">
+        হটলাইন: 16218 | ইমেইল: contactcenter@smartbank.com.bd | কপিরাইট &copy; 2026 সর্বস্বত্ব সংরক্ষিত।
+      </div>
+    </div>
+  </footer>
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
   <script src="/assets/js/common.js?v=2.1"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      UI.initFloatingAIAssistant();
-    });
-  </script>
 </body>
 </html>
-

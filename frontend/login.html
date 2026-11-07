@@ -1,47 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Login - Smart Banking Portal</title>
+  <title>গ্রাহক ইন্টারনেট ব্যাংকিং লগইন - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body class="auth-page">
-  <div class="auth-card">
+  <div class="auth-card" style="max-width: 440px;">
     <div class="auth-header">
       <div class="auth-brand">
         <div class="brand-icon">SB</div>
         <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
       </div>
-      <h2 class="auth-title">Customer Login</h2>
-      <p class="auth-sub">Access your personal banking requests & documents</p>
+      <h2 class="auth-title">গ্রাহক ইন্টারনেট ব্যাংকিং</h2>
+      <p class="auth-sub">আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন</p>
     </div>
 
     <form id="loginForm">
       <div class="form-group">
-        <label class="form-label required">Email Address</label>
-        <input type="email" id="email" class="form-control" placeholder="customer@smartbank.com" required autofocus value="customer@smartbank.com">
+        <label class="form-label required">নিবন্ধিত ইমেইল ঠিকানা (Email Address)</label>
+        <input type="email" id="email" class="form-control" placeholder="user@example.com" required autofocus>
       </div>
 
       <div class="form-group">
-        <label class="form-label required">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="••••••••" required value="Password123!">
+        <label class="form-label required">পাসওয়ার্ড (Password)</label>
+        <input type="password" id="password" class="form-control" placeholder="আপনার অ্যাকাউন্টের পাসওয়ার্ড" required>
       </div>
 
-      <div style="margin-bottom: 20px; font-size: 0.82rem; background: var(--info-bg); padding: 10px; border-radius: var(--radius-sm); color: var(--navy);">
-        <strong>Demo Credentials:</strong><br>
-        Email: <code>customer@smartbank.com</code><br>
-        Password: <code>Password123!</code>
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg">
-        Log In to Customer Portal
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700; margin-top:20px;">
+        🔑 লগইন করুন (Log In)
       </button>
     </form>
 
-    <div class="auth-footer">
-      Don't have an account? <a href="/register.html">Register here</a><br><br>
-      <a href="/admin-login.html" style="font-size: 0.8rem; color: var(--text-muted);">Are you a Bank Officer? Admin Login &rarr;</a>
+    <div class="auth-footer" style="margin-top:24px;">
+      নতুন গ্রাহক? <a href="/register.html" style="color:#0284c7; font-weight:700;">এখানে নতুন অ্যাকাউন্ট খুলুন</a><br><br>
+      <a href="/admin-login.html" style="font-size: 0.85rem; color: #64748b;">ব্যাংক অফিসার পোর্টাল লগইন &rarr;</a>
     </div>
   </div>
 
@@ -49,25 +43,24 @@
   <script src="/assets/js/auth.js"></script>
   <script src="/assets/js/common.js?v=2.1"></script>
   <script>
-    // Redirect if already logged in
     window.Auth.redirectIfAuthenticated();
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
         btn.disabled = true;
-        btn.innerText = 'Verifying credentials...';
+        btn.innerText = 'যাচাই করা হচ্ছে...';
 
         const res = await window.api.post('/api/auth/login', { email, password });
 
         window.api.setToken(res.token);
         window.api.setUser(res.user);
 
-        window.showToast('Login successful! Redirecting...', 'success');
+        window.showToast('✅ লগইন সফল হয়েছে!', 'success');
 
         setTimeout(() => {
           if (res.user.role === 'ADMIN') {
@@ -77,12 +70,11 @@
           }
         }, 500);
       } catch (err) {
-        window.showToast(err.message || 'Invalid login credentials.', 'error');
+        window.showToast(err.message || 'ভুল ইমেইল বা পাসওয়ার্ড।', 'error');
         btn.disabled = false;
-        btn.innerText = 'Log In to Customer Portal';
+        btn.innerText = '🔑 লগইন করুন (Log In)';
       }
     });
   </script>
 </body>
 </html>
-

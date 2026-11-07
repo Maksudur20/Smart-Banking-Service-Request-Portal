@@ -1,47 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin & Officer Login - Smart Banking Portal</title>
+  <title>ব্যাংক অফিসার পোর্টাল লগইন - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body class="auth-page">
-  <div class="auth-card">
+  <div class="auth-card" style="max-width: 440px;">
     <div class="auth-header">
       <div class="auth-brand">
-        <div class="brand-icon" style="background: linear-gradient(135deg, #10b981, #047857);">SB</div>
+        <div class="brand-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">SB</div>
         <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
       </div>
-      <h2 class="auth-title">Bank Officer Login</h2>
-      <p class="auth-sub">Administrative review, verification, and audit oversight</p>
+      <h2 class="auth-title">ব্যাংক অফিসার পোর্টাল</h2>
+      <p class="auth-sub">কেওয়াইসি ভেরিফিকেশন, ডিপোজিট অনুমোদন ও প্রশাসনিক নিয়ন্ত্রণ</p>
     </div>
 
     <form id="adminLoginForm">
       <div class="form-group">
-        <label class="form-label required">Staff Email Address</label>
-        <input type="email" id="email" class="form-control" placeholder="admin@smartbank.com" required autofocus value="admin@smartbank.com">
+        <label class="form-label required">অফিসার ইমেইল (Staff Email)</label>
+        <input type="email" id="email" class="form-control" placeholder="admin@smartbank.com" required autofocus>
       </div>
 
       <div class="form-group">
-        <label class="form-label required">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="••••••••" required value="Password123!">
+        <label class="form-label required">পাসওয়ার্ড (Password)</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
       </div>
 
-      <div style="margin-bottom: 20px; font-size: 0.82rem; background: #ecfdf5; border-left: 4px solid var(--success); padding: 10px; border-radius: var(--radius-sm); color: #064e3b;">
-        <strong>Demo Admin Credentials:</strong><br>
-        Email: <code>admin@smartbank.com</code> (Super Admin)<br>
-        Email: <code>verifier@smartbank.com</code> (Operations Officer)<br>
-        Password: <code>Password123!</code>
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn btn-success btn-block btn-lg">
-        Log In to Admin Operations
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="background:#0284c7; font-weight:700; margin-top:20px;">
+        🛡️ অফিসার পোর্টালে প্রবেশ করুন
       </button>
     </form>
 
-    <div class="auth-footer">
-      <a href="/login.html">&larr; Return to Customer Portal Login</a>
+    <div class="auth-footer" style="margin-top:24px;">
+      <a href="/login.html" style="color:#64748b; font-size:0.85rem;">&larr; গ্রাহক ইন্টারনেট ব্যাংকিং লগইন পেজে ফিরে যান</a>
     </div>
   </div>
 
@@ -54,34 +47,33 @@
     document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
         btn.disabled = true;
-        btn.innerText = 'Authenticating staff credentials...';
+        btn.innerText = 'যাচাই করা হচ্ছে...';
 
         const res = await window.api.post('/api/auth/login', { email, password });
 
         if (res.user.role !== 'ADMIN') {
-          throw new Error('Access denied. This account does not possess Bank Officer permissions.');
+          throw new Error('অ্যাক্সেস প্রত্যাখ্যান করা হয়েছে। এই অ্যাকাউন্টে ব্যাংক অফিসারের অনুমোদন নেই।');
         }
 
         window.api.setToken(res.token);
         window.api.setUser(res.user);
 
-        window.showToast('Officer authentication successful! Redirecting...', 'success');
+        window.showToast('✅ অফিসার প্রমাণীকরণ সফল হয়েছে!', 'success');
 
         setTimeout(() => {
           window.location.href = '/admin/admin-dashboard.html';
         }, 500);
       } catch (err) {
-        window.showToast(err.message || 'Staff login failed.', 'error');
+        window.showToast(err.message || 'ভুল ইমেইল বা পাসওয়ার্ড।', 'error');
         btn.disabled = false;
-        btn.innerText = 'Log In to Admin Operations';
+        btn.innerText = '🛡️ অফিসার পোর্টালে প্রবেশ করুন';
       }
     });
   </script>
 </body>
 </html>
-
