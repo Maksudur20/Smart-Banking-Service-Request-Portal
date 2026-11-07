@@ -344,3 +344,4 @@
 ## Week 12
 **Topic:** Testing and Final Documentation  
 **Progress summary:** Functional and integration tests were run, detected defects were fixed, the full workflow was checked, and final documentation and demonstration materials were prepared.
+
