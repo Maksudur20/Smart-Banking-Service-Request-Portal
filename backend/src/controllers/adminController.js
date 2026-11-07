@@ -43,7 +43,8 @@ async function getCustomers(req, res, next) {
 
     const query = `
       SELECT u.id AS user_id, u.full_name, u.email, u.phone, u.is_active, u.created_at,
-             c.id AS customer_id, c.customer_reference, c.account_number, c.address,
+             c.id AS customer_id, c.customer_reference, c.account_number, c.account_type,
+             c.balance, c.kyc_status, c.account_operational_status, c.address,
              COUNT(sr.id) AS total_requests
       FROM users u
       JOIN customers c ON c.user_id = u.id

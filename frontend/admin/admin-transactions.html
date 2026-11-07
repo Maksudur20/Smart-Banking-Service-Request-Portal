@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transaction Monitoring - Smart Banking Portal</title>
+  <title>লাইভ লেনদেন খতিয়ান - Smart Banking PLC Admin</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
@@ -13,51 +13,46 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading">Transaction Monitoring & Risk Oversight (Demo)</h1>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">💳 লাইভ ব্যাংকিং ট্রানজেকশন লেজার (Live Transaction Ledger)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span style="font-size:0.85rem; color:#64748b;">বাস্তব জমার ও ট্রান্সফারের খতিয়ান</span>
         </div>
       </header>
 
       <main class="content-container">
-        <!-- Academic Disclaimer Banner -->
-        <div class="card" style="background:#fffbeb; border-left:4px solid var(--warning); margin-bottom:20px;">
-          <div class="card-body" style="font-size:0.88rem; color:#78350f;">
-            ⚠️ <strong>Academic Demonstration Notice:</strong> This module showcases automated rule-based transaction monitoring using synthetic seeded records. It does not connect to live banking networks or perform real financial transfers.
-          </div>
-        </div>
-
         <div class="card">
           <div class="card-header" style="flex-wrap:wrap; gap:12px;">
             <div>
-              <h3 class="card-title">Simulated Transaction Stream</h3>
-              <p class="card-subtitle">Inspect flagged records and update risk compliance monitoring status</p>
+              <h3 class="card-title">সকল বাস্তব ব্যাংকিং লেনদেন</h3>
+              <p class="card-subtitle">আউটগোয়িং ট্রান্সফার ও ভেরিফাইড ডিপোজিটের কেন্দ্রীয় রেজিস্টার</p>
             </div>
-            <div>
-              <select id="monitoringFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
-                <option value="">All Transactions</option>
-                <option value="Suspicious">Suspicious Alerts</option>
-                <option value="Under_Review">Under Review</option>
-                <option value="Normal">Normal</option>
-                <option value="Cleared">Cleared</option>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="txSearch" class="form-control" placeholder="Trx ID বা অ্যাকাউন্ট নম্বর..." style="width:220px; font-size:0.85rem;">
+              <select id="typeFilter" class="form-control" style="width:auto; font-size:0.85rem;">
+                <option value="">সকল ধরন</option>
+                <option value="CREDIT">ডিপোজিট / ক্রেডিট (Credit)</option>
+                <option value="DEBIT">ফান্ড ট্রান্সফার / ডেবিট (Debit)</option>
               </select>
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table">
+            <table class="data-table">
               <thead>
                 <tr>
-                  <th>Txn Reference</th>
-                  <th>Customer</th>
-                  <th>Account</th>
-                  <th>Amount</th>
-                  <th>Type</th>
-                  <th>Risk Status</th>
-                  <th>Flag Reason / Rule Trigger</th>
-                  <th>Action</th>
+                  <th>ট্রানজেকশন নম্বর</th>
+                  <th>গ্রাহক ও অ্যাকাউন্ট</th>
+                  <th>লেনদেনের ধরন</th>
+                  <th>পরিমাণ (BDT)</th>
+                  <th>কাউন্টারপার্টি</th>
+                  <th>রেফারেন্স</th>
+                  <th>পরবর্তী ব্যালেন্স</th>
+                  <th>তারিখ ও সময়</th>
                 </tr>
               </thead>
               <tbody id="txTableBody">
                 <tr>
-                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">Loading transactions...</td>
+                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">লেনদেন লোড হচ্ছে...</td>
                 </tr>
               </tbody>
             </table>
@@ -75,9 +70,11 @@
     window.UI.renderAdminSidebar('transactions');
 
     async function loadTransactions() {
-      const monitoringStatus = document.getElementById('monitoringFilter').value;
+      const type = document.getElementById('typeFilter').value;
+      const search = document.getElementById('txSearch').value;
       const params = {};
-      if (monitoringStatus) params.monitoringStatus = monitoringStatus;
+      if (type) params.type = type;
+      if (search) params.search = search;
 
       try {
         const res = await window.api.get('/api/transactions', params);
@@ -85,68 +82,46 @@
         const tbody = document.getElementById('txTableBody');
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No transaction records found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">কোনো লেনদেন রেকর্ড পাওয়া যায়নি।</td></tr>';
           return;
         }
 
-        tbody.innerHTML = list.map(t => `
-          <tr>
-            <td><code>${t.transaction_reference}</code></td>
-            <td>${t.customer_name || 'N/A'}</td>
-            <td>${t.account_number}</td>
-            <td><strong>${window.UI.formatCurrency(t.amount, t.currency)}</strong></td>
-            <td><span class="badge badge-submitted">${t.transaction_type}</span></td>
-            <td>${window.UI.renderStatusBadge(t.monitoring_status)}</td>
-            <td style="font-size:0.82rem; color:${t.flag_reason ? 'var(--danger)' : 'var(--text-light)'};">
-              ${t.flag_reason || 'Standard transaction velocity'}
-            </td>
-            <td>
-              ${t.monitoring_status === 'Suspicious' || t.monitoring_status === 'Under_Review' ? `
-                <button onclick="clearTx(${t.id})" class="btn btn-secondary btn-sm" title="Mark as Cleared">
-                  ✓ Clear
-                </button>
-              ` : `
-                <button onclick="flagTx(${t.id})" class="btn btn-secondary btn-sm" title="Flag as Suspicious" style="color:var(--danger);">
-                  🚩 Flag
-                </button>
-              `}
-            </td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = list.map(t => {
+          const isCredit = t.type === 'CREDIT' || t.type === 'DEPOSIT';
+          return `
+            <tr>
+              <td><code>${t.transaction_number}</code></td>
+              <td>
+                <div style="font-weight:700; color:#0f172a;">${t.customer_name || 'N/A'}</div>
+                <div style="font-size:0.75rem; color:#0284c7;">A/C: ${t.account_number}</div>
+              </td>
+              <td>
+                <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
+                  ${isCredit ? '⬇️ ক্রেডিট / জমা' : '⬆️ ডেবিট / ট্রান্সফার'}
+                </span>
+              </td>
+              <td style="font-weight:800; color:${isCredit ? '#10b981' : '#ef4444'}; font-size:0.95rem;">
+                ${isCredit ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} BDT
+              </td>
+              <td style="font-size:0.85rem;">${t.counterparty_name || t.counterparty_account || '-'}</td>
+              <td style="font-size:0.8rem; color:#64748b;">${t.reference || '-'}</td>
+              <td style="font-weight:700; color:#0f172a;">${parseFloat(t.balance_after).toFixed(2)} BDT</td>
+              <td style="font-size:0.8rem; color:#64748b;">${new Date(t.created_at).toLocaleString()}</td>
+            </tr>
+          `;
+        }).join('');
       } catch (err) {
-        window.showToast('Failed to load transaction monitoring stream.', 'error');
+        window.showToast('লেনদেন তালিকা লোড করা যায়নি।', 'error');
       }
     }
 
-    async function clearTx(id) {
-      try {
-        await window.api.patch(`/api/transactions/${id}/monitoring`, {
-          monitoring_status: 'Cleared',
-          flag_reason: 'Reviewed and cleared by compliance officer',
-        });
-        window.showToast('Transaction cleared.', 'success');
-        loadTransactions();
-      } catch (e) {
-        window.showToast('Failed to update status.', 'error');
-      }
-    }
+    document.getElementById('typeFilter').addEventListener('change', loadTransactions);
+    document.getElementById('txSearch').addEventListener('input', () => {
+      clearTimeout(window._searchTimer);
+      window._searchTimer = setTimeout(loadTransactions, 350);
+    });
 
-    async function flagTx(id) {
-      try {
-        await window.api.patch(`/api/transactions/${id}/monitoring`, {
-          monitoring_status: 'Suspicious',
-          flag_reason: 'Flagged manually for AML investigation',
-        });
-        window.showToast('Transaction marked as Suspicious.', 'warning');
-        loadTransactions();
-      } catch (e) {
-        window.showToast('Failed to update status.', 'error');
-      }
-    }
-
-    document.getElementById('monitoringFilter').addEventListener('change', loadTransactions);
     loadTransactions();
   </script>
 </body>
 </html>
-
