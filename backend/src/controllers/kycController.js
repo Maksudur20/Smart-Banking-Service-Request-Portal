@@ -27,6 +27,22 @@ async function getMyKYC(req, res, next) {
 
     res.json({
       success: true,
+      customer: {
+        id: customer.id,
+        user_id: customer.user_id,
+        full_name: customer.full_name,
+        email: customer.email,
+        phone: customer.phone,
+        customer_reference: customer.customer_reference,
+        account_number: customer.account_number,
+        account_type: customer.account_type,
+        kyc_status: customer.kyc_status,
+        kyc_rejection_reason: customer.kyc_rejection_reason,
+        account_operational_status: customer.account_operational_status,
+        balance: parseFloat(customer.balance || 0)
+      },
+      kyc_status: customer.kyc_status,
+      documents: docsRes.rows,
       kyc: {
         customer_id: customer.id,
         account_number: customer.account_number,

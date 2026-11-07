@@ -11,6 +11,7 @@ router.use(authenticateToken);
 
 router.post('/', requestController.createRequest);
 router.get('/', requestController.getCustomerRequests);
+router.get('/my', requestController.getCustomerRequests);
 router.get('/:requestId', requestController.getRequestById);
 router.post('/:requestId/cancel', requestController.cancelRequest);
 

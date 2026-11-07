@@ -161,6 +161,11 @@ async function getRequestById(req, res, next) {
   try {
     const { requestId } = req.params;
 
+    const parsedId = parseInt(requestId, 10);
+    if (isNaN(parsedId)) {
+      return res.status(400).json({ success: false, message: 'Invalid request ID format.' });
+    }
+
     const requestQuery = `
       SELECT sr.*, s.name AS service_name, s.service_code, s.description AS service_description,
              u.full_name AS customer_name, u.email AS customer_email, u.phone AS customer_phone,

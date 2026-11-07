@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
@@ -127,7 +127,7 @@
         const bal = parseFloat(currentCustomer.balance || 0).toFixed(2);
         document.getElementById('currentBalDisplay').innerText = `${bal} BDT`;
 
-        const kycStatus = currentCustomer.kyc_status;
+        const kycStatus = currentCustomer.kyc_status || user.kyc_status;
         const kycLock = document.getElementById('kycLockContainer');
         const transferBtn = document.getElementById('transferSubmitBtn');
         const kycBadge = document.getElementById('kycApprovedBadge');
