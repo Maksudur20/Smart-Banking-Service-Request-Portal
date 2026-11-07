@@ -18,6 +18,9 @@ const complaintRoutes = require('./routes/complaintRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const kycRoutes = require('./routes/kycRoutes');
+const depositRoutes = require('./routes/depositRoutes');
+const transferRoutes = require('./routes/transferRoutes');
 
 const app = express();
 
@@ -63,6 +66,9 @@ app.use('/api/complaints', complaintRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/deposits', depositRoutes);
+app.use('/api/transfers', transferRoutes);
 
 // Fallback to index.html for frontend root access
 app.get('/', (req, res) => {

@@ -190,9 +190,9 @@ Official Banking Services & Rules:
         // Candidate free models to try in order (resilient against upstream 429 rate limits)
         const modelsToTry = [
           DEFAULT_MODEL,
-          'liquid/lfm-2.5-2.6b:free',
           'google/gemma-4-31b-it:free',
-          'google/gemma-4-26b-a4b-it:free'
+          'google/gemma-4-26b-a4b-it:free',
+          'liquid/lfm-2.5-2.6b:free'
         ];
         const uniqueModels = [...new Set(modelsToTry)];
 

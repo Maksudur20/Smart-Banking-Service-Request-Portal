@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Portal - Smart Banking</title>
+  <title>গ্রাহক ড্যাশবোর্ড - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
   <style>
     .customer-header-balances {
@@ -16,50 +16,84 @@
       flex-direction: column;
     }
     .balance-amount {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      color: var(--navy);
+      color: #0f172a;
       letter-spacing: -0.02em;
     }
     .balance-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: capitalize;
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
     }
-    .account-card-item {
+    .kyc-banner {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-light);
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .account-card-item:last-child { border-bottom: none; }
-    .card-brand-badge {
-      font-size: 1.2rem;
-      width: 38px;
-      height: 28px;
-      border-radius: 4px;
+    .kyc-banner.pending {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+    .kyc-banner.approved {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+    .kyc-banner.rejected {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+    .quick-action-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .quick-action-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #1e293b;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.2s ease;
+    }
+    .quick-action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      border-color: #0284c7;
+    }
+    .quick-action-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
     }
-    .tx-item {
+    .tx-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 20px;
-      border-bottom: 1px solid var(--border-light);
+      border-bottom: 1px solid #f1f5f9;
     }
-    .tx-item:last-child { border-bottom: none; }
-    .tx-icon-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #f1f5f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
+    .tx-row:last-child {
+      border-bottom: none;
     }
   </style>
 </head>
@@ -70,157 +104,124 @@
 
     <!-- Main Content -->
     <div class="main-wrapper">
-      <!-- Top Navbar (Matching Customer Reference Image) -->
+      <!-- Top Navbar -->
       <header class="top-navbar">
         <div class="top-nav-left customer-header-balances">
           <div class="balance-stat">
-            <span class="balance-amount" id="userBalAmount">201,342.00 BDT</span>
-            <span class="balance-label">Total Balance</span>
+            <span class="balance-amount" id="topNavBalance">0.00 BDT</span>
+            <span class="balance-label">মোট অ্যাকাউন্ট ব্যালেন্স (Account Balance)</span>
           </div>
           <div class="balance-stat">
-            <span class="balance-amount" style="color:var(--primary-dark);">3,500,000.00 BDT</span>
-            <span class="balance-label">Available Credit Limit</span>
+            <span class="balance-amount" style="font-size:1.15rem; color:#0284c7;" id="topNavAccount">Loading...</span>
+            <span class="balance-label">অ্যাকাউন্ট নম্বর (Account Number)</span>
           </div>
         </div>
 
         <div class="top-nav-right">
-          <a href="/customer/complaints.html" class="btn btn-primary btn-sm" style="background:#0ea5e9; border-radius:var(--radius-full);">
-            Online Support
+          <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#10b981; border:none;">
+            📥 ডিপোজিট করুন
           </a>
-          <a href="/customer/service-request.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); border-color:var(--primary); color:var(--primary);">
-            + New Request
+          <a href="/customer/transfer.html" class="btn btn-primary btn-sm">
+            📤 ফান্ড ট্রান্সফার
           </a>
           <a href="/customer/profile.html" class="user-mini-profile" style="cursor:pointer;" title="View Profile">
-            <div class="user-avatar" id="navAvatar">U</div>
+            <div class="user-avatar" id="navAvatar">C</div>
           </a>
         </div>
       </header>
 
       <main class="content-container">
-        <!-- Search Bar (Matching Reference Image) -->
-        <div class="top-nav-search" style="width:100%; margin-bottom:24px;">
-          <input type="text" placeholder="What are you interested in? Search banking services, applications, cards..." style="height:48px; font-size:0.95rem; background:#fff; border-radius:var(--radius-md);">
+        <!-- KYC Dynamic Status Banner -->
+        <div id="kycBannerContainer"></div>
+
+        <!-- Quick Banking Actions -->
+        <div class="quick-action-cards">
+          <a href="/customer/deposit.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background:#dcfce7; color:#15803d;">📥</div>
+            <div>
+              <div style="font-weight:700; font-size:0.95rem;">টাকা ডিপোজিট</div>
+              <div style="font-size:0.75rem; color:#64748b;">ব্যাংক / bKash স্লিপ আপলোড</div>
+            </div>
+          </a>
+
+          <a href="/customer/transfer.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background:#e0f2fe; color:#0369a1;">📤</div>
+            <div>
+              <div style="font-weight:700; font-size:0.95rem;">ফান্ড ট্রান্সফার</div>
+              <div style="font-size:0.75rem; color:#64748b;">অন্য অ্যাকাউন্টে টাকা পাঠান</div>
+            </div>
+          </a>
+
+          <a href="/customer/kyc.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background:#fef3c7; color:#b45309;">🪪</div>
+            <div>
+              <div style="font-weight:700; font-size:0.95rem;">আমার কেওয়াইসি</div>
+              <div style="font-size:0.75rem; color:#64748b;">আপলোডকৃত ডকুমেন্ট ও স্ট্যাটাস</div>
+            </div>
+          </a>
+
+          <a href="/customer/service-request.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background:#ede9fe; color:#6d28d9;">📝</div>
+            <div>
+              <div style="font-weight:700; font-size:0.95rem;">নতুন সার্ভিস রিকোয়েস্ট</div>
+              <div style="font-size:0.75rem; color:#64748b;">কার্ড, চেকবই ও লোন আবেদন</div>
+            </div>
+          </a>
         </div>
 
-        <!-- Last / Quick Services (4 Glossy Cyan Cards matching Reference Image) -->
-        <div style="margin-bottom:12px;">
-          <h3 style="font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:14px;">Last Services</h3>
-        </div>
-
-        <div class="services-carousel">
-          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=1'">
-            <div class="service-glossy-icon">🏦</div>
-            <div class="service-glossy-title">Account Opening</div>
-            <div class="service-glossy-sub">High Yield Savings Account</div>
-          </div>
-
-          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=3'">
-            <div class="service-glossy-icon">💳</div>
-            <div class="service-glossy-title">Card Services</div>
-            <div class="service-glossy-sub">Debit & Platinum Credit Cards</div>
-          </div>
-
-          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=5'">
-            <div class="service-glossy-icon">📝</div>
-            <div class="service-glossy-title">Cheque Book Request</div>
-            <div class="service-glossy-sub">25 / 50 Leaves Branch Delivery</div>
-          </div>
-
-          <div class="service-glossy-card" onclick="window.location.href='/customer/service-request.html?serviceId=9'">
-            <div class="service-glossy-icon">🛡️</div>
-            <div class="service-glossy-title">KYC Verification</div>
-            <div class="service-glossy-sub">AI-Assisted Smart ID Review</div>
-          </div>
-        </div>
-
-        <!-- Two Column Section: My Accounts & Last Transactions / Requests -->
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px;">
-          <!-- My Accounts Card -->
+        <!-- Account Details Card & Real Transactions -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:24px;">
+          <!-- My Account Card -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">My Accounts</h3>
-              <span style="font-size:0.8rem; color:var(--text-light);" id="userRefBadge">CUST-2026-0001</span>
+              <h3 class="card-title">আমার অ্যাকাউন্ট বিবরণী (Account Details)</h3>
+              <span class="badge" id="accountKycBadge">Loading...</span>
             </div>
-            <div class="card-body" style="padding:0;">
-              <div class="account-card-item">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <span class="card-brand-badge" style="background:#fee2e2;">🔴🟡</span>
-                  <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Personal Savings Card</div>
-                    <div style="font-size:0.75rem; color:var(--text-light);">Mastercard *8070</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">8,045.00 BDT</div>
-                  <div style="font-size:0.72rem; color:var(--text-light);">Active Balance</div>
-                </div>
+            <div class="card-body">
+              <div style="margin-bottom:16px;">
+                <div style="font-size:0.8rem; color:#64748b;">অ্যাকাউন্টের ধরন:</div>
+                <div style="font-size:1.1rem; font-weight:700; color:#0f172a;" id="displayAccountType">Prime Savings Account</div>
               </div>
-
-              <div class="account-card-item">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <span class="card-brand-badge" style="background:#e0f2fe;">🔵⚪</span>
-                  <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Work / Salary Card</div>
-                    <div style="font-size:0.75rem; color:var(--text-light);">VISA *4573</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">125,728.00 BDT</div>
-                  <div style="font-size:0.72rem; color:var(--text-light);">Available Balance</div>
-                </div>
+              <div style="margin-bottom:16px;">
+                <div style="font-size:0.8rem; color:#64748b;">অ্যাকাউন্ট নম্বর:</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#0284c7; letter-spacing:1px;" id="displayAccountNumber">---------</div>
               </div>
-
-              <div class="account-card-item">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <span class="card-brand-badge" style="background:#fef3c7;">🟡🟠</span>
-                  <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Internet Banking Card</div>
-                    <div style="font-size:0.75rem; color:var(--text-light);">Mastercard *3478</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">67,569.00 BDT</div>
-                  <div style="font-size:0.72rem; color:var(--text-light);">Dual Currency</div>
-                </div>
+              <div style="margin-bottom:16px;">
+                <div style="font-size:0.8rem; color:#64748b;">বর্তমান ব্যালেন্স:</div>
+                <div style="font-size:1.6rem; font-weight:800; color:#10b981;" id="displayBalance">0.00 BDT</div>
               </div>
-
-              <div class="account-card-item">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <span class="card-brand-badge" style="background:#dcfce7;">🟢</span>
-                  <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--navy);">Primary Bank Account</div>
-                    <div style="font-size:0.75rem; color:var(--text-light);" id="userAccNumber">202611010001</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-weight:800; font-size:0.95rem; color:var(--navy);">201,342.00 BDT</div>
-                  <div style="font-size:0.72rem; color:var(--success);">Verified Account</div>
-                </div>
+              <div style="border-top:1px solid #f1f5f9; padding-top:12px; font-size:0.85rem; color:#64748b;">
+                <div>গ্রাহক রেফারেন্স: <strong id="displayCustRef" style="color:#1e293b;">-</strong></div>
+                <div>অ্যাকাউন্ট হোল্ডার: <strong id="displayName" style="color:#1e293b;">-</strong></div>
               </div>
             </div>
-            <div class="card-footer" style="justify-content:center;">
-              <a href="/customer/services.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); width:100%;">
-                Show All Services & Accounts +5 &rsaquo;
+            <div class="card-footer">
+              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="width:100%; text-align:center;">
+                + ডিপোজিট জমা দিন
               </a>
             </div>
           </div>
 
-          <!-- Last Transactions / Requests Card -->
+          <!-- Recent Transactions -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">My Recent Applications</h3>
-              <a href="/customer/requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
+              <h3 class="card-title">সাম্প্রতিক লেনদেন (Recent Transactions)</h3>
+              <a href="/customer/transfer.html" style="font-size:0.8rem; color:#0284c7; text-decoration:none;">সব দেখুন &rsaquo;</a>
             </div>
-            <div class="card-body" style="padding:0;">
-              <div id="customerRecentRequests">
-                <p style="color:var(--text-light); text-align:center; padding:30px;">Loading applications...</p>
-              </div>
+            <div class="card-body" style="padding:0; max-height:340px; overflow-y:auto;" id="recentTxContainer">
+              <p style="text-align:center; padding:30px; color:#94a3b8;">লেনদেন লোড হচ্ছে...</p>
             </div>
-            <div class="card-footer" style="justify-content:center;">
-              <a href="/customer/requests.html" class="btn btn-secondary btn-sm" style="border-radius:var(--radius-full); width:100%;">
-                Show All Applications & History &rsaquo;
-              </a>
-            </div>
+          </div>
+        </div>
+
+        <!-- Recent Service Requests -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">আমার সার্ভিস আবেদনসমূহ (Service Requests)</h3>
+            <a href="/customer/requests.html" style="font-size:0.8rem; color:#0284c7; text-decoration:none;">সকল আবেদন &rsaquo;</a>
+          </div>
+          <div class="card-body" style="padding:0;" id="recentRequestsContainer">
+            <p style="text-align:center; padding:24px; color:#94a3b8;">আবেদন লোড হচ্ছে...</p>
           </div>
         </div>
       </main>
@@ -234,52 +235,178 @@
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');
 
-    async function loadCustomerPortal() {
-      const user = window.Auth.getUser() || {};
-      document.getElementById('navAvatar').innerText = (user.full_name || 'C')[0].toUpperCase();
-      document.getElementById('userRefBadge').innerText = user.customer_reference || 'CUST-2026-0001';
-      document.getElementById('userAccNumber').innerText = user.account_number || '202611010001';
+    let currentCustomer = null;
 
+    async function initDashboard() {
       try {
-        const res = await window.api.get('/api/requests', { limit: 4 });
-        const list = res.requests || [];
-        const container = document.getElementById('customerRecentRequests');
+        // Fetch fresh profile
+        const meRes = await window.api.get('/api/auth/me');
+        const user = meRes.user || {};
+        currentCustomer = user.customer || {};
 
-        if (list.length === 0) {
+        document.getElementById('navAvatar').innerText = (user.full_name || 'C')[0].toUpperCase();
+        document.getElementById('displayName').innerText = user.full_name || 'গ্রাহক';
+        document.getElementById('displayCustRef').innerText = currentCustomer.customer_reference || user.customer_reference || 'N/A';
+        
+        const accNum = currentCustomer.account_number || user.account_number || 'N/A';
+        document.getElementById('topNavAccount').innerText = accNum;
+        document.getElementById('displayAccountNumber').innerText = accNum;
+
+        const bal = parseFloat(currentCustomer.balance || 0).toFixed(2);
+        document.getElementById('topNavBalance').innerText = `${bal} BDT`;
+        document.getElementById('displayBalance').innerText = `${bal} BDT`;
+        document.getElementById('displayAccountType').innerText = currentCustomer.account_type || 'Prime Savings Account';
+
+        renderKYCBanner(currentCustomer.kyc_status, currentCustomer.kyc_rejection_reason);
+        loadRecentTransactions();
+        loadRecentRequests();
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    }
+
+    function renderKYCBanner(status, rejectionReason) {
+      const banner = document.getElementById('kycBannerContainer');
+      const badge = document.getElementById('accountKycBadge');
+      if (!banner) return;
+
+      if (status === 'Approved') {
+        badge.className = 'badge badge-approved';
+        badge.innerText = 'KYC Approved';
+        banner.innerHTML = `
+          <div class="kyc-banner approved">
+            <div>
+              <strong>✅ আপনার ব্যাংক অ্যাকাউন্ট সম্পূর্ণ ভেরিফাইড (KYC Approved)</strong><br>
+              <span style="font-size:0.85rem;">আপনি এখন অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার এবং সকল ডিজিটাল ব্যাংকিং সুবিধা ব্যবহার করতে পারবেন।</span>
+            </div>
+            <a href="/customer/transfer.html" class="btn btn-primary btn-sm" style="background:#059669; border:none;">টাকা পাঠান</a>
+          </div>
+        `;
+      } else if (status === 'Rejected') {
+        badge.className = 'badge badge-rejected';
+        badge.innerText = 'KYC Rejected';
+        banner.innerHTML = `
+          <div class="kyc-banner rejected">
+            <div>
+              <strong>❌ আপনার কেওয়াইসি (KYC) আবেদন বাতিল করা হয়েছে</strong><br>
+              <span style="font-size:0.85rem;">কারণ: <strong>${rejectionReason || 'প্রদত্ত ডকুমেন্টে অস্পষ্টতা'}</strong>। আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে স্থগিত।</span>
+            </div>
+            <a href="/customer/kyc.html" class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#991b1b; border:1px solid #fecaca; font-weight:700;">ডকুমেন্ট পুনরায় আপলোড করুন</a>
+          </div>
+        `;
+      } else {
+        // Pending or Under Review
+        badge.className = 'badge badge-submitted';
+        badge.innerText = status || 'Pending';
+        banner.innerHTML = `
+          <div class="kyc-banner pending">
+            <div>
+              <strong>⚠️ অ্যাকাউন্ট কেওয়াইসি ভেরিফিকেশন প্রক্রিয়াধীন (KYC Pending)</strong><br>
+              <span style="font-size:0.85rem;">আপনার দেওয়া পরিচয়পত্র ও ডকুমেন্টস ব্যাংক অ্যাডমিন কর্তৃক যাচাই করা হচ্ছে। KYC অনুমোদনের পূর্বে অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার স্থগিত থাকবে। তবে আপনি নিজের অ্যাকাউন্টে যেকোনো পরিমাণ ডিপোজিট করতে পারবেন।</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#b45309; border:none;">ডিপোজিট করুন</a>
+              <a href="/customer/kyc.html" class="btn btn-secondary btn-sm">ডকুমেন্ট দেখুন</a>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    async function loadRecentTransactions() {
+      const container = document.getElementById('recentTxContainer');
+      try {
+        const res = await window.api.get('/api/transfers/my');
+        const txList = res.transactions || [];
+
+        if (txList.length === 0) {
           container.innerHTML = `
-            <div style="text-align:center; padding:36px; color:var(--text-muted);">
-              You have no active applications.<br><br>
-              <a href="/customer/service-request.html" class="btn btn-primary btn-sm">+ Apply Now</a>
+            <div style="text-align:center; padding:30px; color:#94a3b8;">
+              <span style="font-size:2rem; display:block; margin-bottom:8px;">💳</span>
+              এখনো কোনো ট্রানজেকশন সম্পন্ন হয়নি।<br>
+              <a href="/customer/deposit.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ প্রথম ডিপোজিট করুন</a>
             </div>
           `;
           return;
         }
 
-        container.innerHTML = list.map(r => `
-          <div class="tx-item">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div class="tx-icon-circle">📑</div>
-              <div>
-                <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">${r.service_name}</div>
-                <div style="font-size:0.75rem; color:var(--text-light);">${r.request_number} &bull; ${window.UI.formatDateTime(r.created_at)}</div>
+        container.innerHTML = txList.slice(0, 5).map(tx => {
+          const isCredit = tx.type === 'CREDIT' || tx.type === 'DEPOSIT';
+          return `
+            <div class="tx-row">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:${isCredit ? '#dcfce7' : '#fee2e2'}; display:flex; align-items:center; justify-content:center;">
+                  ${isCredit ? '⬇️' : '⬆️'}
+                </div>
+                <div>
+                  <div style="font-weight:700; font-size:0.9rem; color:#0f172a;">${tx.reference || tx.type}</div>
+                  <div style="font-size:0.75rem; color:#64748b;">${new Date(tx.created_at).toLocaleString()}</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:800; font-size:0.95rem; color:${isCredit ? '#10b981' : '#ef4444'};">
+                  ${isCredit ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)} BDT
+                </div>
+                <div style="font-size:0.72rem; color:#64748b;">ব্যালেন্স: ${parseFloat(tx.balance_after).toFixed(2)} BDT</div>
               </div>
             </div>
-            <div style="text-align:right;">
-              ${window.UI.renderStatusBadge(r.status)}
-              <div style="margin-top:4px;">
-                <a href="/customer/request-details.html?id=${r.id}" style="font-size:0.78rem; font-weight:600;">
-                  Details &rarr;
-                </a>
-              </div>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       } catch (err) {
-        console.error(err);
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">লেনদেন লোড করা যায়নি।</p>`;
       }
     }
 
-    loadCustomerPortal();
+    async function loadRecentRequests() {
+      const container = document.getElementById('recentRequestsContainer');
+      try {
+        const res = await window.api.get('/api/requests/my');
+        const list = res.requests || [];
+
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:24px; color:#94a3b8;">
+              কোনো সাম্প্রতিক সার্ভিস রিকোয়েস্ট নেই।<br>
+              <a href="/customer/service-request.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ নতুন আবেদন তৈরি করুন</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>আবেদন নম্বর</th>
+                <th>সেবা</th>
+                <th>বিষয়</th>
+                <th>স্ট্যাটাস</th>
+                <th>তারিখ</th>
+                <th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.slice(0, 5).map(r => `
+                <tr>
+                  <td><strong>${r.request_number}</strong></td>
+                  <td>${r.service_name || '-'}</td>
+                  <td>${r.subject}</td>
+                  <td>${window.UI.renderStatusBadge(r.status)}</td>
+                  <td>${window.UI.formatDateOnly(r.created_at)}</td>
+                  <td>
+                    <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn primary">বিস্তারিত</a>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">আবেদন লোড করা যায়নি।</p>`;
+      }
+    }
+
+    initDashboard();
   </script>
 </body>
 </html>

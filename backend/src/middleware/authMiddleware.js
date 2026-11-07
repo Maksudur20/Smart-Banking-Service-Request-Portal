@@ -26,7 +26,11 @@ async function authenticateToken(req, res, next) {
     // Fetch user details from database to ensure user is active and exists
     const userQuery = `
       SELECT u.id, u.full_name, u.email, u.phone, u.role, u.is_active,
-             c.id AS customer_id, c.customer_reference, c.account_number,
+             c.id AS customer_id, c.customer_reference, c.account_number, c.address,
+             c.father_name, c.mother_name, c.permanent_address, c.occupation,
+             c.monthly_income, c.source_of_funds, c.account_type, c.kyc_status,
+             c.kyc_rejection_reason, c.account_operational_status, c.balance,
+             c.nominee_name, c.nominee_relation, c.nominee_nid,
              a.id AS admin_id, a.staff_reference, a.department
       FROM users u
       LEFT JOIN customers c ON c.user_id = u.id
@@ -86,7 +90,11 @@ async function optionalAuth(req, res, next) {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userQuery = `
       SELECT u.id, u.full_name, u.email, u.phone, u.role, u.is_active,
-             c.id AS customer_id, c.customer_reference, c.account_number,
+             c.id AS customer_id, c.customer_reference, c.account_number, c.address,
+             c.father_name, c.mother_name, c.permanent_address, c.occupation,
+             c.monthly_income, c.source_of_funds, c.account_type, c.kyc_status,
+             c.kyc_rejection_reason, c.account_operational_status, c.balance,
+             c.nominee_name, c.nominee_relation, c.nominee_nid,
              a.id AS admin_id, a.staff_reference, a.department
       FROM users u
       LEFT JOIN customers c ON c.user_id = u.id

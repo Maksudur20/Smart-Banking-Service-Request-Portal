@@ -117,10 +117,21 @@ const UI = {
         </div>
       </div>
       <div class="sidebar-nav">
-        <span class="nav-section-title">Menu</span>
+        <span class="nav-section-title">Banking & Transfers</span>
         <a href="/customer/dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
           <span>📊</span> Dashboard
         </a>
+        <a href="/customer/deposit.html" class="nav-item ${activePage === 'deposit' ? 'active' : ''}">
+          <span>📥</span> Deposit Money
+        </a>
+        <a href="/customer/transfer.html" class="nav-item ${activePage === 'transfer' ? 'active' : ''}">
+          <span>📤</span> Fund Transfer
+        </a>
+        <a href="/customer/kyc.html" class="nav-item ${activePage === 'kyc' ? 'active' : ''}">
+          <span>🪪</span> My KYC & Docs
+        </a>
+
+        <span class="nav-section-title">Services & Requests</span>
         <a href="/customer/services.html" class="nav-item ${activePage === 'services' ? 'active' : ''}">
           <span>🏦</span> Banking Services
         </a>
@@ -131,7 +142,7 @@ const UI = {
           <span>📋</span> My Requests
         </a>
         
-        <span class="nav-section-title">Support & Alerts</span>
+        <span class="nav-section-title">Support & Profile</span>
         <a href="/customer/notifications.html" class="nav-item ${activePage === 'notifications' ? 'active' : ''}">
           <span>🔔</span> Notifications
           <span class="nav-badge" id="sidebar-unread-badge" style="display:none;">0</span>
@@ -179,9 +190,15 @@ const UI = {
         </div>
       </div>
       <div class="sidebar-nav">
-        <span class="nav-section-title">Operations</span>
+        <span class="nav-section-title">Verification & Operations</span>
         <a href="/admin/admin-dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
           <span>📈</span> Admin Dashboard
+        </a>
+        <a href="/admin/admin-kyc.html" class="nav-item ${activePage === 'kyc' ? 'active' : ''}">
+          <span>🪪</span> KYC Verifications
+        </a>
+        <a href="/admin/admin-deposits.html" class="nav-item ${activePage === 'deposits' ? 'active' : ''}">
+          <span>💵</span> Deposit Verifications
         </a>
         <a href="/admin/admin-requests.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
           <span>📑</span> Request Review Queue
@@ -198,6 +215,31 @@ const UI = {
           <span>⚠️</span> Complaints Desk
         </a>
         <a href="/admin/admin-transactions.html" class="nav-item ${activePage === 'transactions' ? 'active' : ''}">
+          <span>💳</span> Live Transactions
+        </a>
+        <a href="/admin/admin-reports.html" class="nav-item ${activePage === 'reports' ? 'active' : ''}">
+          <span>📊</span> Analytics & Reports
+        </a>
+        <a href="/admin/admin-audit-logs.html" class="nav-item ${activePage === 'audit' ? 'active' : ''}">
+          <span>🛡️</span> Security & Audit Logs
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-mini-profile">
+          <div class="user-avatar" style="background:#0284c7;">A</div>
+          <div class="user-info-text">
+            <div class="user-name">${user.full_name || 'Admin'}</div>
+            <div class="user-role-badge">Admin Workspace</div>
+          </div>
+        </div>
+        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="Log Out" style="padding: 6px 10px;">
+          🚪
+        </button>
+      </div>
+    `;
+
+    this.initFloatingAIAssistant();
+  },
           <span>🔍</span> Transaction Monitoring
         </a>
         <a href="/admin/admin-reports.html" class="nav-item ${activePage === 'reports' ? 'active' : ''}">

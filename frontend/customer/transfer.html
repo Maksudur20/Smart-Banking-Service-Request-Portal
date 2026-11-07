@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ফান্ড ট্রান্সফার - Smart Banking PLC</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .transfer-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .transfer-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .kyc-lock-box {
+      background: #fef2f2;
+      border: 2px dashed #f87171;
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      color: #991b1b;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">📤 ফান্ড ট্রান্সফার (Fund Transfer)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span style="font-size:0.85rem; color:#64748b;">বর্তমান ব্যালেন্স: <strong id="currentBalDisplay" style="color:#10b981;">0.00 BDT</strong></span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- KYC Lock warning if not Approved -->
+        <div id="kycLockContainer" style="display:none;">
+          <div class="kyc-lock-box">
+            <span style="font-size:2.5rem; display:block; margin-bottom:8px;">🔒</span>
+            <h3 style="margin:0 0 8px 0; font-size:1.2rem; font-weight:700;">আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে সীমাবদ্ধ</h3>
+            <p style="font-size:0.9rem; max-width:550px; margin:0 auto 16px auto; line-height:1.5;">
+              বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী, আপনার জাতীয় পরিচয়পত্র ও প্রয়োজনীয় কেওয়াইসি (KYC) ভেরিফিকেশন ব্যাংক অফিসার কর্তৃক অনুমোদিত (Approved) না হওয়া পর্যন্ত অন্য অ্যাকাউন্টে টাকা পাঠানো সীমাবদ্ধ থাকবে।
+            </p>
+            <div style="display:flex; justify-content:center; gap:12px;">
+              <a href="/customer/kyc.html" class="btn btn-primary btn-sm" style="background:#dc2626; border:none;">
+                🪪 আমার KYC স্ট্যাটাস দেখুন
+              </a>
+              <a href="/customer/deposit.html" class="btn btn-secondary btn-sm">
+                📥 নিজের অ্যাকাউন্টে ডিপোজিট করুন
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="transfer-layout">
+          <!-- Transfer Form -->
+          <div class="card" id="transferFormCard">
+            <div class="card-header">
+              <h3 class="card-title">টাকা পাঠান (Send Money)</h3>
+              <span class="badge badge-approved" id="kycApprovedBadge" style="display:none;">KYC Verified</span>
+            </div>
+            <div class="card-body">
+              <form id="transferForm">
+                <div class="form-group">
+                  <label class="form-label required">প্রাপকের অ্যাকাউন্ট নম্বর (Receiver Account Number)</label>
+                  <input type="text" id="recipientAccount" class="form-control" placeholder="১০ ডিজিটের অ্যাকাউন্ট নম্বর (যেমন: 2026123456)" required>
+                  <small style="color:#64748b; font-size:0.75rem;">Smart Banking PLC-এর নিবন্ধিত সঠিক অ্যাকাউন্ট নম্বর দিন</small>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label required">ট্রান্সফারের পরিমাণ (Amount in BDT)</label>
+                  <input type="number" id="transferAmount" class="form-control" placeholder="যেমন: 1500" min="10" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">রেফারেন্স / বিবরণ (Reference / Purpose)</label>
+                  <input type="text" id="transferReference" class="form-control" placeholder="যেমন: Bill Payment / Family Support">
+                </div>
+
+                <button type="submit" id="transferSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top:20px;">
+                  📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Transfer History -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">আমার লেনদেন হিস্ট্রি (Transactions History)</h3>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <div id="transferHistoryContainer">
+                <p style="padding:24px; text-align:center; color:#94a3b8;">লোড হচ্ছে...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('transfer');
+
+    let currentCustomer = null;
+
+    async function loadData() {
+      try {
+        const meRes = await window.api.get('/api/auth/me');
+        const user = meRes.user || {};
+        currentCustomer = user.customer || {};
+
+        const bal = parseFloat(currentCustomer.balance || 0).toFixed(2);
+        document.getElementById('currentBalDisplay').innerText = `${bal} BDT`;
+
+        const kycStatus = currentCustomer.kyc_status;
+        const kycLock = document.getElementById('kycLockContainer');
+        const transferBtn = document.getElementById('transferSubmitBtn');
+        const kycBadge = document.getElementById('kycApprovedBadge');
+
+        if (kycStatus !== 'Approved') {
+          kycLock.style.display = 'block';
+          transferBtn.disabled = true;
+          transferBtn.style.opacity = '0.6';
+          transferBtn.innerText = '⚠️ KYC ভেরিফিকেশন ছাড়া ট্রান্সফার বন্ধ';
+        } else {
+          kycLock.style.display = 'none';
+          kycBadge.style.display = 'inline-block';
+          transferBtn.disabled = false;
+        }
+
+        loadHistory();
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+
+    async function loadHistory() {
+      const container = document.getElementById('transferHistoryContainer');
+      try {
+        const res = await window.api.get('/api/transfers/my');
+        const list = res.transactions || [];
+
+        if (list.length === 0) {
+          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">কোনো লেনদেন হিস্ট্রি নেই।</p>`;
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>লেনদেন নম্বর</th>
+                <th>টাইপ</th>
+                <th>পরিমাণ</th>
+                <th>কাউন্টারপার্টি</th>
+                <th>ব্যালেন্স</th>
+                <th>তারিখ</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(t => {
+                const isCredit = t.type === 'CREDIT' || t.type === 'DEPOSIT';
+                return `
+                  <tr>
+                    <td><strong>${t.transaction_number}</strong></td>
+                    <td>
+                      <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
+                        ${isCredit ? '⬇️ ইনকামিং / ডিপোজিট' : '⬆️ আউটগোয়িং ট্রান্সফার'}
+                      </span>
+                    </td>
+                    <td style="font-weight:700; color:${isCredit ? '#10b981' : '#ef4444'};">
+                      ${isCredit ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} BDT
+                    </td>
+                    <td>${t.counterparty_name || t.counterparty_account || '-'}</td>
+                    <td>${parseFloat(t.balance_after).toFixed(2)} BDT</td>
+                    <td style="font-size:0.8rem; color:#64748b;">${new Date(t.created_at).toLocaleDateString()}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">হিস্ট্রি পাওয়া যায়নি।</p>`;
+      }
+    }
+
+    document.getElementById('transferForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentCustomer || currentCustomer.kyc_status !== 'Approved') {
+        window.showToast('আপনার KYC অনুমোদিত নয়। ট্রান্সফার সম্পন্ন করা সম্ভব নয়।', 'error');
+        return;
+      }
+
+      const recipient_account = document.getElementById('recipientAccount').value.trim();
+      const amount = parseFloat(document.getElementById('transferAmount').value);
+      const reference = document.getElementById('transferReference').value.trim();
+
+      const btn = document.getElementById('transferSubmitBtn');
+
+      try {
+        btn.disabled = true;
+        btn.innerText = '⏳ ট্রান্সফার প্রক্রিয়াধীন...';
+
+        const res = await window.api.post('/api/transfers', {
+          recipient_account,
+          amount,
+          reference
+        });
+
+        window.showToast(`✅ ${amount} BDT সফলভাবে ট্রান্সফার হয়েছে! নতুন ব্যালেন্স: ${parseFloat(res.sender_balance).toFixed(2)} BDT`, 'success');
+        document.getElementById('transferForm').reset();
+        loadData();
+      } catch (err) {
+        window.showToast(err.message || 'ট্রান্সফার ব্যর্থ হয়েছে।', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন';
+      }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

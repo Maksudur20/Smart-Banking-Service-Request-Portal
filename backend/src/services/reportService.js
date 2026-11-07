@@ -9,7 +9,8 @@ async function getDashboardSummary() {
     requestsSummary,
     pendingReviews,
     complaintsSummary,
-    monitoringStats,
+    kycSummary,
+    depositsSummary,
     recentRequests,
   ] = await Promise.all([
     db.query(`SELECT 
@@ -40,10 +41,20 @@ async function getDashboardSummary() {
       FROM complaints`),
 
     db.query(`SELECT 
-      COUNT(*) as total_transactions,
-      COUNT(*) FILTER (WHERE monitoring_status = 'Suspicious') as suspicious_count,
-      COUNT(*) FILTER (WHERE monitoring_status = 'Under_Review') as under_review_count
-      FROM demo_transactions`),
+      COUNT(*) as total_customers,
+      COUNT(*) FILTER (WHERE kyc_status = 'Pending') as kyc_pending,
+      COUNT(*) FILTER (WHERE kyc_status = 'Under Review') as kyc_under_review,
+      COUNT(*) FILTER (WHERE kyc_status = 'Approved') as kyc_approved,
+      COUNT(*) FILTER (WHERE kyc_status = 'Rejected') as kyc_rejected,
+      COUNT(*) FILTER (WHERE kyc_status = 'Documents Required') as kyc_docs_required
+      FROM customers`),
+
+    db.query(`SELECT 
+      COUNT(*) as total_deposits,
+      COUNT(*) FILTER (WHERE status = 'Pending Verification') as pending_deposits,
+      COUNT(*) FILTER (WHERE status = 'Approved') as approved_deposits,
+      COALESCE(SUM(amount) FILTER (WHERE status = 'Approved'), 0) as total_approved_amount
+      FROM deposits`),
 
     db.query(`SELECT sr.id, sr.request_number, sr.subject, sr.status, sr.created_at,
                      s.name AS service_name, u.full_name AS customer_name
@@ -60,7 +71,8 @@ async function getDashboardSummary() {
     requests: requestsSummary.rows[0],
     pendingCount: parseInt(pendingReviews.rows[0].pending_count, 10),
     complaints: complaintsSummary.rows[0],
-    monitoring: monitoringStats.rows[0],
+    kyc: kycSummary.rows[0],
+    deposits: depositsSummary.rows[0],
     recentRequests: recentRequests.rows,
   };
 }
@@ -134,4 +146,3 @@ module.exports = {
   getRequestsReport,
   getComplaintsReport,
 };
-

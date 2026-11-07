@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+    .docs-viewer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .doc-preview-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+    .doc-preview-item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin: 8px 0;
+      border: 1px solid #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🪪 গ্রাহক কেওয়াইসি ভেরিফিকেশন ডেস্ক (KYC Desk)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span style="font-size:0.85rem; color:#64748b;">অ্যাডমিন ওয়ার্কস্পেস</span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Stats Row -->
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <span class="stat-value" id="countPending" style="color:#d97706;">0</span>
+            <span class="stat-label">Pending / অপেক্ষা করছে</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="countApproved" style="color:#059669;">0</span>
+            <span class="stat-label">Approved / অনুমোদিত</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="countRejected" style="color:#dc2626;">0</span>
+            <span class="stat-label">Rejected / বাতিল</span>
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-body" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <label style="font-weight:600; font-size:0.85rem;">ফিল্টার:</label>
+              <select id="statusFilter" class="form-control" style="width:180px;">
+                <option value="">সকল আবেদন (All)</option>
+                <option value="Pending">Pending (অপেক্ষমাণ)</option>
+                <option value="Approved">Approved (অনুমোদিত)</option>
+                <option value="Rejected">Rejected (বাতিলকৃত)</option>
+              </select>
+            </div>
+            <button onclick="loadApplications()" class="btn btn-secondary btn-sm">🔄 রিফ্রেশ</button>
+          </div>
+        </div>
+
+        <!-- Applications Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">আবেদনকারী তালিকা (KYC Applications)</h3>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div id="applicationsContainer">
+              <p style="padding:30px; text-align:center; color:#94a3b8;">লোড হচ্ছে...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div id="kycModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:#0f172a;" id="modalCustomerName">আবেদনকারীর তথ্য ও ডকুমেন্টস</h3>
+        <button onclick="closeModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
+      </div>
+
+      <div id="modalCustomerBio" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px; font-size:0.85rem; line-height:1.6;">
+        <!-- Filled by JS -->
+      </div>
+
+      <h4 style="margin:16px 0 8px 0; font-size:1rem; color:#0f172a;">সংযুক্ত ডকুমেন্টস (Uploaded KYC Documents):</h4>
+      <div id="modalDocsContainer" class="docs-viewer-grid">
+        <!-- Docs injected by JS -->
+      </div>
+
+      <!-- Decision Form -->
+      <div style="border-top:1px solid #e2e8f0; padding-top:16px; margin-top:20px;">
+        <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;">অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:</h4>
+        
+        <div class="form-group">
+          <label class="form-label">মন্তব্য / বাতিলের কারণ (Rejection Reason or Remarks):</label>
+          <textarea id="adminRemarks" class="form-control" rows="2" placeholder="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ বাধ্যতামূলক"></textarea>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="makeDecision('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;">
+            ❌ Reject Application
+          </button>
+          <button onclick="makeDecision('REQUEST_DOCS')" class="btn btn-secondary" style="background:#fffbeb; color:#d97706; border-color:#fde68a;">
+            ⚠️ Request Additional Docs
+          </button>
+          <button onclick="makeDecision('APPROVE')" class="btn btn-primary" style="background:#059669; border-color:#059669;">
+            ✅ Approve KYC & Activate Full Banking
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('ADMIN');
+    window.UI.renderAdminSidebar('kyc');
+
+    let currentApplications = [];
+    let selectedCustomerId = null;
+
+    async function loadApplications() {
+      const container = document.getElementById('applicationsContainer');
+      const statusFilter = document.getElementById('statusFilter').value;
+
+      try {
+        let url = '/api/kyc/admin/applications';
+        if (statusFilter) url += `?status=${statusFilter}`;
+
+        const res = await window.api.get(url);
+        currentApplications = res.applications || [];
+
+        // Count stats
+        let p = 0, a = 0, r = 0;
+        currentApplications.forEach(app => {
+          if (app.kyc_status === 'Approved') a++;
+          else if (app.kyc_status === 'Rejected') r++;
+          else p++;
+        });
+        document.getElementById('countPending').innerText = p;
+        document.getElementById('countApproved').innerText = a;
+        document.getElementById('countRejected').innerText = r;
+
+        if (currentApplications.length === 0) {
+          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">কোনো আবেদন পাওয়া যায়নি।</p>`;
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>গ্রাহক রেফারেন্স</th>
+                <th>নাম ও ইমেইল</th>
+                <th>অ্যাকাউন্ট নম্বর</th>
+                <th>অ্যাকাউন্টের ধরন</th>
+                <th>ডকুমেন্ট সংখ্যা</th>
+                <th>কেওয়াইসি স্ট্যাটাস</th>
+                <th>আবেদনের তারিখ</th>
+                <th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${currentApplications.map(app => {
+                let badgeClass = 'badge-submitted';
+                if (app.kyc_status === 'Approved') badgeClass = 'badge-approved';
+                if (app.kyc_status === 'Rejected') badgeClass = 'badge-rejected';
+
+                return `
+                  <tr>
+                    <td><strong>${app.customer_reference}</strong></td>
+                    <td>
+                      <div style="font-weight:600; color:#0f172a;">${app.full_name}</div>
+                      <div style="font-size:0.75rem; color:#64748b;">${app.email}</div>
+                    </td>
+                    <td><strong style="color:#0284c7;">${app.account_number}</strong></td>
+                    <td>${app.account_type || 'Savings'}</td>
+                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${app.doc_count || 0} টি ফাইল</span></td>
+                    <td><span class="badge ${badgeClass}">${app.kyc_status}</span></td>
+                    <td style="font-size:0.8rem; color:#64748b;">${new Date(app.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <button onclick="openReviewModal(${app.id})" class="table-action-btn primary">
+                        যাচাই করুন &rsaquo;
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">আবেদন তালিকা লোড করা যায়নি।</p>`;
+      }
+    }
+
+    async function openReviewModal(customerId) {
+      selectedCustomerId = customerId;
+      document.getElementById('adminRemarks').value = '';
+
+      try {
+        const res = await window.api.get(`/api/kyc/admin/applications/${customerId}`);
+        const c = res.customer;
+        const docs = res.documents || [];
+
+        document.getElementById('modalCustomerName').innerText = `${c.full_name} — KYC Review`;
+
+        document.getElementById('modalCustomerBio').innerHTML = `
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div><strong>অ্যাকাউন্ট নম্বর:</strong> ${c.account_number}</div>
+            <div><strong>অ্যাকাউন্টের ধরন:</strong> ${c.account_type}</div>
+            <div><strong>পিতার নাম:</strong> ${c.father_name || 'N/A'}</div>
+            <div><strong>মাতার নাম:</strong> ${c.mother_name || 'N/A'}</div>
+            <div><strong>জাতীয় পরিচয়পত্র (NID):</strong> ${c.nid_number || 'N/A'}</div>
+            <div><strong>মোবাইল:</strong> ${c.phone || 'N/A'}</div>
+            <div><strong>পেশা:</strong> ${c.occupation || 'N/A'} (আয়: ${c.monthly_income || 0} BDT)</div>
+            <div><strong>বর্তমান ব্যালেন্স:</strong> ${parseFloat(c.balance || 0).toFixed(2)} BDT</div>
+            <div><strong>বর্তমান ঠিকানা:</strong> ${c.present_address || c.address || 'N/A'}</div>
+            <div><strong>নমিনির তথ্য:</strong> ${c.nominee_name || 'N/A'} (${c.nominee_relation || '-'}) NID: ${c.nominee_nid || '-'}</div>
+          </div>
+          <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;">
+            <strong>বর্তমান কেওয়াইসি স্ট্যাটাস:</strong> <span class="badge ${c.kyc_status === 'Approved' ? 'badge-approved' : (c.kyc_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">${c.kyc_status}</span>
+            ${c.kyc_rejection_reason ? `<span style="color:#dc2626; margin-left:12px;">(পূর্বের কারণ: ${c.kyc_rejection_reason})</span>` : ''}
+          </div>
+        `;
+
+        const docsContainer = document.getElementById('modalDocsContainer');
+        if (docs.length === 0) {
+          docsContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">কোনো ডকুমেন্ট ফাইল পাওয়া যায়নি।</p>`;
+        } else {
+          docsContainer.innerHTML = docs.map(d => {
+            const isPdf = (d.mime_type || '').includes('pdf') || (d.file_name || '').endsWith('.pdf');
+            return `
+              <div class="doc-preview-item">
+                <div style="font-weight:700; font-size:0.85rem; color:#0f172a;">${d.title || d.doc_type}</div>
+                <div style="font-size:0.72rem; color:#64748b;">${d.doc_type}</div>
+                ${isPdf ? `
+                  <div style="height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff; border:1px solid #e2e8f0; border-radius:4px; margin:6px 0;">
+                    <span style="font-size:2rem;">📄</span>
+                    <span style="font-size:0.75rem;">PDF Document</span>
+                  </div>
+                ` : `
+                  <img src="${d.file_url}" alt="${d.doc_type}">
+                `}
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                  <span class="badge ${d.verification_status === 'Approved' ? 'badge-approved' : 'badge-submitted'}" style="font-size:0.7rem;">
+                    ${d.verification_status || 'Pending'}
+                  </span>
+                  <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem;">পূর্ণাঙ্গ দেখুন ↗</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('kycModal').classList.add('open');
+      } catch (err) {
+        window.showToast(err.message || 'গ্রাহক তথ্য লোড করা যায়নি।', 'error');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('kycModal').classList.remove('open');
+      selectedCustomerId = null;
+    }
+
+    async function makeDecision(decision) {
+      if (!selectedCustomerId) return;
+      const remarks = document.getElementById('adminRemarks').value.trim();
+
+      if ((decision === 'REJECT' || decision === 'REQUEST_DOCS') && !remarks) {
+        window.showToast('বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার জন্য অবশ্যই কারণ/মন্তব্য উল্লেখ করুন।', 'error');
+        return;
+      }
+
+      try {
+        const res = await window.api.post(`/api/kyc/admin/applications/${selectedCustomerId}/decision`, {
+          decision,
+          rejection_reason: remarks,
+          remarks
+        });
+
+        window.showToast(`✅ সিদ্ধান্ত সফলভাবে সংরক্ষিত হয়েছে: ${res.new_status}`, 'success');
+        closeModal();
+        loadApplications();
+      } catch (err) {
+        window.showToast(err.message || 'সিদ্ধান্ত সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    document.getElementById('statusFilter').addEventListener('change', loadApplications);
+
+    loadApplications();
+  </script>
+</body>
+</html>

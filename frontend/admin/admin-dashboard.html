@@ -95,43 +95,42 @@
       </header>
 
       <main class="content-container">
-        <!-- 4 Top Metric Cards (Exact Match to Reference UI) -->
+        <!-- 4 Top Metric Cards (Real Banking Operations) -->
         <div class="metrics-grid">
-          <div class="metric-card">
+          <div class="metric-card" onclick="window.location.href='/admin/admin-customers.html'" style="cursor:pointer;">
             <div class="metric-left">
-              <span class="metric-title">Total Customers</span>
-              <div class="metric-value" id="mCustCount">24,680</div>
-              <div class="metric-trend up">&uarr; +5% <span style="color:var(--text-light); font-weight:400;">vs. last month</span></div>
+              <span class="metric-title">নিবন্ধিত গ্রাহক (Total Customers)</span>
+              <div class="metric-value" id="mCustCount">0</div>
+              <div class="metric-trend up" style="color:#0284c7;">বাস্তব নিবন্ধিত গ্রাহক সংখ্যা</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">👥</div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header" style="margin:0;"></div>
+          <div class="metric-card" onclick="window.location.href='/admin/admin-kyc.html'" style="cursor:pointer; border-left:4px solid #f59e0b;">
             <div class="metric-left">
-              <span class="metric-title">Pending Requests</span>
-              <div class="metric-value" id="mPendingCount">128</div>
-              <div class="metric-trend up" style="color:var(--warning);">&uarr; +12% <span style="color:var(--text-light); font-weight:400;">vs. last week</span></div>
+              <span class="metric-title">কেওয়াইসি ভেরিফিকেশন (KYC Pending)</span>
+              <div class="metric-value" id="mKycPendingCount" style="color:#d97706;">0</div>
+              <div class="metric-trend up" style="color:#d97706;">যাচাইয়ের অপেক্ষায় &rsaquo;</div>
+            </div>
+            <div class="metric-icon-box" style="background:#fef3c7; color:#d97706;">🪪</div>
+          </div>
+
+          <div class="metric-card" onclick="window.location.href='/admin/admin-deposits.html'" style="cursor:pointer; border-left:4px solid #10b981;">
+            <div class="metric-left">
+              <span class="metric-title">ডিপোজিট ভেরিফিকেশন (Deposits)</span>
+              <div class="metric-value" id="mPendingDepositCount" style="color:#059669;">0</div>
+              <div class="metric-trend up" style="color:#059669;">স্লিপ ও TrxID যাচাই &rsaquo;</div>
+            </div>
+            <div class="metric-icon-box" style="background:#dcfce7; color:#059669;">💵</div>
+          </div>
+
+          <div class="metric-card" onclick="window.location.href='/admin/admin-requests.html'" style="cursor:pointer;">
+            <div class="metric-left">
+              <span class="metric-title">সার্ভিস রিকোয়েস্ট (Service Requests)</span>
+              <div class="metric-value" id="mPendingCount">0</div>
+              <div class="metric-trend up" style="color:#0284c7;">কার্ড ও চেকবই আবেদন &rsaquo;</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">📋</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-left">
-              <span class="metric-title">Transactions Today</span>
-              <div class="metric-value">8,452</div>
-              <div class="metric-trend up">&uarr; +8% <span style="color:var(--text-light); font-weight:400;">vs. yesterday</span></div>
-            </div>
-            <div class="metric-icon-box metric-icon-blue">⇄</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-left">
-              <span class="metric-title">Flagged Transactions</span>
-              <div class="metric-value" id="mFlaggedCount" style="color:var(--danger);">17</div>
-              <div class="metric-trend down" style="color:var(--danger);">&uarr; +6% <span style="color:var(--text-light); font-weight:400;">vs. yesterday</span></div>
-            </div>
-            <div class="metric-icon-box metric-icon-red">🛡️</div>
           </div>
         </div>
 
@@ -322,14 +321,17 @@
         const res = await window.api.get('/api/admin/dashboard');
         const summary = res.summary || {};
 
-        if (summary.users?.customer_count) {
+        if (summary.users?.customer_count !== undefined) {
           document.getElementById('mCustCount').innerText = Number(summary.users.customer_count).toLocaleString();
+        }
+        if (summary.kyc?.kyc_pending !== undefined) {
+          document.getElementById('mKycPendingCount').innerText = summary.kyc.kyc_pending;
+        }
+        if (summary.deposits?.pending_deposits !== undefined) {
+          document.getElementById('mPendingDepositCount').innerText = summary.deposits.pending_deposits;
         }
         if (summary.pendingCount !== undefined) {
           document.getElementById('mPendingCount').innerText = summary.pendingCount;
-        }
-        if (summary.monitoring?.suspicious_count) {
-          document.getElementById('mFlaggedCount').innerText = summary.monitoring.suspicious_count;
         }
 
         const tbody = document.getElementById('priorityQueueBody');

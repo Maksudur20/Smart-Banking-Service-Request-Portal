@@ -1,17 +1,37 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/database');
+const { uploadFileBuffer } = require('../services/cloudinaryService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_banking_portal_2026_dev_mode';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
 /**
- * Register a new customer
+ * Register a new customer / Open a new account with KYC documents
  */
 async function register(req, res, next) {
   const client = await db.getClient();
   try {
-    const { full_name, email, phone, password, address, date_of_birth } = req.body;
+    const {
+      full_name,
+      email,
+      phone,
+      password,
+      father_name,
+      mother_name,
+      date_of_birth,
+      nid_number,
+      present_address,
+      permanent_address,
+      occupation = 'Salaried',
+      monthly_income = 0,
+      source_of_funds = 'Salary',
+      account_type = 'Prime Savings Account',
+      nominee_name,
+      nominee_relation,
+      nominee_nid,
+      address
+    } = req.body;
 
     if (!full_name || !email || !password) {
       return res.status(400).json({
@@ -52,19 +72,86 @@ async function register(req, res, next) {
     );
     const user = userRes.rows[0];
 
-    // Generate unique customer reference & demo account number
+    // Generate unique 10-digit authentic account number: 2026 + 6 random digits
     const year = new Date().getFullYear();
+    const randomDigits = Math.floor(100000 + Math.random() * 900000);
+    const accountNumber = `${year}${randomDigits}`;
     const customerRef = `CUST-${year}-${String(user.id).padStart(4, '0')}`;
-    const accountNumber = `${year}${String(user.id).padStart(8, '0')}`;
 
     // Insert customer profile
     const custRes = await client.query(
-      `INSERT INTO customers (user_id, customer_reference, account_number, date_of_birth, address)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, customer_reference, account_number, address`,
-      [user.id, customerRef, accountNumber, date_of_birth || null, address || null]
+      `INSERT INTO customers (
+         user_id, customer_reference, account_number, date_of_birth, address,
+         father_name, mother_name, permanent_address, occupation, monthly_income,
+         source_of_funds, account_type, kyc_status, account_operational_status, balance,
+         nominee_name, nominee_relation, nominee_nid
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'Pending', 'Restricted', 0.00, $13, $14, $15)
+       RETURNING *`,
+      [
+        user.id,
+        customerRef,
+        accountNumber,
+        date_of_birth || null,
+        present_address || address || null,
+        father_name || null,
+        mother_name || null,
+        permanent_address || null,
+        occupation || 'Salaried',
+        parseFloat(monthly_income) || 0.00,
+        source_of_funds || 'Salary',
+        account_type || 'Prime Savings Account',
+        nominee_name || null,
+        nominee_relation || null,
+        nominee_nid || null
+      ]
     );
     const customer = custRes.rows[0];
+
+    // Handle any uploaded KYC documents (via Multer req.files)
+    const uploadedDocs = [];
+    if (req.files) {
+      const docTypeMapping = {
+        applicant_photo: { title: "Applicant Photograph (Used for Profile & Debit Card)" },
+        nid_front: { title: "NID Card Front Side (Used for Identity Proof)" },
+        nid_back: { title: "NID Card Back Side (Used for Address & Barcode Verification)" },
+        signature: { title: "Applicant Signature (Used for Cheque & Transaction Verification)" },
+        nominee_photo: { title: "Nominee Photograph (Used for Nominee Verification)" },
+        nominee_nid: { title: "Nominee Identity Document (Used for Legal Nominee Verification)" },
+        utility_bill: { title: "Utility Bill (Used for Address Verification)" },
+        income_proof: { title: "Proof of Income / Salary Slip / Trade License (Used for AML & KYC Eligibility)" }
+      };
+
+      for (const [fieldName, meta] of Object.entries(docTypeMapping)) {
+        const fileArr = req.files[fieldName];
+        if (fileArr && fileArr.length > 0) {
+          const f = fileArr[0];
+          try {
+            const uploadRes = await uploadFileBuffer(f.buffer, f.originalname, 'Smart-Banking-Service-Request-Portal/kyc');
+            const docInsert = await client.query(`
+              INSERT INTO kyc_documents (
+                customer_id, doc_type, title, file_url, cloudinary_public_id,
+                file_name, mime_type, file_size_bytes, verification_status
+              )
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Pending')
+              RETURNING *
+            `, [
+              customer.id,
+              fieldName,
+              meta.title,
+              uploadRes.secure_url,
+              uploadRes.public_id,
+              f.originalname,
+              f.mimetype,
+              f.size
+            ]);
+            uploadedDocs.push(docInsert.rows[0]);
+          } catch (uploadErr) {
+            console.warn(`[KYC Upload Warning for ${fieldName}]:`, uploadErr.message);
+          }
+        }
+      }
+    }
 
     // Create welcome notification
     await client.query(
@@ -72,19 +159,25 @@ async function register(req, res, next) {
        VALUES ($1, $2, $3, 'IN_APP')`,
       [
         user.id,
-        'Welcome to Smart Banking Portal',
-        `Welcome ${user.full_name}! Your customer profile has been created with reference ${customerRef}. You can now submit service requests online.`
+        'Welcome to Smart Banking PLC',
+        `Account created successfully! Your Account Number is ${accountNumber}. Your account is currently under Pending KYC verification. You can deposit money into your account, but outgoing fund transfers remain restricted until KYC documents are approved.`
       ]
     );
 
     // Create audit log
     await client.query(
       `INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, details, ip_address)
-       VALUES ($1, 'CUSTOMER_REGISTER', 'users', $2, $3, $4)`,
+       VALUES ($1, 'ACCOUNT_OPENING_REGISTER', 'users', $2, $3, $4)`,
       [
         user.id,
         String(user.id),
-        JSON.stringify({ email: user.email, customer_reference: customerRef }),
+        JSON.stringify({
+          email: user.email,
+          customer_reference: customerRef,
+          account_number: accountNumber,
+          account_type: customer.account_type,
+          documents_uploaded: uploadedDocs.length
+        }),
         req.ip || '127.0.0.1'
       ]
     );
@@ -100,7 +193,7 @@ async function register(req, res, next) {
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful! Welcome to Smart Banking Portal.',
+      message: 'Account created successfully with Pending KYC status.',
       token,
       user: {
         id: user.id,
@@ -111,6 +204,12 @@ async function register(req, res, next) {
         customer_id: customer.id,
         customer_reference: customer.customer_reference,
         account_number: customer.account_number,
+        account_type: customer.account_type,
+        balance: 0.00,
+        kyc_status: 'Pending',
+        account_operational_status: 'Restricted',
+        address: customer.address,
+        uploaded_documents_count: uploadedDocs.length
       },
     });
   } catch (err) {
@@ -138,6 +237,10 @@ async function login(req, res, next) {
     const query = `
       SELECT u.id, u.full_name, u.email, u.phone, u.password_hash, u.role, u.is_active,
              c.id AS customer_id, c.customer_reference, c.account_number, c.address,
+             c.father_name, c.mother_name, c.permanent_address, c.occupation,
+             c.monthly_income, c.source_of_funds, c.account_type, c.kyc_status,
+             c.kyc_rejection_reason, c.account_operational_status, c.balance,
+             c.nominee_name, c.nominee_relation, c.nominee_nid,
              a.id AS admin_id, a.staff_reference, a.department
       FROM users u
       LEFT JOIN customers c ON c.user_id = u.id
@@ -203,7 +306,14 @@ async function login(req, res, next) {
         customer_id: user.customer_id,
         customer_reference: user.customer_reference,
         account_number: user.account_number,
+        account_type: user.account_type,
+        balance: parseFloat(user.balance || 0),
+        kyc_status: user.kyc_status || 'Pending',
+        kyc_rejection_reason: user.kyc_rejection_reason,
+        account_operational_status: user.account_operational_status || 'Restricted',
         address: user.address,
+        occupation: user.occupation,
+        monthly_income: user.monthly_income,
         admin_id: user.admin_id,
         staff_reference: user.staff_reference,
         department: user.department,
@@ -218,9 +328,27 @@ async function login(req, res, next) {
  * Get current authenticated user details
  */
 async function getMe(req, res) {
+  const u = req.user || {};
   res.json({
     success: true,
-    user: req.user,
+    user: {
+      ...u,
+      customer: {
+        id: u.customer_id,
+        customer_reference: u.customer_reference,
+        account_number: u.account_number,
+        account_type: u.account_type,
+        balance: parseFloat(u.balance || 0),
+        kyc_status: u.kyc_status || 'Pending',
+        kyc_rejection_reason: u.kyc_rejection_reason,
+        account_operational_status: u.account_operational_status || 'Restricted',
+        address: u.address,
+        father_name: u.father_name,
+        mother_name: u.mother_name,
+        occupation: u.occupation,
+        monthly_income: u.monthly_income,
+      }
+    },
   });
 }
 

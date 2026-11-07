@@ -1,96 +1,373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Registration - Smart Banking Portal</title>
+  <title>নতুন অ্যাকাউন্ট আবেদন ও কেওয়াইসি ভেরিফিকেশন - Smart Banking PLC</title>
   <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .reg-container {
+      max-width: 860px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+    .reg-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 32px;
+      border: 1px solid #e2e8f0;
+    }
+    .form-section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #0284c7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .form-grid-2, .form-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .upload-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 14px;
+      background: #f8fafc;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .upload-box:hover {
+      border-color: #0284c7;
+      background: #f0f9ff;
+    }
+    .upload-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1e293b;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .upload-purpose {
+      font-size: 0.78rem;
+      color: #0284c7;
+      margin-bottom: 8px;
+      display: block;
+      line-height: 1.3;
+    }
+    .upload-input {
+      font-size: 0.85rem;
+      width: 100%;
+    }
+    .file-hint {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .status-badge-pending {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
-<body class="auth-page">
-  <div class="auth-card" style="max-width: 500px;">
-    <div class="auth-header">
-      <div class="auth-brand">
-        <div class="brand-icon">SB</div>
-        <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
-      </div>
-      <h2 class="auth-title">Create Account</h2>
-      <p class="auth-sub">Register as a new customer to access digital banking services</p>
-    </div>
-
-    <form id="registerForm">
-      <div class="form-group">
-        <label class="form-label required">Full Legal Name</label>
-        <input type="text" id="full_name" class="form-control" placeholder="e.g. John Doe" required>
+<body class="bg-gray-50">
+  <div class="reg-container">
+    <div class="reg-card">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <div style="background:#0284c7; color:#fff; font-weight:800; padding:6px 12px; border-radius:6px; font-size:1.1rem;">SB</div>
+          <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0;">Smart Banking PLC</h1>
+        </div>
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #334155; margin: 4px 0;">অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন ও ই-কেওয়াইসি (e-KYC)</h2>
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী সঠিক তথ্য ও প্রয়োজনীয় কাগজপত্র সংযুক্ত করে আবেদন সম্পন্ন করুন।</p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label required">Email Address</label>
-        <input type="email" id="email" class="form-control" placeholder="john.doe@example.com" required>
+      <div class="status-badge-pending">
+        ℹ️ <strong>জরুরি তথ্য:</strong> অ্যাকাউন্ট খোলার পর আপনার প্রোফাইলটি <em>Pending KYC</em> স্ট্যাটাসে থাকবে। অ্যাডমিন ভেরিফিকেশনের পর আউটগোয়িং ফান্ড ট্রান্সফার সক্রিয় হবে। আপনি সাথে সাথেই নিজের অ্যাকাউন্টে ডিপোজিট করতে পারবেন।
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Contact Phone</label>
-        <input type="tel" id="phone" class="form-control" placeholder="+8801700000000">
+      <form id="kycRegistrationForm" enctype="multipart/form-data">
+        <!-- 1. ব্যক্তিগত তথ্য (Applicant Info) -->
+        <div class="form-section-title">
+          <span>👤</span> ১. আবেদনকারীর ব্যক্তিগত তথ্য (Personal Information)
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label required">আবেদনকারীর পূর্ণ নাম (Full Legal Name)</label>
+            <input type="text" id="full_name" name="full_name" class="form-control" placeholder="যেমন: মোঃ কামরুল হাসান" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">ইমেইল ঠিকানা (Email Address)</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="kamrul@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label required">মোবাইল নম্বর (Contact Phone)</label>
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="017XXXXXXXX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">পাসওয়ার্ড (লগইনের জন্য)</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="কমপক্ষে ৬ অক্ষর" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">অ্যাকাউন্টের ধরন (Account Type)</label>
+            <select id="account_type" name="account_type" class="form-control" required>
+              <option value="Prime Savings Account">Prime Savings Account (প্রাথমিক জমা ৫০০৳)</option>
+              <option value="Current Deposit Account">Current Deposit Account (ব্যবসায়িক)</option>
+              <option value="Student Savings Account">Student Savings Account</option>
+              <option value="Salary Account">Salary Account</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label">পিতার নাম (Father's Name)</label>
+            <input type="text" id="father_name" name="father_name" class="form-control" placeholder="পিতার পূর্ণ নাম">
+          </div>
+          <div class="form-group">
+            <label class="form-label">মাতার নাম (Mother's Name)</label>
+            <input type="text" id="mother_name" name="mother_name" class="form-control" placeholder="মাতার পূর্ণ নাম">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">জন্ম তারিখ (Date of Birth)</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label required">জাতীয় পরিচয়পত্র নম্বর (NID Number)</label>
+            <input type="text" id="nid_number" name="nid_number" class="form-control" placeholder="১০ বা ১৭ ডিজিটের NID" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">পেশা ও মাসিক আয় (Occupation & Monthly Income)</label>
+            <div style="display:flex; gap:8px;">
+              <select id="occupation" name="occupation" class="form-control" style="flex:1;">
+                <option value="Salaried">চাকরিজীবী (Salaried)</option>
+                <option value="Business">ব্যবসায়ী (Business)</option>
+                <option value="Self-employed">পেশাজীবী (Self-employed)</option>
+                <option value="Student">শিক্ষার্থী (Student)</option>
+                <option value="Homemaker">গৃহিণী (Homemaker)</option>
+              </select>
+              <input type="number" id="monthly_income" name="monthly_income" class="form-control" placeholder="আয় (টাকায়)" style="flex:1;">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label required">বর্তমান ঠিকানা (Present Address)</label>
+            <textarea id="present_address" name="present_address" class="form-control" rows="2" placeholder="বাড়ি/রাস্তা, এলাকা, থানা, জেলা" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">স্থায়ী ঠিকানা (Permanent Address)</label>
+            <textarea id="permanent_address" name="permanent_address" class="form-control" rows="2" placeholder="গ্রাম/রাস্তা, ডাকঘর, থানা, জেলা"></textarea>
+          </div>
+        </div>
+
+        <!-- 2. নমিনির তথ্য (Nominee Info) -->
+        <div class="form-section-title">
+          <span>🤝</span> ২. নমিনির তথ্য (Nominee Information)
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label required">নমিনির নাম (Nominee Name)</label>
+            <input type="text" id="nominee_name" name="nominee_name" class="form-control" placeholder="নমিনির পূর্ণ নাম" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">সম্পর্ক (Relationship)</label>
+            <select id="nominee_relation" name="nominee_relation" class="form-control" required>
+              <option value="Spouse">স্বামী / স্ত্রী (Spouse)</option>
+              <option value="Father">পিতা (Father)</option>
+              <option value="Mother">মাতা (Mother)</option>
+              <option value="Son">পুত্র (Son)</option>
+              <option value="Daughter">কন্যা (Daughter)</option>
+              <option value="Brother">ভাই (Brother)</option>
+              <option value="Sister">বোন (Sister)</option>
+              <option value="Other">অন্যান্য (Other)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">নমিনির NID / জন্মনিবন্ধন নম্বর</label>
+            <input type="text" id="nominee_nid" name="nominee_nid" class="form-control" placeholder="নমিনির পরিচয়পত্র নম্বর">
+          </div>
+        </div>
+
+        <!-- 3. প্রয়োজনীয় ডকুমেন্ট আপলোড (Document Upload Options) -->
+        <div class="form-section-title">
+          <span>📁</span> ৩. ছবি ও ডকুমেন্ট আপলোড (Document & Photo Verification)
+        </div>
+        <p style="color:#64748b; font-size:0.85rem; margin-bottom:16px;">
+          প্রতিটি ডকুমেন্টের পাশে ছবিটি কোথায় ও কেন ব্যবহার হবে তা উল্লেখ করা হয়েছে। অনুমোদিত ফাইল ফরম্যাট: JPG, PNG, PDF (সর্বোচ্চ 5MB)।
+        </p>
+
+        <div class="form-grid-2">
+          <!-- 1. Applicant Photo -->
+          <div class="upload-box">
+            <label class="upload-label required">১. আবেদনকারীর পাসপোর্ট সাইজ ছবি (Applicant's Photo)</label>
+            <span class="upload-purpose">📌 ব্যবহার: গ্রাহকের ব্যাংক প্রোফাইল এবং ডেবিট কার্ড প্রিন্টিংয়ে ব্যবহৃত হবে।</span>
+            <input type="file" name="applicant_photo" class="upload-input" accept="image/jpeg,image/png,image/webp" required>
+            <div class="file-hint">সাম্প্রতিক তোলা পরিষ্কার রঙিন ছবি (সর্বোচ্চ 5MB)</div>
+          </div>
+
+          <!-- 2. Applicant Signature -->
+          <div class="upload-box">
+            <label class="upload-label required">২. আবেদনকারীর নমুনা স্বাক্ষর (Applicant's Signature)</label>
+            <span class="upload-purpose">📌 ব্যবহার: চেকবই ও ব্যাংকিং লেনদেনের স্বাক্ষর যাচাইয়ের জন্য সংরক্ষিত থাকবে।</span>
+            <input type="file" name="signature" class="upload-input" accept="image/jpeg,image/png" required>
+            <div class="file-hint">সাদা কাগজে কালো বা নীল কালির স্পষ্ট স্বাক্ষর</div>
+          </div>
+
+          <!-- 3. NID Front -->
+          <div class="upload-box">
+            <label class="upload-label required">৩. জাতীয় পরিচয়পত্র - সামনের অংশ (NID Front Side)</label>
+            <span class="upload-purpose">📌 ব্যবহার: আবেদনকারীর নাম, ছবি ও জন্ম তারিখ ভেরিফিকেশনের জন্য।</span>
+            <input type="file" name="nid_front" class="upload-input" accept="image/jpeg,image/png,application/pdf" required>
+            <div class="file-hint">স্পষ্ট ছবি বা স্ক্যান কপি</div>
+          </div>
+
+          <!-- 4. NID Back -->
+          <div class="upload-box">
+            <label class="upload-label required">৪. জাতীয় পরিচয়পত্র - পেছনের অংশ (NID Back Side)</label>
+            <span class="upload-purpose">📌 ব্যবহার: আবেদনকারীর ঠিকানা ও বারকোড নিশ্চিতকরণের জন্য।</span>
+            <input type="file" name="nid_back" class="upload-input" accept="image/jpeg,image/png,application/pdf" required>
+            <div class="file-hint">স্পষ্ট ছবি বা স্ক্যান কপি</div>
+          </div>
+
+          <!-- 5. Nominee Photo -->
+          <div class="upload-box">
+            <label class="upload-label required">৫. নমিনির পাসপোর্ট সাইজ ছবি (Nominee's Photo)</label>
+            <span class="upload-purpose">📌 ব্যবহার: আইনি প্রয়োজনে নমিনির ছবি শনাক্তকরণ ও রেকর্ডের জন্য।</span>
+            <input type="file" name="nominee_photo" class="upload-input" accept="image/jpeg,image/png" required>
+            <div class="file-hint">নমিনির সাম্প্রতিক ছবি</div>
+          </div>
+
+          <!-- 6. Nominee NID -->
+          <div class="upload-box">
+            <label class="upload-label">৬. নমিনির NID / জন্মনিবন্ধন (Nominee NID / Birth Cert)</label>
+            <span class="upload-purpose">📌 ব্যবহার: নমিনির জাতীয় পরিচয় ও অভিভাবকত্ব যাচাইয়ের জন্য।</span>
+            <input type="file" name="nominee_nid" class="upload-input" accept="image/jpeg,image/png,application/pdf">
+            <div class="file-hint">নমিনির NID বা জন্মনিবন্ধন কপি</div>
+          </div>
+
+          <!-- 7. Address Proof -->
+          <div class="upload-box">
+            <label class="upload-label required">৭. বর্তমান ঠিকানার প্রমাণ (Utility Bill / Address Proof)</label>
+            <span class="upload-purpose">📌 ব্যবহার: গ্রাহকের বর্তমান বসবাসের ঠিকানা নিশ্চিতে বিদ্যুৎ/গ্যাস/পানির বিল।</span>
+            <input type="file" name="utility_bill" class="upload-input" accept="image/jpeg,image/png,application/pdf" required>
+            <div class="file-hint">সর্বোচ্চ ৩ মাসের বিদ্যুৎ/গ্যাস/পানির বিল</div>
+          </div>
+
+          <!-- 8. Income Proof -->
+          <div class="upload-box">
+            <label class="upload-label">৮. আয়ের উৎসের প্রমাণ (Proof of Income)</label>
+            <span class="upload-purpose">📌 ব্যবহার: মানিলন্ডারিং প্রতিরোধ (AML) ও লেনদেন সীমা নির্ধারণের জন্য।</span>
+            <input type="file" name="income_proof" class="upload-input" accept="image/jpeg,image/png,application/pdf">
+            <div class="file-hint">চাকরিজীবী: Salary Certificate/ID; ব্যবসায়ী: Trade License</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px;">
+          <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700; font-size:1.05rem;">
+            📝 আবেদন ও কেওয়াইসি সাবমিট করুন (Submit Account Application)
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer" style="margin-top:20px; text-align:center;">
+        পূর্বেই অ্যাকাউন্ট আছে? <a href="/login.html" style="color:#0284c7; font-weight:600;">সরাসরি লগইন করুন</a>
       </div>
-
-      <div class="form-group">
-        <label class="form-label required">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Residential Address</label>
-        <textarea id="address" class="form-control" placeholder="House/Road, City, Postal Code" style="min-height: 70px;"></textarea>
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg">
-        Create Customer Account
-      </button>
-    </form>
-
-    <div class="auth-footer">
-      Already have an account? <a href="/login.html">Log in here</a>
     </div>
   </div>
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
+    const form = document.getElementById('kycRegistrationForm');
+    const submitBtn = document.getElementById('submitBtn');
 
-      const payload = {
-        full_name: document.getElementById('full_name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        password: document.getElementById('password').value,
-        address: document.getElementById('address').value,
-      };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Client-side validation for files
+      const requiredFileInputs = ['applicant_photo', 'signature', 'nid_front', 'nid_back', 'nominee_photo', 'utility_bill'];
+      for (const field of requiredFileInputs) {
+        const input = form.querySelector(`input[name="${field}"]`);
+        if (!input || !input.files || input.files.length === 0) {
+          window.showToast(`অনুগ্রহ করে "${field}" এর ডকুমেন্ট ফাইলটি আপলোড করুন।`, 'error');
+          input.focus();
+          return;
+        }
+        // Size validation: max 5MB
+        const file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+          window.showToast(`"${file.name}" ফাইলের সাইজ ৫MB-এর বেশি হতে পারবে না।`, 'error');
+          return;
+        }
+      }
+
+      const formData = new FormData(form);
 
       try {
-        btn.disabled = true;
-        btn.innerText = 'Creating account...';
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ ডকুমেন্ট ও তথ্য আপলোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন';
 
-        const res = await window.api.post('/api/auth/register', payload);
+        // Direct fetch to POST /api/auth/register with FormData
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          body: formData,
+        });
 
-        window.api.setToken(res.token);
-        window.api.setUser(res.user);
+        const data = await response.json();
 
-        window.showToast('Account created successfully! Welcome to Smart Banking.', 'success');
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
+        }
+
+        // Store token and user
+        window.api.setToken(data.token);
+        window.api.setUser(data.user);
+
+        window.showToast('✅ আবেদন সফল হয়েছে! স্বাগতম Smart Banking PLC-তে।', 'success');
 
         setTimeout(() => {
           window.location.href = '/customer/dashboard.html';
-        }, 600);
+        }, 1200);
       } catch (err) {
-        window.showToast(err.message || 'Registration failed. Try again.', 'error');
-        btn.disabled = false;
-        btn.innerText = 'Create Customer Account';
+        window.showToast(err.message || 'আবেদন জমা দিতে সমস্যা হয়েছে।', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '📝 আবেদন ও কেওয়াইসি সাবমিট করুন (Submit Account Application)';
       }
     });
   </script>
 </body>
 </html>
-

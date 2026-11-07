@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>আমার কেওয়াইসি ও ডকুমেন্টস - Smart Banking PLC</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .doc-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .doc-img-preview {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #f1f5f9;
+      margin: 10px 0;
+      border: 1px solid #cbd5e1;
+    }
+    .doc-purpose-badge {
+      font-size: 0.72rem;
+      color: #0369a1;
+      background: #e0f2fe;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🪪 আমার কেওয়াইসি ও ডকুমেন্টস (e-KYC Status)</h2>
+        </div>
+        <div class="top-nav-right">
+          <span class="badge" id="kycStatusBadge">Loading...</span>
+        </div>
+      </header>
+
+      <main class="content-container">
+        <!-- Rejection or pending banner -->
+        <div id="kycMessageBanner" style="margin-bottom:20px;"></div>
+
+        <!-- Document List -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">আপলোডকৃত পরিচয়পত্র ও ডকুমেন্টস</h3>
+            <span style="font-size:0.8rem; color:#64748b;">সকল ফাইল ব্যাংক সার্ভারে এনক্রিপ্টেড সংরক্ষিত</span>
+          </div>
+          <div class="card-body">
+            <div id="documentsContainer" class="doc-grid">
+              <p style="padding:24px; color:#94a3b8; text-align:center;">ডকুমেন্ট লোড হচ্ছে...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Re-upload Form Section (visible if Rejected or Documents Required) -->
+        <div class="card" id="reuploadSection" style="margin-top:24px; display:none;">
+          <div class="card-header">
+            <h3 class="card-title">ডকুমেন্ট পুনরায় আপলোড করুন (Re-upload Document)</h3>
+          </div>
+          <div class="card-body">
+            <form id="reuploadForm" enctype="multipart/form-data">
+              <div class="form-group">
+                <label class="form-label required">ডকুমেন্টের ধরন নির্বাচন করুন</label>
+                <select id="reuploadDocType" name="doc_type" class="form-control" required>
+                  <option value="applicant_photo">Applicant's Photo (আবেদনকারীর ছবি)</option>
+                  <option value="nid_front">NID Front Side (জাতীয় পরিচয়পত্র - সামনের অংশ)</option>
+                  <option value="nid_back">NID Back Side (জাতীয় পরিচয়পত্র - পেছনের অংশ)</option>
+                  <option value="signature">Applicant's Signature (আবেদনকারীর নমুনা স্বাক্ষর)</option>
+                  <option value="nominee_photo">Nominee's Photo (নমিনির ছবি)</option>
+                  <option value="nominee_nid">Nominee's NID (নমিনির পরিচয়পত্র)</option>
+                  <option value="utility_bill">Utility Bill (বিদ্যুৎ / গ্যাস বিল - ঠিকানার প্রমাণ)</option>
+                  <option value="income_proof">Proof of Income (আয়ের প্রমাণ / Trade License)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label required">নতুন ফাইল নির্বাচন করুন (JPG, PNG, PDF - Max 5MB)</label>
+                <input type="file" id="reuploadFile" name="file" class="form-control" accept="image/jpeg,image/png,application/pdf" required>
+              </div>
+
+              <button type="submit" id="reuploadBtn" class="btn btn-primary">
+                📤 নতুন ফাইল আপলোড করুন
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('kyc');
+
+    async function loadKYCData() {
+      try {
+        const res = await window.api.get('/api/kyc/my');
+        const cust = res.customer || {};
+        const docs = res.documents || [];
+
+        // Status badge
+        const badge = document.getElementById('kycStatusBadge');
+        badge.innerText = `KYC: ${cust.kyc_status}`;
+        if (cust.kyc_status === 'Approved') badge.className = 'badge badge-approved';
+        else if (cust.kyc_status === 'Rejected') badge.className = 'badge badge-rejected';
+        else badge.className = 'badge badge-submitted';
+
+        // Banner
+        const banner = document.getElementById('kycMessageBanner');
+        const reuploadCard = document.getElementById('reuploadSection');
+
+        if (cust.kyc_status === 'Approved') {
+          banner.innerHTML = `
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; padding:16px; border-radius:8px; color:#065f46;">
+              <strong>✅ আপনার কেওয়াইসি সম্পন্ন ও অনুমোদিত!</strong> আপনি সকল ডিজিটাল ব্যাংকিং ও আউটগোয়িং ফান্ড ট্রান্সফার সুবিধা সক্রিয়ভাবে ব্যবহার করতে পারবেন।
+            </div>
+          `;
+          reuploadCard.style.display = 'none';
+        } else if (cust.kyc_status === 'Rejected') {
+          banner.innerHTML = `
+            <div style="background:#fef2f2; border:1px solid #fecaca; padding:16px; border-radius:8px; color:#991b1b;">
+              <strong>❌ আপনার কেওয়াইসি আবেদন বাতিল করা হয়েছে!</strong><br>
+              ব্যাংক অ্যাডমিনের মন্তব্য: <em>${cust.kyc_rejection_reason || 'কাগজপত্রে ত্রুটি পরিলক্ষিত হয়েছে'}</em>।<br>
+              অনুগ্রহ করে নিচের ফর্ম থেকে সঠিক ডকুমেন্ট আবার আপলোড করুন।
+            </div>
+          `;
+          reuploadCard.style.display = 'block';
+        } else {
+          banner.innerHTML = `
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:16px; border-radius:8px; color:#92400e;">
+              <strong>⏳ আপনার কেওয়াইসি ভেরিফিকেশন চলমান রয়েছে (Pending)</strong><br>
+              ব্যাংক অ্যাডমিন আপনার সাবমিট করা ডকুমেন্টস যাচাই করছেন। যাচাই সম্পন্ন হলে ফান্ড ট্রান্সফার চালু হয়ে যাবে।
+            </div>
+          `;
+          reuploadCard.style.display = 'block';
+        }
+
+        renderDocuments(docs);
+      } catch (err) {
+        console.error('Failed to load KYC docs:', err);
+      }
+    }
+
+    function renderDocuments(docs) {
+      const container = document.getElementById('documentsContainer');
+      if (docs.length === 0) {
+        container.innerHTML = `<p style="padding:20px; color:#94a3b8; text-align:center;">কোনো ডকুমেন্ট পাওয়া যায়নি।</p>`;
+        return;
+      }
+
+      container.innerHTML = docs.map(d => {
+        const isPdf = (d.mime_type || '').includes('pdf') || (d.file_name || '').endsWith('.pdf');
+        return `
+          <div class="doc-card">
+            <div>
+              <div style="font-weight:700; font-size:0.95rem; color:#0f172a;">${d.title || d.doc_type}</div>
+              <span class="doc-purpose-badge">টাইপ: ${d.doc_type}</span>
+              
+              ${isPdf ? `
+                <div style="height:140px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin:10px 0;">
+                  <span style="font-size:2.5rem;">📄</span>
+                  <span style="font-size:0.8rem; color:#64748b;">PDF Document</span>
+                </div>
+              ` : `
+                <img src="${d.file_url}" alt="${d.doc_type}" class="doc-img-preview" onerror="this.src='/assets/images/placeholder.png'">
+              `}
+              
+              <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">
+                ফাইল: ${d.file_name || 'ডকুমেন্ট'}<br>
+                আপলোড তারিখ: ${new Date(d.created_at).toLocaleDateString()}
+              </div>
+            </div>
+
+            <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge ${d.verification_status === 'Approved' ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">
+                ${d.verification_status || 'Pending'}
+              </span>
+              <a href="${d.file_url}" target="_blank" class="table-action-btn secondary">বড় করে দেখুন ↗</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('reuploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const btn = document.getElementById('reuploadBtn');
+
+      try {
+        btn.disabled = true;
+        btn.innerText = '⏳ আপলোড হচ্ছে...';
+
+        const token = window.api.getToken();
+        const res = await fetch('/api/kyc/reupload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'আপলোড ব্যর্থ হয়েছে।');
+        }
+
+        window.showToast('✅ ডকুমেন্ট সফলভাবে পুনরায় আপলোড হয়েছে! অ্যাডমিন যাচাই করবেন।', 'success');
+        form.reset();
+        loadKYCData();
+      } catch (err) {
+        window.showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '📤 নতুন ফাইল আপলোড করুন';
+      }
+    });
+
+    loadKYCData();
+  </script>
+</body>
+</html>
