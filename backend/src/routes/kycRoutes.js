@@ -20,3 +20,4 @@ router.post('/admin/documents/:docId/replace', requireRole('ADMIN'), uploadLimit
 router.delete('/admin/documents/:docId', requireRole('ADMIN'), kycController.adminDeleteKYCDocument);
 
 module.exports = router;
+

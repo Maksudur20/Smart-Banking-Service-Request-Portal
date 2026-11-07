@@ -240,31 +240,6 @@ const UI = {
 
     this.initFloatingAIAssistant();
   },
-          <span>🔍</span> Transaction Monitoring
-        </a>
-        <a href="/admin/admin-reports.html" class="nav-item ${activePage === 'reports' ? 'active' : ''}">
-          <span>📊</span> Reports & Analytics
-        </a>
-        <a href="/admin/admin-audit-logs.html" class="nav-item ${activePage === 'audit' ? 'active' : ''}">
-          <span>🛡️</span> Security Audit Logs
-        </a>
-      </div>
-      <div class="sidebar-footer">
-        <div class="user-mini-profile">
-          <div class="user-avatar">${(user.full_name || 'A')[0].toUpperCase()}</div>
-          <div class="user-info-text">
-            <div class="user-name">${user.full_name || 'Officer'}</div>
-            <div class="user-role-badge">Administrator</div>
-          </div>
-        </div>
-        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="Log Out" style="padding: 6px 10px;">
-          🚪
-        </button>
-      </div>
-    `;
-
-    this.initFloatingAIAssistant();
-  },
 
   async updateNotificationBadge() {
     try {
@@ -603,3 +578,14 @@ Smart Banking Account Number, কার্ডধারীর নাম, নি�
 };
 
 window.UI = UI;
+
+// Automatically initialize Floating AI Assistant on every page
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      window.UI.initFloatingAIAssistant();
+    });
+  } else {
+    window.UI.initFloatingAIAssistant();
+  }
+}

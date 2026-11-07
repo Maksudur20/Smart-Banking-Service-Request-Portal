@@ -17,3 +17,4 @@ router.get('/admin', requireRole('ADMIN'), depositController.getAdminDeposits);
 router.post('/admin/:depositId/verify', requireRole('ADMIN'), depositController.verifyDeposit);
 
 module.exports = router;
+
