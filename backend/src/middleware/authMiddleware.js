@@ -67,7 +67,48 @@ async function authenticateToken(req, res, next) {
   }
 }
 
+async function optionalAuth(req, res, next) {
+  try {
+    const authHeader = req.headers['authorization'];
+    let token = null;
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } else if (req.query && req.query.token) {
+      token = req.query.token;
+    }
+
+    if (!token) {
+      req.user = { full_name: 'Guest Customer', role: 'GUEST' };
+      return next();
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userQuery = `
+      SELECT u.id, u.full_name, u.email, u.phone, u.role, u.is_active,
+             c.id AS customer_id, c.customer_reference, c.account_number,
+             a.id AS admin_id, a.staff_reference, a.department
+      FROM users u
+      LEFT JOIN customers c ON c.user_id = u.id
+      LEFT JOIN admins a ON a.user_id = u.id
+      WHERE u.id = $1
+    `;
+    const result = await db.query(userQuery, [decoded.id]);
+
+    if (result.rows.length > 0 && result.rows[0].is_active) {
+      req.user = result.rows[0];
+    } else {
+      req.user = { full_name: 'Guest Customer', role: 'GUEST' };
+    }
+    next();
+  } catch (err) {
+    req.user = { full_name: 'Guest Customer', role: 'GUEST' };
+    next();
+  }
+}
+
 module.exports = {
   authenticateToken,
+  optionalAuth,
 };
 
