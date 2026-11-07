@@ -42,7 +42,7 @@
 | **Backend** | Node.js, Express.js | Modular REST API with MVC architecture |
 | **Database** | Supabase-hosted PostgreSQL | 15 normalized tables, foreign keys, triggers, constraints, indexes |
 | **Storage** | Cloudinary | Protected document asset storage in designated project folder |
-| **AI Vision** | OpenRouter API (`google/gemini-2.0-flash-exp:free`) | Image clarity, completeness, and consistency analysis |
+| **AI Vision & Chat** | OpenRouter API (`google/gemma-4-31b-it:free` & fallback models) | Image clarity, completeness, consistency analysis & bilingual chatbot |
 | **Security** | bcryptjs, jsonwebtoken, helmet, express-rate-limit | Strict RBAC, parameterized SQL queries, secure sessions |
 
 ---
@@ -76,7 +76,7 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 CLOUDINARY_FOLDER=Smart-Banking-Service-Request-Portal
 OPENROUTER_API_KEY=your_openrouter_key
-OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free
+OPENROUTER_MODEL=google/gemma-4-31b-it:free
 ```
 
 ### 3. Run Database Migrations & Seed Data
@@ -120,12 +120,15 @@ Complete documentation and UML/DFD models are located in [`docs/`](./docs/):
 - **[`docs/API.md`](./docs/API.md)** — Complete REST API endpoint reference.
 - **[`docs/DATABASE.md`](./docs/DATABASE.md)** — Database schema dictionary and ERD relationships.
 - **[`docs/TEST-PLAN.md`](./docs/TEST-PLAN.md)** — Test cases, execution logs, and verification report.
+- **[`docs/LOGBOOK.md`](./docs/LOGBOOK.md)** — Complete 60-Day Daily Logbook (Activities & New Skills Learned) + 12 Weekly Supervisor Evaluation Notes.
 - **[`docs/diagrams/DIAGRAMS.md`](./docs/diagrams/DIAGRAMS.md)** — Complete Mermaid diagrams:
   - System Architecture & Component Diagram
   - Exactly ONE Full Database ERD (15 Tables)
   - Exactly ONE DFD Level 0 Context Diagram
   - Exactly ONE DFD Level 1 (Single Process: `1.0 Customer & Service Request Management`)
   - Exactly THREE DFD Level 2 Detailed Process Sheets (Sub-processes `1.1` to `1.26`)
+  - Use Case Diagrams for all 9 modules
+  - Activity & Swimlane Workflow Diagrams
   - AI Human-in-the-Loop Sequence Diagram
 
 ---
