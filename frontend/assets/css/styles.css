@@ -533,93 +533,111 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
-.badge-draft { background-color: #f1f5f9; color: #475569; }
-.badge-submitted { background-color: #e0f2fe; color: #0284c7; }
-.badge-doc-review { background-color: #fef3c7; color: #d97706; }
-.badge-ai-validation { background-color: #f3e8ff; color: #7e22ce; }
+.badge-draft { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.badge-submitted { background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+.badge-doc-review { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+.badge-ai-validation { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
 .badge-pending-admin { background-color: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
-.badge-approved { background-color: #dcfce7; color: #16a34a; }
-.badge-completed { background-color: #d1fae5; color: #059669; }
+.badge-approved { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.badge-completed { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
 .badge-correction { background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
-.badge-rejected { background-color: #fef2f2; color: #b91c1c; }
-.badge-cancelled { background-color: #f1f5f9; color: #64748b; }
+.badge-rejected { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.badge-cancelled { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
 
 /* ------------------------------------------------------------------ */
-/* Tables                                                             */
+/* Tables & Lists                                                     */
 /* ------------------------------------------------------------------ */
 
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.table {
+.table, .data-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  background-color: #ffffff;
 }
 
-.table th {
+.table th, .data-table th {
   background-color: #f8fafc;
-  color: var(--text-muted);
+  color: #334155;
   font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  padding: 14px 18px;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
-.table td {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border-light);
+.table td, .data-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
-  color: var(--text-main);
+  color: #1e293b;
+  font-size: 0.88rem;
+  white-space: nowrap;
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover, .data-table tbody tr:hover {
   background-color: #f8fafc;
 }
 
 .table-action-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  border-radius: 6px;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   background-color: #0284c7;
-  color: #fff;
-  border: none;
+  color: #ffffff !important;
+  text-decoration: none;
+  border: 1px solid #0284c7;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.15s ease;
+  line-height: 1.2;
 }
 
 .table-action-btn:hover {
   background-color: #0369a1;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+  border-color: #0369a1;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+}
+
+.table-action-btn.primary {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff !important;
 }
 
 .table-action-btn.secondary {
-  background-color: #fff;
-  border: 1px solid var(--border);
-  color: var(--navy);
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a !important;
 }
 
 .table-action-btn.secondary:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a !important;
 }
 
 /* ------------------------------------------------------------------ */

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফান্ড ট্রান্সফার - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
   <style>
     .transfer-layout {
       display: grid;
@@ -111,7 +111,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.1"></script>
+  <script src="/assets/js/common.js?v=2.2"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('transfer');
@@ -161,39 +161,41 @@
         }
 
         container.innerHTML = `
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>লেনদেন নম্বর</th>
-                <th>টাইপ</th>
-                <th>পরিমাণ</th>
-                <th>কাউন্টারপার্টি</th>
-                <th>ব্যালেন্স</th>
-                <th>তারিখ</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${list.map(t => {
-                const isCredit = t.type === 'CREDIT' || t.type === 'DEPOSIT';
-                return `
-                  <tr>
-                    <td><strong>${t.transaction_number}</strong></td>
-                    <td>
-                      <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
-                        ${isCredit ? '⬇️ ইনকামিং / ডিপোজিট' : '⬆️ আউটগোয়িং ট্রান্সফার'}
-                      </span>
-                    </td>
-                    <td style="font-weight:700; color:${isCredit ? '#10b981' : '#ef4444'};">
-                      ${isCredit ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} BDT
-                    </td>
-                    <td>${t.counterparty_name || t.counterparty_account || '-'}</td>
-                    <td>${parseFloat(t.balance_after).toFixed(2)} BDT</td>
-                    <td style="font-size:0.8rem; color:#64748b;">${new Date(t.created_at).toLocaleDateString()}</td>
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>লেনদেন নম্বর</th>
+                  <th>টাইপ</th>
+                  <th>পরিমাণ</th>
+                  <th>কাউন্টারপার্টি</th>
+                  <th>ব্যালেন্স</th>
+                  <th>তারিখ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(t => {
+                  const isCredit = t.type === 'CREDIT' || t.type === 'DEPOSIT';
+                  return `
+                    <tr>
+                      <td><strong>${t.transaction_number}</strong></td>
+                      <td>
+                        <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
+                          ${isCredit ? '⬇️ ইনকামিং / ডিপোজিট' : '⬆️ আউটগোয়িং ট্রান্সফার'}
+                        </span>
+                      </td>
+                      <td style="font-weight:700; color:${isCredit ? '#10b981' : '#ef4444'};">
+                        ${isCredit ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} BDT
+                      </td>
+                      <td>${t.counterparty_name || t.counterparty_account || '-'}</td>
+                      <td>${parseFloat(t.balance_after).toFixed(2)} BDT</td>
+                      <td style="font-size:0.8rem; color:#64748b;">${new Date(t.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
         `;
       } catch (err) {
         container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">হিস্ট্রি পাওয়া যায়নি।</p>`;
