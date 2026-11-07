@@ -1,5 +1,5 @@
 const { cloudinary, isConfigured } = require('../config/cloudinary');
-const streamifier = require('streamifier'); // or custom stream
+const { Readable } = require('stream');
 
 const DEFAULT_FOLDER = process.env.CLOUDINARY_FOLDER || 'Smart-Banking-Service-Request-Portal';
 
