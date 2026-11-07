@@ -41,3 +41,4 @@ The backend includes automated integration tests executed via Node.js native tes
 ```
 
 All 7 core test suites execute cleanly with **0 failures**.
+

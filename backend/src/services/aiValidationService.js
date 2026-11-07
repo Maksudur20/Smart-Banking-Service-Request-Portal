@@ -36,21 +36,13 @@ Expected Document Type: ${documentTypeName || 'Unknown'}
 Original Filename: ${originalName}
 Customer Name: ${customerContext.customerName || 'N/A'}
 Service Requested: ${customerContext.serviceName || 'N/A'}
+Cloudinary File Link: ${fileUrl}
 
-Provide structured validation feedback in JSON according to system prompt instructions.`;
+Provide structured validation feedback in JSON strictly adhering to the schema and guidelines.`;
 
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
-      {
-        role: 'user',
-        content: [
-          { type: 'text', text: userPromptText },
-          {
-            type: 'image_url',
-            image_url: { url: fileUrl }
-          }
-        ]
-      }
+      { role: 'user', content: userPromptText }
     ];
 
     const response = await fetch(OPENROUTER_API_URL, {
@@ -64,8 +56,7 @@ Provide structured validation feedback in JSON according to system prompt instru
       body: JSON.stringify({
         model: DEFAULT_MODEL,
         messages,
-        temperature: 0.1,
-        response_format: { type: 'json_object' }
+        temperature: 0.1
       })
     });
 

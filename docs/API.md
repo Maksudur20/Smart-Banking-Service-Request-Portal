@@ -57,3 +57,4 @@ Authentication: Bearer Token (`Authorization: Bearer <JWT>`)
 - `GET /reports/requests`: Aggregated request report with filters.
 - `GET /reports/requests/export-csv`: Download CSV export of request data.
 - `GET /reports/audit-logs`: Paginated administrative security audit log.
+

@@ -454,3 +454,4 @@ sequenceDiagram
     Backend->>DB: Dispatch customer in-app notification
     Backend-->>Frontend: Return decision success
 ```
+

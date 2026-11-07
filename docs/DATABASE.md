@@ -29,3 +29,4 @@
 1. **Cloudinary Asset Storage vs Database Binary:** Files are never stored as bytea/blobs in PostgreSQL. Only Cloudinary public IDs, secure delivery URLs, MIME types, and file sizes are stored.
 2. **Automated Timestamp Triggers:** All tables with `updated_at` utilize a PostgreSQL trigger (`update_updated_at_column`) to ensure timestamps update automatically on row modifications.
 3. **Structured AI Storage:** AI outputs (readability, completeness, confidence, issues) are parsed and stored as native PostgreSQL columns and JSONB to allow direct SQL aggregation and reporting.
+
