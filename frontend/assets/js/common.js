@@ -365,11 +365,11 @@ const UI = {
           স্বাগতম ${firstName}! 👋 আমি আপনার <strong>স্মার্ট ব্যাংকিং এআই সহকারী</strong>। 
           প্রয়োজনীয় ডকুমেন্টস, সেবার নিয়ম বা যেকোনো সহায়তার জন্য আমাকে বাংলায় প্রশ্ন করতে পারেন।
           <div class="ai-prompt-chips">
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('সেভিংস অ্যাকাউন্ট খুলতে কী কী ডকুমেন্ট ও নিয়ম দরকার?')">🏦 অ্যাকাউন্ট খোলার নিয়ম</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('কার্ড হারিয়ে গেলে বা রিপ্লেসমেন্ট পেতে কী করতে হবে?')">💳 কার্ড সেবা ও রিপ্লেসমেন্ট</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('নতুন চেকবই নেওয়ার নিয়ম ও কত পাতা পাওয়া যায়?')">📑 চেকবই রিকোয়েস্ট</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('লোন পাওয়ার যোগ্যতা ও প্রয়োজনীয় ডকুমেন্টস কী কী?')">💰 লোন আবেদন</span>
-            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('আমার এটিএম কার্ড হারিয়ে গেছে, জরুরি ব্লক করব কীভাবে?')">🚨 কার্ড হারানো / ব্লক</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('account')">🏦 অ্যাকাউন্ট খোলার নিয়ম</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('card')">💳 কার্ড সেবা ও রিপ্লেসমেন্ট</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('cheque')">📑 চেকবই রিকোয়েস্ট</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('loan')">💰 লোন আবেদন</span>
+            <span class="ai-chip" onclick="UI.sendQuickAIQuestion('block')">🚨 কার্ড হারানো / ব্লক</span>
           </div>
         </div>
       `;
@@ -393,8 +393,130 @@ const UI = {
     }
   },
 
-  sendQuickAIQuestion(text) {
-    this.sendAIMessage(text);
+  sendQuickAIQuestion(topicKey) {
+    // Exact Bangladesh Banking Guidelines customized for Smart Banking PLC
+    const guides = {
+      account: {
+        query: 'সেভিংস অ্যাকাউন্ট খোলার নিয়ম ও প্রয়োজনীয় ডকুমেন্টস কী কী?',
+        bn: `🏦 <strong>Smart Banking PLC — অ্যাকাউন্ট খোলার নিয়মাবলী (Account Opening)</strong><br><br>
+📄 <strong>প্রয়োজনীয় কাগজপত্র:</strong><br>
+1. জাতীয় পরিচয়পত্র (NID) অথবা পাসপোর্ট / জন্মনিবন্ধন।<br>
+2. আবেদনকারীর ২ কপি পাসপোর্ট সাইজ রঙিন ছবি।<br>
+3. নমিনির NID / জন্মনিবন্ধন / পাসপোর্ট ও ১ কপি ছবি।<br>
+4. বর্তমান ঠিকানার প্রমাণ (বিদ্যুৎ / গ্যাস / পানির বিল - সর্বোচ্চ ৩ মাসের)।<br>
+5. <strong>পেশা ও আয়ের প্রমাণ:</strong><br>
+&nbsp;&nbsp;• চাকরিজীবী: Salary Certificate / Pay Slip / Job ID।<br>
+&nbsp;&nbsp;• ব্যবসায়ী: Trade License।<br>
+&nbsp;&nbsp;• স্বনির্ভর (Self-employed): Professional Certificate।<br>
+6. প্রযোজ্য ক্ষেত্রে e-TIN / Tax Return Submission Proof।<br>
+7. পূরণ করা Account Opening Form।<br><br>
+🔄 <strong>ধাপে ধাপে আবেদন প্রক্রিয়া:</strong><br>
+1. অ্যাকাউন্টের ধরন (Smart Savings / Current) নির্বাচন করুন।<br>
+2. পোর্টালে <strong>"New Service Request"</strong> > <strong>"Account Opening Request"</strong> এ যান।<br>
+3. প্রয়োজনীয় কাগজপত্র প্রস্তুত করুন ও নমিনির তথ্য দিন।<br>
+4. অনলাইনে আবেদন জমা দিন (অথবা নিকটস্থ Smart Banking শাখায় দিন)।<br>
+5. ব্যাংকের KYC ও এআই ডকুমেন্ট যাচাই শেষে অ্যাকাউন্ট সক্রিয় হবে।<br><br>
+💡 <em>বিশেষ দ্রষ্টব্য: Smart Savings Account-এর প্রাথমিক জমা ৫০০ টাকা। ১৮ বছরের কম বয়সীদের ক্ষেত্রে অভিভাবকের মাধ্যমে হিসাব খুলতে হবে।</em><br><br>
+<a href="/customer/service-request.html" class="btn btn-primary btn-sm" style="display:inline-block; margin-top:6px; color:#fff; text-decoration:none;">📝 অনলাইনে আবেদন করুন</a>`
+      },
+      card: {
+        query: 'কার্ড সেবা ও রিপ্লেসমেন্ট পাওয়ার নিয়ম কী?',
+        bn: `💳 <strong>Smart Banking PLC — কার্ড সেবা ও রিপ্লেসমেন্ট (Card Service & Replacement)</strong><br><br>
+📄 <strong>প্রয়োজনীয় কাগজপত্র:</strong><br>
+1. Smart Banking Account Number।<br>
+2. জাতীয় পরিচয়পত্র (NID) ও পাসপোর্ট সাইজ ছবি।<br>
+3. স্বাক্ষরসহ Debit Card Application Form।<br>
+4. পুরোনো কার্ড (ক্ষতিগ্রস্ত বা নষ্ট হলে)।<br><br>
+🔄 <strong>ধাপে ধাপে আবেদন প্রক্রিয়া:</strong><br>
+1. Smart Banking-এর সক্রিয় ব্যাংক অ্যাকাউন্ট থাকতে হবে।<br>
+2. পোর্টালে <strong>"New Service Request"</strong> > <strong>"Card Replacement Request"</strong> নির্বাচন করুন।<br>
+3. প্রয়োজনীয় তথ্য পূরণ করে NID ও স্বাক্ষরের কপি আপলোড করুন।<br>
+4. ব্যাংক আবেদন যাচাই করে নতুন কার্ড প্রস্তুত করবে।<br>
+5. <strong>MySmartBank App</strong> অথবা Contact Center (16218)-এর মাধ্যমে কার্ড অ্যাক্টিভেশন ও গোপন PIN সেট করুন।<br><br>
+⏱️ <strong>সম্ভাব্য সময়সীমা:</strong><br>
+• ঢাকা শাখা: ৪ দিনের মধ্যে।<br>
+• ঢাকার বাইরের মেট্রো শাখা: ৫ দিনের মধ্যে।<br>
+• গ্রামীণ শাখা: ৬ দিনের মধ্যে।<br><br>
+<a href="/customer/service-request.html" class="btn btn-primary btn-sm" style="display:inline-block; margin-top:6px; color:#fff; text-decoration:none;">💳 কার্ডের আবেদন করুন</a>`
+      },
+      cheque: {
+        query: 'নতুন চেকবই নেওয়ার আবেদন কীভাবে করব?',
+        bn: `📑 <strong>Smart Banking PLC — চেকবই রিকোয়েস্ট (Cheque Book Request)</strong><br><br>
+📄 <strong>প্রয়োজনীয় তথ্য ও কাগজপত্র:</strong><br>
+1. Smart Banking Account Number ও অ্যাকাউন্টের নাম।<br>
+2. অ্যাকাউন্টধারীর স্বাক্ষর (Signature Specimen)।<br>
+3. নিবন্ধিত মোবাইল নম্বর।<br>
+4. প্রয়োজনীয় চেকের পাতার সংখ্যা (২০, ৫০ বা ১০০ পাতা)।<br><br>
+🔄 <strong>ধাপে ধাপে আবেদন প্রক্রিয়া:</strong><br>
+1. <strong>MySmartBank App</strong> অথবা ওয়েব পোর্টালে লগইন করুন।<br>
+2. <strong>"New Service Request"</strong> > <strong>"Cheque Book Request"</strong> নির্বাচন করুন।<br>
+3. অ্যাকাউন্ট সিলেক্ট করে চেকের পাতার সংখ্যা উল্লেখ করুন।<br>
+4. আবেদন Submit করুন।<br>
+5. ব্যাংক স্বাক্ষর যাচাইয়ের পর ২–৪ দিনের মধ্যে চেকবই রেডি হয়ে যাবে।<br><br>
+💰 <em>ফি: ব্যাংকের সর্বশেষ Schedule of Charges অনুযায়ী নির্ধারিত হবে।</em><br><br>
+<a href="/customer/service-request.html" class="btn btn-primary btn-sm" style="display:inline-block; margin-top:6px; color:#fff; text-decoration:none;">📑 চেকবই রিকোয়েস্ট করুন</a>`
+      },
+      loan: {
+        query: 'লোন আবেদন ও প্রয়োজনীয় কাগজপত্র কী কী?',
+        bn: `💰 <strong>Smart Banking PLC — লোন আবেদন নির্দেশিকা (Loan Application Guide)</strong><br><br>
+🎯 <strong>প্রয়োজনীয় যোগ্যতা:</strong><br>
+• Personal Loan-এর ক্ষেত্রে ন্যূনতম বয়স ২২–৬৫ বছর।<br>
+• নিয়মিত আয়ের উৎস ও ব্যাংকের CIB শর্ত পূরণ করতে হবে।<br>
+• একজন পার্সোনাল গ্যারান্টর (Personal Guarantor) থাকতে হবে।<br><br>
+📄 <strong>প্রয়োজনীয় কাগজপত্র:</strong><br>
+1. পূরণ করা Loan Application Form।<br>
+2. আবেদনকারীর NID / Passport ও সাম্প্রতিক ছবি।<br>
+3. Guarantor-এর NID ও ছবি।<br>
+4. সর্বশেষ Utility Bill ও আয়ের প্রমাণ (Salary Certificate / Pay Slip)।<br>
+5. সর্বশেষ ৬ মাসের Bank Statement।<br>
+6. প্রযোজ্য ক্ষেত্রে e-TIN ও অফিস আইডি।<br><br>
+🔄 <strong>ধাপে ধাপে আবেদন প্রক্রিয়া:</strong><br>
+1. লোনের ধরন নির্বাচন করুন (Personal, Home, Auto, Education)।<br>
+2. পোর্টালে <strong>"New Service Request"</strong> > <strong>"Loan Service Inquiry"</strong> এ যান।<br>
+3. আয়ের তথ্য ও স্টেটমেন্ট আপলোড করুন।<br>
+4. ব্যাংক কর্মকর্তা CIB ও ডকুমেন্ট যাচাই করে লোন এগ্রিমেন্ট ও ডিসবার্সমেন্ট সম্পন্ন করবেন।<br><br>
+<a href="/customer/service-request.html" class="btn btn-primary btn-sm" style="display:inline-block; margin-top:6px; color:#fff; text-decoration:none;">💰 লোনের আবেদন করুন</a>`
+      },
+      block: {
+        query: 'আমার এটিএম কার্ড হারিয়ে গেছে, জরুরি ব্লক করব কীভাবে?',
+        bn: `🚨 <strong>Smart Banking PLC — কার্ড হারানো / জরুরি ব্লক (Lost / Block Card)</strong><br><br>
+⚠️ <strong>জরুরি সেবা — যা প্রয়োজন হতে পারে:</strong><br>
+Smart Banking Account Number, কার্ডধারীর নাম, নিবন্ধিত মোবাইল নম্বর।<br><br>
+🔄 <strong>ধাপে ধাপে তাৎক্ষণিক করণীয়:</strong><br>
+1. কার্ড হারিয়ে বা চুরি হলে দ্রুত ব্যাংককে জানান।<br>
+2. <strong>MySmartBank App</strong>-এ লগইন করে <strong>Card Management</strong> > <strong>Block Card</strong> দিয়ে সাথে সাথে কার্ড ফ্রিজ করুন।<br>
+3. অথবা নিচের ২৪/৭ জরুরি হটলাইনে কল করে ব্লক নিশ্চিত করুন।<br>
+4. অননুমোদিত লেনদেন হয়ে থাকলে <strong>"Complaints / Support"</strong>-এ অভিযোগ দায়ের করুন।<br>
+5. পরবর্তীতে নতুন কার্ড পেতে <strong>"Card Replacement Request"</strong> করুন।<br><br>
+📞 <strong>Smart Banking 24/7 Contact Center:</strong><br>
+• <strong>বাংলাদেশ থেকে কল:</strong> <strong>16218</strong> (টোল-ফ্রি ২৪/৭)<br>
+• <strong>বিদেশ থেকে কল:</strong> <strong>+88 09610016218</strong><br>
+• <strong>ইমেইল:</strong> contactcenter@smartbank.com.bd<br><br>
+🔒 <em>সতর্কতা: কার্ড হারালে অবিলম্বে ব্লক করুন। কখনো কারো সাথে PIN, CVV বা OTP শেয়ার করবেন না।</em><br><br>
+<a href="/customer/complaints.html" class="btn btn-danger btn-sm" style="display:inline-block; margin-top:6px; color:#fff; text-decoration:none;">⚠️ জরুরি অভিযোগ জমা দিন</a>`
+      }
+    };
+
+    if (guides[topicKey]) {
+      const g = guides[topicKey];
+      // Display immediate formatted card in chat body
+      const chatBody = document.getElementById('aiChatBody');
+      if (chatBody) {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'ai-msg user';
+        userDiv.innerText = g.query;
+        chatBody.appendChild(userDiv);
+
+        const botDiv = document.createElement('div');
+        botDiv.className = 'ai-msg bot';
+        botDiv.innerHTML = g.bn;
+        chatBody.appendChild(botDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+      return;
+    }
+
+    this.sendAIMessage(topicKey);
   },
 
   async sendAIMessage(userText) {

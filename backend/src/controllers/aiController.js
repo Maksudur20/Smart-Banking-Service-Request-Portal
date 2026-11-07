@@ -257,162 +257,233 @@ function generateContextualBankingReply(msg, user, isBangla = false) {
   const m = msg.toLowerCase();
   const userName = user.full_name ? user.full_name.split(' ')[0] : 'Customer';
 
-  // BANGLA REPLIES
+  // BANGLA REPLIES (Customized according to Smart Banking PLC Banking Regulations)
   if (isBangla) {
     if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu') || m.includes('নমস্কার') || m.includes('সালাম') || m.includes('কেমন')) {
-      return `স্বাগতম ${userName}! 👋 আমি আপনার স্মার্ট ব্যাংকিং এআই সহকারী। প্রয়োজনীয় ডকুমেন্টস, অ্যাকাউন্ট খোলার নিয়ম, কার্ড সেবা, চেক বই রিকোয়েস্ট বা যেকোনো সমস্যার বিষয়ে আমাকে বাংলায় জিজ্ঞাসা করতে পারেন। আমি কীভাবে সহায়তা করতে পারি?`;
+      return `স্বাগতম ${userName}! 👋 আমি আপনার **Smart Banking PLC**-এর এআই সহকারী।
+প্রয়োজনীয় কাগজপত্র, অ্যাকাউন্ট খোলার নিয়ম, কার্ড সেবা, চেক বই রিকোয়েস্ট, লোন আবেদন বা কার্ড ব্লক করার জরুরি নির্দেশিকার জন্য নিচে যে কোনো অপশনে চাপ দিন অথবা আপনার প্রশ্ন লিখুন!`;
     }
 
-    if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen') || m.includes('হারিয়ে') || m.includes('চুরি') || m.includes('ব্লক')) {
-      return `🚨 **জরুরি কার্ড ব্লক করার নিয়মাবলী:**
-1. কার্ডের তাৎক্ষণিক অপব্যবহার রোধে আমাদের ২৪/৭ জরুরি হটলাইন **১৬২৩৪** অথবা **+৮৮০-৯৬১২৩৪৫৬৭৮** এ এখনই কল করে কার্ড ফ্রিজ করুন।
-2. এই পোর্টালে **"Complaints / Support"** অপশনে গিয়ে জরুরি ডিসপিউট টিকিট সাবমিট করুন।
-3. পরবর্তীতে নতুন কার্ড পাওয়ার জন্য **"New Service Request"** > **"Card Replacement Request"** থেকে আবেদন করুন (প্রয়োজনীয় ডকুমেন্ট: NID এবং স্বাক্ষর কার্ড)।`;
-    }
-
+    // ১. অ্যাকাউন্ট খোলার নিয়ম (Account Opening)
     if (m.includes('account') || m.includes('savings') || m.includes('current') || m.includes('open') || m.includes('অ্যাকাউন্ট') || m.includes('খুলতে') || m.includes('খোলা')) {
-      return `🏦 **অনলাইন অ্যাকাউন্ট খোলার নিয়ম:**
-সেভিংস বা কারেন্ট অ্যাকাউন্ট খুলতে নিম্নোক্ত ৩টি ডকুমেন্ট স্ক্যান কপি প্রয়োজন:
-1. **জাতীয় পরিচয়পত্র (NID Smart Card)** - সামনের ও পেছনের স্পষ্ট রঙিন ছবি।
-2. **পাসপোর্ট সাইজ ছবি** - সদ্য তোলা রঙিন ছবি (সাদা ব্যাকগ্রাউন্ড)।
-3. **ইউটিলিটি বিলের কপি** - গ্যাস, বিদ্যুৎ বা পানির বিল (সর্বোচ্চ ৩ মাসের পুরানো) ঠিকানার প্রমাণের জন্য।
-আবেদন করতে মেন্যুর **"New Service Request"** > **"Account Opening Request"** নির্বাচন করুন!`;
+      return `🏦 **Smart Banking PLC — অ্যাকাউন্ট খোলার নিয়মাবলী (Account Opening Guide)**
+
+📄 **প্রয়োজনীয় কাগজপত্র:**
+1. **জাতীয় পরিচয়পত্র (NID)** অথবা পাসপোর্ট / ডিজিটাল জন্মনিবন্ধন।
+2. আবেদনকারীর **২ কপি পাসপোর্ট সাইজ রঙিন ছবি** (সাদা ব্যাকগ্রাউন্ড)।
+3. **নমিনির NID** / জন্মনিবন্ধন / পাসপোর্ট।
+4. **নমিনির ১ কপি ছবি**।
+5. **বর্তমান ঠিকানার প্রমাণ:** বিদ্যুৎ / গ্যাস / পানির বিলের কপি (সর্বোচ্চ ৩ মাসের)।
+6. **পেশা ও আয়ের প্রমাণ:**
+   - চাকরিজীবী: Salary Certificate / Pay Slip / Job ID।
+   - ব্যবসায়ী: Trade License।
+   - স্বনির্ভর (Self-employed): Professional Certificate।
+7. প্রযোজ্য ক্ষেত্রে e-TIN / Tax Return Submission Proof।
+8. পূরণ করা Account Opening Form (আমাদের পোর্টালে অনলাইন ফর্ম)।
+
+🔄 **ধাপে ধাপে আবেদন প্রক্রিয়া:**
+1. অ্যাকাউন্টের ধরন (Smart Savings / Current) নির্বাচন করুন।
+2. আমাদের পোর্টালে **"New Service Request"** > **"Account Opening Request"** এ যান।
+3. প্রয়োজনীয় কাগজপত্র স্ক্যান বা পরিষ্কার ছবি প্রস্তুত করুন।
+4. ফর্ম পূরণ করে নমিনির তথ্য ও ছবি যুক্ত করুন।
+5. ডকুমেন্টস আপলোড করে অনলাইনে আবেদন সাবমিট করুন (অথবা নিকটস্থ Smart Banking শাখায় জমা দিন)।
+6. ব্যাংকের KYC ও এআই ডকুমেন্ট যাচাই সম্পন্ন হবে।
+7. ব্যাংক কর্মকর্তার অনুমোদনের পর অ্যাকাউন্ট চালু হবে।
+
+💡 **বিশেষ দ্রষ্টব্য:** Smart Savings Account-এর প্রাথমিক জমা ৫০০ টাকা (অ্যাকাউন্টের ধরন অনুযায়ী ভিন্ন হতে পারে)। ১৮ বছরের কম বয়সীদের ক্ষেত্রে অভিভাবকের মাধ্যমে ব্যাংকের নির্ধারিত নিয়মে হিসাব খুলতে হবে।`;
     }
 
+    // ২. কার্ড সেবা ও রিপ্লেসমেন্ট (Card Service & Replacement)
+    if ((m.includes('card') || m.includes('কার্ড')) && (m.includes('replacement') || m.includes('রিপ্লেসমেন্ট') || m.includes('service') || m.includes('সেবা') || m.includes('নতুন') || m.includes('new') || m.includes('debit') || m.includes('ডেবিট'))) {
+      return `💳 **Smart Banking PLC — কার্ড সেবা ও রিপ্লেসমেন্ট নির্দেশিকা (Card Service & Replacement)**
+
+📄 **প্রয়োজনীয় কাগজপত্র:**
+1. Smart Banking Account Number।
+2. জাতীয় পরিচয়পত্র (NID)।
+3. পাসপোর্ট সাইজ ছবি।
+4. স্বাক্ষরসহ Debit Card Application Form।
+5. পুরোনো কার্ড (ক্ষতিগ্রস্ত বা নষ্ট হলে)।
+6. কার্ড রিপ্লেসমেন্টের ক্ষেত্রে ব্যাংক চাইলে অতিরিক্ত তথ্য বা আবেদনপত্র।
+
+🔄 **ধাপে ধাপে আবেদন প্রক্রিয়া:**
+1. Smart Banking-এর গ্রাহক হতে হবে এবং একটি সক্রিয় ব্যাংক অ্যাকাউন্ট থাকতে হবে।
+2. পোর্টালে **"New Service Request"** > **"Card Replacement Request"** নির্বাচন করুন (অথবা Debit Card Application Form সংগ্রহ করুন)।
+3. প্রয়োজনীয় তথ্য দিয়ে ফর্ম পূরণ করুন।
+4. ছবি ও প্রয়োজনীয় কাগজপত্র (NID ও স্বাক্ষর) আপলোড করুন।
+5. আবেদন সাবমিট করুন (অথবা নিকটস্থ Smart Banking শাখায় জমা দিন)।
+6. ব্যাংক কর্তৃপক্ষ আবেদন যাচাই করবে।
+7. অনুমোদনের পর নতুন কার্ড আপনার ঠিকানায় অথবা শাখায় পৌঁছে যাবে।
+8. **MySmartBank App** অথবা Contact Center-এর মাধ্যমে কার্ড অ্যাক্টিভেশন ও গোপন PIN সেট করুন।
+
+⏱️ **সম্ভাব্য সময়সীমা:**
+- ঢাকা শাখা: ৪ দিনের মধ্যে।
+- ঢাকার বাইরের মেট্রো শাখা: ৫ দিনের মধ্যে।
+- গ্রামীণ শাখা: ৬ দিনের মধ্যে।
+*(কার্ডের ধরন ও রিপ্লেসমেন্ট ফি ব্যাংকের Schedule of Charges অনুযায়ী প্রযোজ্য)*`;
+    }
+
+    // ৩. চেকবই রিকোয়েস্ট (Cheque Book Request)
     if (m.includes('cheque') || m.includes('check') || m.includes('bohi') || m.includes('চেক') || m.includes('বই')) {
-      return `📑 **চেক বই (Cheque Book) রিকোয়েস্ট:**
-- আপনি ২০, ৫০ বা ১০০ পাতার চেক বইয়ের জন্য আবেদন করতে পারবেন।
-- **প্রয়োজনীয় ডকুমেন্ট:** আপনার স্বাক্ষর কার্ড (Signature Specimen)।
-- আবেদন অনুমোদনের পর ৩–৫ কার্যদিবসের মধ্যে নিকটস্থ শাখা থেকে অথবা কুরিয়ারে সংগ্রহ করতে পারবেন।`;
+      return `📑 **Smart Banking PLC — চেকবই রিকোয়েস্ট নির্দেশিকা (Cheque Book Request)**
+
+📄 **প্রয়োজনীয় তথ্য ও কাগজপত্র:**
+1. Smart Banking Account Number।
+2. Account Holder-এর নাম।
+3. Cheque Requisition Slip / অনলাইন আবেদন।
+4. অ্যাকাউন্টধারীর স্বাক্ষর (Signature Specimen)।
+5. যোগাযোগের নিবন্ধিত মোবাইল নম্বর।
+6. প্রয়োজনীয় Cheque Leaves-এর সংখ্যা (২০, ৫০ বা ১০০ পাতা)।
+
+🔄 **ধাপে ধাপে প্রক্রিয়া:**
+1. **MySmartBank App**-এ লগইন করুন অথবা আমাদের ওয়েব পোর্টালে যান।
+2. **"New Service Request"** > **"Cheque Book Request"** অপশন নির্বাচন করুন।
+3. অ্যাকাউন্ট নম্বর নির্বাচন করুন।
+4. প্রয়োজনীয় Cheque Leaves-এর সংখ্যা উল্লেখ করুন।
+5. আবেদন Submit করুন।
+6. ব্যাংক আবেদন ও স্বাক্ষর যাচাই করবে।
+7. অনুমোদনের পর চেকবই সংগ্রহ করুন।
+
+🌐 **আবেদনের মাধ্যম:** MySmartBank App, অনলাইন পোর্টাল অথবা সরাসরি ব্যাংক শাখা।
+⏱️ **সম্ভাব্য সময়:** ২–৪ দিন।
+💰 **ফি:** ব্যাংকের সর্বশেষ Schedule of Charges অনুযায়ী।`;
     }
 
+    // ৪. লোন আবেদন (Loan Application)
     if (m.includes('loan') || m.includes('rin') || m.includes('emi') || m.includes('interest') || m.includes('লোন') || m.includes('ঋণ')) {
-      return `💰 **লোন সেবা ও আবেদন নির্দেশিকা:**
-আমরা সহজ শর্তে পার্সোনাল লোন, গৃহ ঋণ (Home Loan) এবং গাড়ি ঋণ দিয়ে থাকি।
-**লোন পাওয়ার জন্য প্রয়োজনীয় কাগজপত্র:**
-1. জাতীয় পরিচয়পত্র (NID)
-2. বিগত ৬ মাসের ব্যাংক স্টেটমেন্ট
-3. শেষ ৩ মাসের বেতন সার্টিফিকেট (Salary Certificate) বা আয়ের প্রমাণপত্র
-অনলাইনে আবেদন করতে **"New Service Request"** > **"Loan Service Inquiry"** ফর্মটি পূরণ করুন।`;
+      return `💰 **Smart Banking PLC — লোন আবেদন নির্দেশিকা (Loan Application Guide)**
+
+🎯 **প্রয়োজনীয় যোগ্যতা:**
+- Personal Loan-এর ক্ষেত্রে সাধারণত বয়স ২২–৬৫ বছর।
+- নিয়মিত আয়ের উৎস থাকতে হবে।
+- ব্যাংকের নির্ধারিত আয় ও অন্যান্য যোগ্যতার শর্ত পূরণ করতে হবে।
+- প্রয়োজন অনুযায়ী একজন পার্সোনাল গ্যারান্টর (Personal Guarantor) থাকতে হবে।
+
+📄 **প্রয়োজনীয় কাগজপত্র:**
+1. পূরণ করা Loan Application Form।
+2. আবেদনকারীর NID / Passport কপি।
+3. সাম্প্রতিক পাসপোর্ট সাইজ ছবি।
+4. Guarantor-এর NID ও ছবি।
+5. সর্বশেষ Utility Bill (বিদ্যুৎ/গ্যাস/পানি)।
+6. Salary Certificate / Letter of Introduction (চাকরিজীবীদের জন্য)।
+7. সর্বশেষ Pay Slip।
+8. সর্বশেষ ৬ মাসের Bank Statement।
+9. e-TIN / Tax Clearance Certificate (প্রযোজ্য ক্ষেত্রে)।
+10. Office ID / Business Card (প্রযোজ্য ক্ষেত্রে)।
+11. প্রয়োজন অনুযায়ী চাকরির অভিজ্ঞতার প্রমাণ ও গ্যারান্টরের কাগজপত্র।
+
+🔄 **ধাপে ধাপে প্রক্রিয়া:**
+1. কোন ধরনের Loan প্রয়োজন তা নির্বাচন করুন (Personal, Home, Auto, Education)।
+2. ব্যাংকের Loan Eligibility যাচাই করুন।
+3. পোর্টালে **"New Service Request"** > **"Loan Service Inquiry"** ফর্ম পূরণ করুন।
+4. প্রয়োজনীয় কাগজপত্র প্রস্তুত ও আপলোড করুন।
+5. Guarantor-এর তথ্য ও কাগজপত্র যুক্ত করুন।
+6. আবেদন সাবমিট করুন (অথবা নিকটস্থ Smart Banking শাখায় জমা দিন)।
+7. ব্যাংক আয়, চাকরি, CIB ও অন্যান্য তথ্য যাচাই করবে।
+8. ব্যাংকের অনুমোদন পেলে Loan Agreement সম্পন্ন করুন।
+9. অনুমোদিত নিয়ম অনুযায়ী Loan Disbursement হবে।
+
+💡 **বিশেষ দ্রষ্টব্য:** লোনের ধরন অনুযায়ী কাগজপত্র ও যোগ্যতা আলাদা হয়ে থাকে।`;
     }
 
-    if (m.includes('card') || m.includes('debit') || m.includes('credit') || m.includes('replacement') || m.includes('কার্ড')) {
-      return `💳 **ডেবিট ও ক্রেডিট কার্ড সেবা:**
-- **নতুন কার্ডের আবেদন:** NID এবং স্যালারি সার্টিফিকেট প্রয়োজন।
-- **কার্ড রিপ্লেসমেন্ট (Replacement):** NID এবং সিগনেচার স্পেসিমেন প্রয়োজন।
-অফিসার অনুমোদনের পর ২ থেকে ৩ কার্যদিবসের মধ্যে কার্ড প্রস্তুত হয়ে যাবে।`;
+    // ৫. কার্ড হারানো / ব্লক (Lost Card / Block Card)
+    if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen') || m.includes('হারিয়ে') || m.includes('চুরি') || m.includes('ব্লক')) {
+      return `🚨 **Smart Banking PLC — কার্ড হারানো / জরুরি ব্লক নির্দেশিকা (Lost / Block Card)**
+
+⚠️ **জরুরি সেবা — যা প্রয়োজন হতে পারে:**
+1. Smart Banking Account Number।
+2. কার্ডধারীর নাম।
+3. নিবন্ধিত মোবাইল নম্বর।
+4. পরিচয় যাচাইয়ের জন্য প্রয়োজনীয় তথ্য।
+
+🔄 **ধাপে ধাপে তাৎক্ষণিক করণীয়:**
+1. কার্ড হারিয়ে বা চুরি হয়ে গেলে দ্রুত ব্যাংককে জানান।
+2. **MySmartBank App**-এ লগইন করুন।
+3. **Card Management** অপশনে যান।
+4. হারানো কার্ডটি নির্বাচন করুন।
+5. **Block Card** অপশন নির্বাচন করে কার্ডটি তাৎক্ষণিক ফ্রিজ করুন।
+6. প্রয়োজনীয় Verification সম্পন্ন করুন এবং কার্ড ব্লক নিশ্চিত করুন।
+7. নতুন কার্ড প্রয়োজন হলে **"New Service Request"** > **"Card Replacement Request"** করুন।
+8. কোনো অননুমোদিত লেনদেন হয়ে থাকলে দ্রুত পোর্টালে **"Complaints / Support"** অপশনে গিয়ে Complaint করুন।
+
+📞 **জরুরি যোগাযোগ — Smart Banking 24/7 Contact Center:**
+- **বাংলাদেশ থেকে কল:** 16218 (২৪/৭ কল সেন্টার)
+- **বিদেশ থেকে কল:** +88 09610016218
+- **ইমেইল:** contactcenter@smartbank.com.bd
+
+🔒 **সতর্কতা:** কার্ড হারালে দেরি না করে ব্লক করুন। কাউকে কখনো আপনার PIN, CVV বা OTP জানাবেন না।`;
     }
 
     if (m.includes('nid') || m.includes('national id') || m.includes('document') || m.includes('file') || m.includes('upload') || m.includes('ডকুমেন্ট') || m.includes('কাগজ') || m.includes('আপলোড')) {
-      return `📄 **ডকুমেন্ট আপলোড করার নিয়ম ও নির্দেশিকা:**
+      return `📄 **Smart Banking PLC — ডকুমেন্ট আপলোড নির্দেশিকা:**
 - **সমর্থিত ফরম্যাট:** JPG, JPEG, PNG এবং PDF।
 - **সর্বোচ্চ সাইজ:** প্রতি ডকুমেন্টে ৫ মেগাবাইট (ব্যাংক স্টেটমেন্টের ক্ষেত্রে ১০ মেগাবাইট)।
 - **স্পষ্টতা:** ডকুমেন্টের চার কোণ স্পষ্ট দেখা যেতে হবে, কোনো ঝাপসা বা অতিরিক্ত আলো থাকা যাবে না।
 - **এআই ভ্যালিডেশন:** ডকুমেন্ট আপলোড করার সাথে সাথে আমাদের এআই ইঞ্জিন স্বয়ংক্রিয়ভাবে লেখার স্পষ্টতা ও সত্যতা যাচাই করে দ্রুত অ্যাপ্রুভাল সহায়তা প্রদান করে!`;
     }
 
-    if (m.includes('internet') || m.includes('app') || m.includes('mobile') || m.includes('login') || m.includes('ইন্টারনেট') || m.includes('অ্যাপ')) {
-      return `🌐 **ডিজিটাল ইন্টারনেট ব্যাংকিং অ্যাক্টিভেশন:**
-- ২৪/৭ ইন্টারনেট ব্যাংকিং ও মোবাইল অ্যাপে ফান্ড ট্রান্সফার ও ব্যালেন্স চেক করতে পারবেন।
-- **প্রয়োজনীয় তথ্য:** আপনার নিবন্ধিত মোবাইল নম্বর, অ্যাকাউন্ট নম্বর এবং এনআইডি স্ক্যান।
-- **"New Service Request"** > **"Internet Banking Activation"** এ গিয়ে এখনই অ্যাক্টিভেশনের আবেদন জমা দিন!`;
-    }
-
     if (m.includes('complaint') || m.includes('dispute') || m.includes('atm') || m.includes('problem') || m.includes('সমস্যা') || m.includes('অভিযোগ')) {
-      return `⚠️ **অভিযোগ বা বিরোধ প্রতিকার:**
-কোনো সমস্যা বা অভিযোগ থাকলে পোর্টালের **"Complaints / Support"** অপশনে গিয়ে টিকিট ওপেন করতে পারেন। এটিএম লেনদেন সমস্যা, কার্ড ডেলিভারি বিলম্ব বা ফান্ড ট্রান্সফার সংক্রান্ত অভিযোগ ২৪ থেকে ৪৮ ঘণ্টার মধ্যে সমাধান করা হয়।`;
+      return `⚠️ **অভিযোগ বা বিরোধ প্রতিকার (Complaint Management):**
+কোনো সমস্যা বা অননুমোদিত লেনদেন হলে পোর্টালের **"Complaints / Support"** অপশনে গিয়ে টিকিট ওপেন করুন। এটিএম সমস্যা, কার্ড ডেলিভারি বিলম্ব বা ফান্ড ট্রান্সফার সংক্রান্ত অভিযোগ ২৪ থেকে ৪৮ ঘণ্টার মধ্যে সমাধান করা হয়। জরুরি প্রয়োজনে কল করুন: **16218**।`;
     }
 
-    return `ধন্যবাদ ${userName}। আমি আপনার স্মার্ট ব্যাংকিং সহকারী।
-আমি আপনাকে সহায়তা করতে পারি:
-- অ্যাকাউন্ট খোলা, কার্ড, চেক বই ও লোনের প্রয়োজনীয় ডকুমেন্টস জানাতে
-- এআই ডকুমেন্ট ভেরিফিকেশন নিয়মাবলীতে
-- আবেদনের স্ট্যাটাস ও জরুরি কার্ড ব্লক সংক্রান্ত তথ্যে
-আপনি নির্দিষ্ট যেকোনো প্রশ্ন বাংলায় লিখতে পারেন অথবা সাইডবার থেকে **"New Service Request"** নির্বাচন করে সেবা নিতে পারেন!`;
+    return `ধন্যবাদ ${userName}। আমি **Smart Banking PLC**-এর ভার্চুয়াল সহকারী।
+আপনার সহায়তার জন্য:
+- 🏦 **অ্যাকাউন্ট খোলার নিয়ম**
+- 💳 **কার্ড সেবা ও রিপ্লেসমেন্ট**
+- 📑 **চেকবই রিকোয়েস্ট**
+- 💰 **লোন আবেদন**
+- 🚨 **কার্ড হারানো / ব্লক**
+উপরে দেওয়া অপশনগুলোর যেকোনোটিতে ক্লিক করতে পারেন অথবা সরাসরি প্রশ্ন লিখতে পারেন!`;
   }
 
-  // ENGLISH REPLIES
+  // ENGLISH REPLIES (Smart Banking PLC Regulations)
   if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('kemon') || m.includes('help') || m.includes('assalamu')) {
-    return `Hello ${userName}! 👋 I am your Smart Banking AI Assistant. You can ask me any banking questions, document requirements, loan queries, card lost/block procedures, or portal navigation. How may I assist you today?`;
+    return `Hello ${userName}! 👋 I am your **Smart Banking PLC** AI Assistant. You can ask me any questions about Account Opening, Card Services, Cheque Books, Loan Applications, or Emergency Card Blocking!`;
   }
 
   if (m.includes('block') || m.includes('lost') || m.includes('harie') || m.includes('churi') || m.includes('stolen')) {
-    return `🚨 **Emergency Card Block Procedure:**
-1. Please call our 24/7 emergency hotline at **16234** or **+880-9612345678** immediately to freeze your card instantly.
-2. In this portal, navigate to **"Complaints / Support"** and submit a high-priority dispute ticket.
-3. Once blocked, you can request a replacement card from **"New Service Request"** > **"Card Replacement Request"** (requires your NID and Signature specimen).`;
-  }
-
-  if (m.includes('nid') || m.includes('national id') || m.includes('document') || m.includes('file') || m.includes('upload') || m.includes('doc')) {
-    return `📄 **Document Upload Guidelines:**
-- **Supported Formats:** JPG, JPEG, PNG, and PDF.
-- **File Size Limit:** Up to 5 MB per document (10 MB for Bank Statements).
-- **Quality Check:** Ensure all four corners are visible, text is crisp, clear, and without glare or motion blur.
-- **AI Validation:** Our vision AI assistant automatically validates document clarity, completeness, and NID authenticity upon upload!`;
+    return `🚨 **Smart Banking PLC — Emergency Card Block Procedure:**
+1. Log in to the **MySmartBank App** > go to **Card Management** > select **Block Card** to freeze immediately.
+2. Call our 24/7 Contact Center at **16218** (or **+88 09610016218** from abroad).
+3. If unauthorized charges occurred, submit a dispute under **"Complaints / Support"**.
+4. Request a replacement from **"New Service Request"** > **"Card Replacement Request"**.
+*Never share your PIN, CVV, or OTP with anyone.*`;
   }
 
   if (m.includes('account') || m.includes('savings') || m.includes('current') || m.includes('open')) {
-    return `🏦 **Account Opening Requirements:**
-To open a Savings or Current Account online, please have ready:
-1. **National ID (NID) Smart Card** (Color Front & Back)
-2. **Recent Passport-size Photograph** (White background)
-3. **Recent Utility Bill** (Electricity / Gas / Water not older than 3 months for address verification)
-Click **"New Service Request"** > select **"Account Opening Request"** to apply!`;
-  }
-
-  if (m.includes('cheque') || m.includes('check') || m.includes('bohi')) {
-    return `📑 **Cheque Book Request:**
-- Available leaf options: 20, 50, or 100 leaves.
-- **Required Document:** Signature Specimen Card.
-- You can collect it from your branch or have it delivered via registered postal courier within 3–5 business days.`;
-  }
-
-  if (m.includes('loan') || m.includes('rin') || m.includes('emi') || m.includes('interest')) {
-    return `💰 **Loan Service Inquiry:**
-We offer Personal Loans, Home Loans, and Auto Loans at competitive interest rates.
-**Required Documents for Eligibility:**
-1. National ID (NID)
-2. Last 6 months' Bank Statement
-3. Latest 3 months' Salary Certificate / Proof of Income
-Submit an inquiry via **"New Service Request"** > **"Loan Service Inquiry"** to receive an officer callback.`;
+    return `🏦 **Smart Banking PLC — Account Opening Requirements:**
+1. Applicant's National ID (NID) / Passport / Birth Certificate.
+2. 2 copies of recent passport-size photographs.
+3. Nominee's NID & 1 photograph.
+4. Recent Utility Bill (Electricity/Gas/Water not older than 3 months).
+5. Proof of Income: Salary Certificate/Pay Slip (Salaried) or Trade License (Business).
+*Initial deposit for Smart Savings Account is BDT 500.* Apply online via **"New Service Request"**!`;
   }
 
   if (m.includes('card') || m.includes('debit') || m.includes('credit') || m.includes('replacement')) {
-    return `💳 **Debit & Credit Card Services:**
-- **New Card:** Requires NID and latest Salary Certificate / Income Proof.
-- **Replacement Card:** Requires NID and Signature Specimen.
-Standard issuance turnaround is 2 to 3 business days following administrative approval.`;
+    return `💳 **Smart Banking PLC — Card Services & Replacement:**
+- **Requirements:** Smart Banking Account Number, NID copy, passport photo, signed application form.
+- **Delivery Timeline:** Dhaka (within 4 days), Outside Dhaka Metro (within 5 days), Rural branches (within 6 days).
+- **Activation:** Set PIN via MySmartBank App or Contact Center (**16218**).`;
   }
 
-  if (m.includes('internet') || m.includes('app') || m.includes('mobile') || m.includes('login') || m.includes('password')) {
-    return `🌐 **Digital Banking Activation:**
-- You can activate 24/7 Internet Banking & Mobile App access.
-- Requires your registered Phone Number, Account Number, and NID copy.
-- Go to **"New Service Request"** > **"Internet Banking Activation"** to submit your verification!`;
+  if (m.includes('cheque') || m.includes('check') || m.includes('bohi')) {
+    return `📑 **Smart Banking PLC — Cheque Book Request:**
+- Available in 20, 50, or 100 leaves.
+- Requires Account Number and Signature Specimen.
+- Apply via **MySmartBank App** or **"New Service Request"** > **"Cheque Book Request"**.
+- Turnaround time: 2–4 business days. Fee as per latest Schedule of Charges.`;
   }
 
-  if (m.includes('status') || m.includes('pending') || m.includes('correction') || m.includes('review')) {
-    return `📊 **Service Request Lifecycle:**
-1. **Submitted:** Your request is received.
-2. **AI Validation:** Automated scan inspects document readability & authenticity.
-3. **Pending Admin Review:** A human bank officer verifies the compliance details.
-4. **Correction Required:** Officer requested a clearer re-upload of a specific document.
-5. **Approved / Completed:** Request successfully approved and processed!`;
-  }
-
-  if (m.includes('complaint') || m.includes('dispute') || m.includes('atm') || m.includes('problem')) {
-    return `⚠️ **Dispute & Complaint Assistance:**
-You can lodge an official complaint under the **Complaints / Support** menu. Categories include ATM cash dispensing issues, unauthorized charges, card delivery delays, and transaction queries. Our grievance team resolves tickets within 24–48 hours.`;
+  if (m.includes('loan') || m.includes('rin') || m.includes('emi') || m.includes('interest')) {
+    return `💰 **Smart Banking PLC — Loan Application Guide:**
+- **Eligibility:** Age 22–65 years with regular verifiable income. Personal Guarantor required.
+- **Documents:** Loan Form, NID/Passport, Photos, Guarantor NID & Photo, Utility Bill, Salary Certificate, Pay Slip, and last 6 months' Bank Statement.
+- Submit an inquiry via **"New Service Request"** > **"Loan Service Inquiry"** to initiate verification.`;
   }
 
   return `Thank you for contacting Smart Banking AI Assistant, ${userName}. 
-I can assist you with:
-- **Document requirements** for Account Opening, Cards, Cheque Books, or Loans
-- **AI Document Verification guidelines** & upload troubleshooting
-- **Application status tracking** and correction advice
-- **Emergency card blocking** and dispute resolution
-
-Please feel free to ask your specific question, or click **"New Service Request"** in the sidebar to begin your application!`;
+Feel free to ask about Account Opening, Cards, Cheque Books, Loans, or Emergency Card Blocking guidelines!`;
 }
 
 module.exports = {
