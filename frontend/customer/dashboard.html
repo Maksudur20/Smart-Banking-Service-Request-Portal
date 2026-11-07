@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ড্যাশবোর্ড - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
   <style>
     .customer-header-balances {
       display: flex;
@@ -206,7 +206,7 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">সাম্প্রতিক লেনদেন (Recent Transactions)</h3>
-              <a href="/customer/transfer.html" style="font-size:0.8rem; color:#0284c7; text-decoration:none;">সব দেখুন &rsaquo;</a>
+              <a href="/customer/transfer.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;">সব দেখুন &rarr;</a>
             </div>
             <div class="card-body" style="padding:0; max-height:340px; overflow-y:auto;" id="recentTxContainer">
               <p style="text-align:center; padding:30px; color:#94a3b8;">লেনদেন লোড হচ্ছে...</p>
@@ -218,7 +218,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">আমার সার্ভিস আবেদনসমূহ (Service Requests)</h3>
-            <a href="/customer/requests.html" style="font-size:0.8rem; color:#0284c7; text-decoration:none;">সকল আবেদন &rsaquo;</a>
+            <a href="/customer/requests.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;">সকল আবেদন &rarr;</a>
           </div>
           <div class="card-body" style="padding:0;" id="recentRequestsContainer">
             <p style="text-align:center; padding:24px; color:#94a3b8;">আবেদন লোড হচ্ছে...</p>
@@ -230,7 +230,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');
@@ -389,13 +389,15 @@
               <tbody>
                 ${list.slice(0, 5).map(r => `
                   <tr>
-                    <td><strong>${r.request_number}</strong></td>
-                    <td>${r.service_name || '-'}</td>
-                    <td>${r.subject}</td>
+                    <td><code>${r.request_number}</code></td>
+                    <td><strong style="color:#0f172a;">${r.service_name || '-'}</strong></td>
+                    <td style="color:#334155;">${r.subject}</td>
                     <td>${window.UI.renderStatusBadge(r.status)}</td>
-                    <td>${window.UI.formatDateOnly(r.created_at)}</td>
+                    <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${window.UI.formatDateOnly(r.created_at)}</td>
                     <td>
-                      <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn primary">বিস্তারিত</a>
+                      <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn primary">
+                        বিস্তারিত &rarr;
+                      </a>
                     </td>
                   </tr>
                 `).join('')}

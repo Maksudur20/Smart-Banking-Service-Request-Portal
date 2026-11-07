@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
   <style>
     .modal-overlay {
       position: fixed;
@@ -157,7 +157,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');
@@ -217,17 +217,17 @@
                     <tr>
                       <td><code>${app.customer_reference || '-'}</code></td>
                       <td>
-                        <div style="font-weight:700; color:#0f172a;">${app.full_name}</div>
-                        <div style="font-size:0.75rem; color:#64748b;">${app.email}</div>
+                        <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">${app.full_name}</div>
+                        <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">${app.email}</div>
                       </td>
-                      <td><strong style="color:#0284c7;">${app.account_number}</strong></td>
-                      <td>${app.account_type || 'Prime Savings'}</td>
-                      <td><span class="badge" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">${app.document_count || app.doc_count || 0} টি ফাইল</span></td>
+                      <td><span style="font-family:ui-monospace, monospace; font-weight:700; color:#0369a1; font-size:0.9rem;">${app.account_number}</span></td>
+                      <td><span style="color:#475569; font-weight:500;">${app.account_type || 'Prime Savings'}</span></td>
+                      <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${app.document_count || app.doc_count || 0} টি ফাইল</span></td>
                       <td><span class="badge ${badgeClass}">${app.kyc_status}</span></td>
-                      <td style="font-size:0.8rem; color:#64748b;">${new Date(app.created_at).toLocaleDateString()}</td>
+                      <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(app.created_at).toLocaleDateString()}</td>
                       <td>
                         <button onclick="openReviewModal(${app.customer_id || app.id})" class="table-action-btn primary">
-                          যাচাই করুন
+                          যাচাই করুন &rarr;
                         </button>
                       </td>
                     </tr>

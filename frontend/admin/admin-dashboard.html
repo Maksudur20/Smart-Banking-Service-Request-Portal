@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
   <style>
     .dashboard-two-col {
       display: grid;
@@ -72,7 +72,7 @@
         <div class="top-nav-left">
           <div>
             <h1 class="page-heading">Admin Dashboard</h1>
-            <div class="page-breadcrumbs">🏠 &rsaquo; Overview</div>
+            <div class="page-breadcrumbs">🏠 / Overview</div>
           </div>
         </div>
 
@@ -101,7 +101,7 @@
             <div class="metric-left">
               <span class="metric-title">নিবন্ধিত গ্রাহক (Total Customers)</span>
               <div class="metric-value" id="mCustCount">0</div>
-              <div class="metric-trend up" style="color:#0284c7;">বাস্তব নিবন্ধিত গ্রাহক সংখ্যা</div>
+              <div class="metric-trend up" style="color:#0284c7;">বাস্তব নিবন্ধিত গ্রাহক সংখ্যা &rarr;</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">👥</div>
           </div>
@@ -110,7 +110,7 @@
             <div class="metric-left">
               <span class="metric-title">কেওয়াইসি ভেরিফিকেশন (KYC Pending)</span>
               <div class="metric-value" id="mKycPendingCount" style="color:#d97706;">0</div>
-              <div class="metric-trend up" style="color:#d97706;">যাচাইয়ের অপেক্ষায় &rsaquo;</div>
+              <div class="metric-trend up" style="color:#d97706;">যাচাইয়ের অপেক্ষায় &rarr;</div>
             </div>
             <div class="metric-icon-box" style="background:#fef3c7; color:#d97706;">🪪</div>
           </div>
@@ -119,7 +119,7 @@
             <div class="metric-left">
               <span class="metric-title">ডিপোজিট ভেরিফিকেশন (Deposits)</span>
               <div class="metric-value" id="mPendingDepositCount" style="color:#059669;">0</div>
-              <div class="metric-trend up" style="color:#059669;">স্লিপ ও TrxID যাচাই &rsaquo;</div>
+              <div class="metric-trend up" style="color:#059669;">স্লিপ ও TrxID যাচাই &rarr;</div>
             </div>
             <div class="metric-icon-box" style="background:#dcfce7; color:#059669;">💵</div>
           </div>
@@ -128,7 +128,7 @@
             <div class="metric-left">
               <span class="metric-title">সার্ভিস রিকোয়েস্ট (Service Requests)</span>
               <div class="metric-value" id="mPendingCount">0</div>
-              <div class="metric-trend up" style="color:#0284c7;">কার্ড ও চেকবই আবেদন &rsaquo;</div>
+              <div class="metric-trend up" style="color:#0284c7;">কার্ড ও চেকবই আবেদন &rarr;</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">📋</div>
           </div>
@@ -140,7 +140,7 @@
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
               <h3 class="card-title">Service Requests</h3>
-              <a href="/admin/admin-requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
+              <a href="/admin/admin-requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rarr;</a>
             </div>
             <div class="table-responsive">
               <table class="table">
@@ -167,7 +167,7 @@
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
               <h3 class="card-title">Recent Alerts</h3>
-              <a href="/admin/admin-transactions.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rsaquo;</a>
+              <a href="/admin/admin-transactions.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rarr;</a>
             </div>
             <div class="card-body" style="padding:16px 20px;">
               <div class="alert-item">
@@ -311,7 +311,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('dashboard');
@@ -344,19 +344,16 @@
 
         tbody.innerHTML = recent.map(r => `
           <tr>
-            <td><strong>#${r.request_number}</strong></td>
+            <td><code>${r.request_number}</code></td>
             <td>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:1.1rem;">👤</span>
-                <span>${r.customer_name}</span>
-              </div>
+              <div style="font-weight:700; color:#0f172a; font-size:0.9rem;">${r.customer_name}</div>
             </td>
-            <td>${r.service_name}</td>
-            <td>${window.UI.formatDateTime(r.created_at)}</td>
+            <td><strong style="color:#0369a1;">${r.service_name}</strong></td>
+            <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${window.UI.formatDateTime(r.created_at)}</td>
             <td>${window.UI.renderStatusBadge(r.status)}</td>
             <td>
-              <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn">
-                Review
+              <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn primary">
+                যাচাই &rarr;
               </a>
             </td>
           </tr>

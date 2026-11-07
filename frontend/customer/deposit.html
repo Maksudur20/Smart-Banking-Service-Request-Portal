@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>টাকা ডিপোজিট - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
   <style>
     .deposit-grid {
       display: grid;
@@ -149,7 +149,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('deposit');
@@ -205,17 +205,17 @@
 
                   return `
                     <tr>
-                      <td><strong>${d.deposit_number}</strong></td>
-                      <td style="font-weight:700; color:#10b981;">${parseFloat(d.amount).toFixed(2)} BDT</td>
-                      <td>${d.deposit_method}</td>
-                      <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0;">${d.transaction_id}</code></td>
+                      <td><code>${d.deposit_number}</code></td>
+                      <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(d.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}</span></td>
+                      <td><span style="font-weight:600; color:#334155;">${d.deposit_method}</span></td>
+                      <td><code>${d.transaction_id}</code></td>
                       <td>
-                        ${d.slip_url ? `<a href="${d.slip_url}" target="_blank" class="table-action-btn secondary">স্লিপ দেখুন</a>` : '-'}
+                        ${d.slip_url ? `<a href="${d.slip_url}" target="_blank" class="table-action-btn secondary">স্লিপ দেখুন 📄</a>` : '-'}
                       </td>
                       <td><span class="badge ${badgeClass}">${d.status}</span></td>
-                      <td style="font-size:0.8rem; color:#64748b;">${new Date(d.created_at).toLocaleDateString()}</td>
+                      <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(d.created_at).toLocaleDateString()}</td>
                     </tr>
-                    ${d.admin_remarks ? `<tr><td colspan="7" style="background:#fff7ed; font-size:0.78rem; color:#c2410c; padding:8px 18px; border-bottom:1px solid #fed7aa;"><strong>অ্যাডমিন মন্তব্য:</strong> ${d.admin_remarks}</td></tr>` : ''}
+                    ${d.admin_remarks ? `<tr><td colspan="7" style="background:#fff7ed; font-size:0.8rem; color:#c2410c; padding:10px 20px; border-bottom:1px solid #fed7aa;"><strong>অ্যাডমিন মন্তব্য:</strong> ${d.admin_remarks}</td></tr>` : ''}
                   `;
                 }).join('')}
               </tbody>

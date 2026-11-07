@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>লাইভ লেনদেন খতিয়ান - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
 </head>
 <body>
   <div class="app-layout">
@@ -64,7 +64,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('transactions');
@@ -92,21 +92,21 @@
             <tr>
               <td><code>${t.transaction_number}</code></td>
               <td>
-                <div style="font-weight:700; color:#0f172a;">${t.customer_name || 'N/A'}</div>
-                <div style="font-size:0.75rem; color:#0284c7;">A/C: ${t.account_number}</div>
+                <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">${t.customer_name || 'N/A'}</div>
+                <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">A/C: <span style="font-family:monospace; color:#0369a1; font-weight:700;">${t.account_number}</span></div>
               </td>
               <td>
                 <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
-                  ${isCredit ? '⬇️ ক্রেডিট / জমা' : '⬆️ ডেবিট / ট্রান্সফার'}
+                  ${isCredit ? 'ক্রেডিট / জমা' : 'ডেবিট / ট্রান্সফার'}
                 </span>
               </td>
-              <td style="font-weight:800; color:${isCredit ? '#10b981' : '#ef4444'}; font-size:0.95rem;">
-                ${isCredit ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} BDT
+              <td style="font-weight:800; color:${isCredit ? '#059669' : '#e11d48'}; font-size:0.95rem;">
+                ${isCredit ? '+' : '-'}${Number(t.amount).toLocaleString('en-US', {minimumFractionDigits: 2})} BDT
               </td>
-              <td style="font-size:0.85rem;">${t.counterparty_name || t.counterparty_account || '-'}</td>
-              <td style="font-size:0.8rem; color:#64748b;">${t.reference || '-'}</td>
-              <td style="font-weight:700; color:#0f172a;">${parseFloat(t.balance_after).toFixed(2)} BDT</td>
-              <td style="font-size:0.8rem; color:#64748b;">${new Date(t.created_at).toLocaleString()}</td>
+              <td style="font-size:0.86rem; color:#334155; font-weight:500;">${t.counterparty_name || t.counterparty_account || '-'}</td>
+              <td style="font-size:0.82rem; color:#64748b;">${t.reference || '-'}</td>
+              <td style="font-weight:700; color:#0f172a;">৳${Number(t.balance_after).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+              <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(t.created_at).toLocaleString()}</td>
             </tr>
           `;
         }).join('');

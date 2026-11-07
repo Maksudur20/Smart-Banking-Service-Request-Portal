@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ডিরেক্টরি - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
 </head>
 <body>
   <div class="app-layout">
@@ -59,7 +59,7 @@
 
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.2"></script>
+  <script src="/assets/js/common.js?v=2.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('customers');
@@ -88,17 +88,17 @@
             <tr>
               <td><code>${c.customer_reference || '-'}</code></td>
               <td>
-                <div style="font-weight:700; color:#0f172a;">${c.full_name}</div>
-                <div style="font-size:0.75rem; color:#64748b;">${c.email} | ${c.phone || '-'}</div>
+                <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">${c.full_name}</div>
+                <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">${c.email} &bull; ${c.phone || '-'}</div>
               </td>
-              <td><strong style="color:#0284c7;">${c.account_number || 'N/A'}</strong></td>
-              <td>${c.account_type || 'Savings'}</td>
-              <td style="font-weight:800; color:#10b981;">${parseFloat(c.balance || 0).toFixed(2)} BDT</td>
+              <td><span style="font-family:ui-monospace, monospace; font-weight:700; color:#0369a1; font-size:0.9rem;">${c.account_number || 'N/A'}</span></td>
+              <td><span style="color:#475569; font-weight:500;">${c.account_type || 'Prime Savings'}</span></td>
+              <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(c.balance || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</span></td>
               <td><span class="badge ${badgeClass}">${c.kyc_status || 'Pending'}</span></td>
-              <td style="font-size:0.8rem; color:#64748b;">${new Date(c.created_at).toLocaleDateString()}</td>
+              <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(c.created_at).toLocaleDateString()}</td>
               <td>
                 <a href="/admin/admin-kyc.html" class="table-action-btn primary">
-                  কেওয়াইসি রিভিউ
+                  কেওয়াইসি রিভিউ &rarr;
                 </a>
               </td>
             </tr>
