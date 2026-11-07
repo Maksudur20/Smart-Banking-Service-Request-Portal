@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ইন্টারনেট ব্যাংকিং লগইন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.3">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.4">
 </head>
 <body class="auth-page">
   <div class="auth-card" style="max-width: 440px;">
@@ -15,6 +15,11 @@
       </div>
       <h2 class="auth-title">গ্রাহক ইন্টারনেট ব্যাংকিং</h2>
       <p class="auth-sub">আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন</p>
+    </div>
+
+    <!-- Banking Security Alert for Back/Forward Navigation -->
+    <div id="securityAlert" style="display:none; background:#fff1f2; border:1px solid #fecdd3; color:#be123c; padding:12px 16px; border-radius:8px; font-size:0.85rem; margin-bottom:18px; line-height:1.4;">
+      🔒 <strong>নিরাপত্তা সতর্কতা:</strong> ব্রাউজারের ব্যাক বা ফরোয়ার্ড নেভিগেশনের কারণে আপনার ব্যাংকিং সেশন সমাপ্ত করা হয়েছে। অনুগ্রহ করে আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে পুনরায় লগইন করুন।
     </div>
 
     <form id="loginForm">
@@ -40,10 +45,15 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/common.js?v=2.3"></script>
+  <script src="/assets/js/auth.js?v=2.4"></script>
+  <script src="/assets/js/common.js?v=2.4"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
+
+    if (window.location.search.includes('reason=back_nav') || window.location.search.includes('session=expired')) {
+      const alertEl = document.getElementById('securityAlert');
+      if (alertEl) alertEl.style.display = 'block';
+    }
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();

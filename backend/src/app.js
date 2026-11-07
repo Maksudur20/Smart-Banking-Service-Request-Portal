@@ -40,6 +40,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Apply general API rate limiter to all API routes
 app.use('/api', apiLimiter);
 
+// Anti-caching headers for banking security (prevents browser Back/Forward bfcache)
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+});
+
 // Serve Frontend static files directly from Express
 const frontendPath = path.join(__dirname, '../../frontend');
 app.use(express.static(frontendPath));
