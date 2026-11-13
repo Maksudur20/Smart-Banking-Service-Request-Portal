@@ -25,15 +25,15 @@
         <div style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff; border-radius:12px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 12px rgba(2,132,199,0.2);">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div>
-              <div style="font-size:0.8rem; opacity:0.85;">অ্যাকাউন্ট নম্বর:</div>
+              <div style="font-size:0.8rem; opacity:0.85;" data-bn="অ্যাকাউন্ট নম্বর:" data-en="Account Number:">অ্যাকাউন্ট নম্বর:</div>
               <div style="font-size:1.4rem; font-weight:800; letter-spacing:1px;" id="topAccDisplay">Loading...</div>
               <div style="font-size:0.85rem; opacity:0.9; margin-top:2px;" id="topAccType">Prime Savings Account</div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:0.8rem; opacity:0.85;">মোট ব্যালেন্স:</div>
+              <div style="font-size:0.8rem; opacity:0.85;" data-bn="মোট ব্যালেন্স:" data-en="Total Balance:">মোট ব্যালেন্স:</div>
               <div style="font-size:1.5rem; font-weight:800;" id="topBalDisplay">0.00 BDT</div>
               <div style="margin-top:6px;">
-                <a href="/customer/deposit.html" class="btn btn-secondary btn-sm" style="background:#fff; color:#0284c7; font-weight:700;">+ ডিপোজিট জমা দিন</a>
+                <a href="/customer/deposit.html" class="btn btn-secondary btn-sm" style="background:#fff; color:#0284c7; font-weight:700;" data-bn="+ ডিপোজিট জমা দিন" data-en="+ Make Deposit">+ ডিপোজিট জমা দিন</a>
               </div>
             </div>
           </div>
@@ -41,57 +41,57 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">ব্যক্তিগত ও ব্যাংকিং তথ্যাবলী</h3>
-            <a href="/customer/kyc.html" class="table-action-btn secondary">🪪 কেওয়াইসি ডকুমেন্টস দেখুন &rarr;</a>
+            <h3 class="card-title" data-bn="ব্যক্তিগত ও ব্যাংকিং তথ্যাবলী" data-en="Personal & Banking Information">ব্যক্তিগত ও ব্যাংকিং তথ্যাবলী</h3>
+            <a href="/customer/kyc.html" class="table-action-btn secondary" data-bn="🪪 কেওয়াইসি ডকুমেন্টস দেখুন &rarr;" data-en="🪪 View KYC Documents &rarr;">🪪 কেওয়াইসি ডকুমেন্টস দেখুন &rarr;</a>
           </div>
           <div class="card-body">
             <form id="profileForm">
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="form-group">
-                  <label class="form-label">গ্রাহক রেফারেন্স আইডি</label>
+                  <label class="form-label" data-bn="গ্রাহক রেফারেন্স আইডি" data-en="Customer Reference ID">গ্রাহক রেফারেন্স আইডি</label>
                   <input type="text" id="profRef" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">অ্যাকাউন্ট নম্বর</label>
+                  <label class="form-label" data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</label>
                   <input type="text" id="profAcc" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label required">আবেদনকারীর পূর্ণ নাম</label>
+                <label class="form-label required" data-bn="আবেদনকারীর পূর্ণ নাম" data-en="Full Legal Name">আবেদনকারীর পূর্ণ নাম</label>
                 <input type="text" id="profName" class="form-control" required>
               </div>
 
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="form-group">
-                  <label class="form-label">নিবন্ধিত ইমেইল</label>
+                  <label class="form-label" data-bn="নিবন্ধিত ইমেইল" data-en="Registered Email">নিবন্ধিত ইমেইল</label>
                   <input type="email" id="profEmail" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">মোবাইল নম্বর</label>
+                  <label class="form-label" data-bn="মোবাইল নম্বর" data-en="Mobile Number">মোবাইল নম্বর</label>
                   <input type="tel" id="profPhone" class="form-control" placeholder="017XXXXXXXX">
                 </div>
               </div>
 
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="form-group">
-                  <label class="form-label">পিতার নাম</label>
+                  <label class="form-label" data-bn="পিতার নাম" data-en="Father's Name">পিতার নাম</label>
                   <input type="text" id="profFather" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">মাতার নাম</label>
+                  <label class="form-label" data-bn="মাতার নাম" data-en="Mother's Name">মাতার নাম</label>
                   <input type="text" id="profMother" class="form-control" readonly disabled style="background:#f1f5f9;">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label">বর্তমান বসবাসের ঠিকানা</label>
-                <textarea id="profAddress" class="form-control" style="min-height:80px;"></textarea>
+                <label class="form-label" data-bn="বর্তমান বসবাসের ঠিকানা" data-en="Present Address">বর্তমান বসবাসের ঠিকানা</label>
+                <textarea id="profAddress" class="form-control" style="min-height:80px;" data-bn="বর্তমান ঠিকানা" data-en="Present residential address"></textarea>
               </div>
 
               <div style="display:flex; justify-content:flex-end;">
-                <button type="submit" id="saveBtn" class="btn btn-primary">
-                  তথ্য সংরক্ষণ করুন (Save Changes)
+                <button type="submit" id="saveBtn" class="btn btn-primary" data-bn="তথ্য সংরক্ষণ করুন" data-en="Save Changes">
+                  তথ্য সংরক্ষণ করুন
                 </button>
               </div>
             </form>
@@ -101,9 +101,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/assets/js/api.js?v=3.5"></script>
+  <script src="/assets/js/auth.js?v=3.5"></script>
+  <script src="/assets/js/common.js?v=3.5"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('profile');

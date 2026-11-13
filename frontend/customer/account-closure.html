@@ -95,19 +95,19 @@
           <div class="card-body" style="padding: 20px 24px;">
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
               <div>
-                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">হিসাবধারীর নাম</span>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;" data-bn="হিসাবধারীর নাম" data-en="Account Holder Name">হিসাবধারীর নাম</span>
                 <div style="font-size:1rem; font-weight:700; color:#0f172a;" id="accHolderName">-</div>
               </div>
               <div>
-                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">অ্যাকাউন্ট নম্বর</span>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;" data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</span>
                 <div style="font-size:1rem; font-weight:700; color:#0284c7; font-family:monospace;" id="accNumberDisplay">-</div>
               </div>
               <div>
-                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">অ্যাকাউন্টের ধরন</span>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;" data-bn="অ্যাকাউন্টের ধরন" data-en="Account Type">অ্যাকাউন্টের ধরন</span>
                 <div style="font-size:0.95rem; font-weight:600; color:#334155;" id="accTypeDisplay">-</div>
               </div>
               <div>
-                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;">বর্তমান ব্যালেন্স</span>
+                <span style="font-size:0.78rem; color:#64748b; text-transform:uppercase; font-weight:700;" data-bn="বর্তমান ব্যালেন্স" data-en="Current Balance">বর্তমান ব্যালেন্স</span>
                 <div style="font-size:1.15rem; font-weight:800; color:#059669;" id="accBalanceDisplay">0.00 BDT</div>
               </div>
             </div>
@@ -118,8 +118,8 @@
         <div id="activeRequestContainer" style="display:none;" class="card">
           <div class="card-header">
             <div>
-              <h3 class="card-title" id="activeReqTitle">অ্যাকাউন্ট ক্লোজার আবেদন অগ্রগতি</h3>
-              <p class="card-subtitle" id="activeReqSubtitle">আপনার আবেদনের বর্তমান স্ট্যাটাস ও ব্যাংক যাচাই</p>
+              <h3 class="card-title" id="activeReqTitle" data-bn="অ্যাকাউন্ট ক্লোজার আবেদন অগ্রগতি" data-en="Account Closure Request Progress">অ্যাকাউন্ট ক্লোজার আবেদন অগ্রগতি</h3>
+              <p class="card-subtitle" id="activeReqSubtitle" data-bn="আপনার আবেদনের বর্তমান স্ট্যাটাস ও ব্যাংক যাচাই" data-en="Current status and verification of your application">আপনার আবেদনের বর্তমান স্ট্যাটাস ও ব্যাংক যাচাই</p>
             </div>
             <span class="badge" id="activeReqBadge">Request Submitted</span>
           </div>
@@ -128,27 +128,27 @@
             <div class="status-tracker">
               <div class="tracker-step" id="step-submitted">
                 <div class="tracker-dot">১</div>
-                <div class="tracker-label">আবেদন জমা</div>
+                <div class="tracker-label" data-bn="আবেদন জমা" data-en="Submitted">আবেদন জমা</div>
               </div>
               <div class="tracker-step" id="step-review">
                 <div class="tracker-dot">২</div>
-                <div class="tracker-label">অফিসার যাচাই</div>
+                <div class="tracker-label" data-bn="অফিসার যাচাই" data-en="Review">অফিসার যাচাই</div>
               </div>
               <div class="tracker-step" id="step-docs">
                 <div class="tracker-dot">৩</div>
-                <div class="tracker-label">ডকুমেন্ট চেক</div>
+                <div class="tracker-label" data-bn="ডকুমেন্ট চেক" data-en="Docs Check">ডকুমেন্ট চেক</div>
               </div>
               <div class="tracker-step" id="step-settlement">
                 <div class="tracker-dot">৪</div>
-                <div class="tracker-label">ব্যালেন্স নিষ্পত্তি</div>
+                <div class="tracker-label" data-bn="ব্যালেন্স নিষ্পত্তি" data-en="Settlement">ব্যালেন্স নিষ্পত্তি</div>
               </div>
               <div class="tracker-step" id="step-approved">
                 <div class="tracker-dot">৫</div>
-                <div class="tracker-label">অনুমোদিত</div>
+                <div class="tracker-label" data-bn="অনুমোদিত" data-en="Approved">অনুমোদিত</div>
               </div>
               <div class="tracker-step" id="step-closed">
                 <div class="tracker-dot">৬</div>
-                <div class="tracker-label">হিসাব বন্ধ</div>
+                <div class="tracker-label" data-bn="হিসাব বন্ধ" data-en="Closed">হিসাব বন্ধ</div>
               </div>
             </div>
 
@@ -160,12 +160,12 @@
         <div id="closedCertificateContainer" style="display:none;" class="card">
           <div class="card-body" style="text-align:center; padding: 40px 24px;">
             <div style="font-size: 3rem; margin-bottom: 12px;">🏛️</div>
-            <h2 style="color: #0f172a; font-weight: 800; margin-bottom: 8px;">অ্যাকাউন্ট ক্লোজার সম্পন্ন (Account Closed)</h2>
-            <p style="color: #64748b; max-width: 600px; margin: 0 auto 24px; line-height: 1.6;">
+            <h2 style="color: #0f172a; font-weight: 800; margin-bottom: 8px;" data-bn="অ্যাকাউন্ট ক্লোজার সম্পন্ন" data-en="Account Officially Closed">অ্যাকাউন্ট ক্লোজার সম্পন্ন</h2>
+            <p style="color: #64748b; max-width: 600px; margin: 0 auto 24px; line-height: 1.6;" data-bn="আপনার অ্যাকাউন্টটি প্রাইম ব্যাংক পিএলসি এবং বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী স্থায়ীভাবে বন্ধ (Closed) করা হয়েছে। অবশিষ্ট ব্যালেন্স সম্পূর্ণ নিষ্পত্তি করা হয়েছে।" data-en="Your account has been permanently closed per banking regulations. Remaining balance has been fully settled.">
               আপনার অ্যাকাউন্টটি প্রাইম ব্যাংক পিএলসি এবং বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী স্থায়ীভাবে বন্ধ (Closed) করা হয়েছে। অবশিষ্ট ব্যালেন্স সম্পূর্ণ নিষ্পত্তি করা হয়েছে।
             </p>
             <div style="display:inline-flex; gap:12px;">
-              <button onclick="printClosureCertificate()" class="btn btn-primary" style="background:#059669; border-color:#059669;">
+              <button onclick="printClosureCertificate()" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="🖨️ ক্লোজার কনফার্মেশন প্রিন্ট / ডাউনলোড" data-en="🖨️ Print / Download Confirmation">
                 🖨️ ক্লোজার কনফার্মেশন প্রিন্ট / ডাউনলোড
               </button>
             </div>
@@ -176,8 +176,8 @@
         <div class="card" id="closureFormCard">
           <div class="card-header">
             <div>
-              <h3 class="card-title">অ্যাকাউন্ট বন্ধ করার আবেদনপত্র (Submit Closure Request)</h3>
-              <p class="card-subtitle">প্রাইম ব্যাংক নীতি অনুযায়ী সকল তথ্য পূরণ করুন এবং প্রয়োজনীয় কাগজপত্র আপলোড করুন</p>
+              <h3 class="card-title" data-bn="অ্যাকাউন্ট বন্ধ করার আবেদনপত্র" data-en="Account Closure Application Form">অ্যাকাউন্ট বন্ধ করার আবেদনপত্র</h3>
+              <p class="card-subtitle" data-bn="প্রাইম ব্যাংক নীতি অনুযায়ী সকল তথ্য পূরণ করুন এবং প্রয়োজনীয় কাগজপত্র আপলোড করুন" data-en="Complete all details and upload required verification documents as per bank policy">প্রাইম ব্যাংক নীতি অনুযায়ী সকল তথ্য পূরণ করুন এবং প্রয়োজনীয় কাগজপত্র আপলোড করুন</p>
             </div>
           </div>
           <div class="card-body">
@@ -185,86 +185,86 @@
               <!-- Reason and Settlement Choice -->
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
                 <div class="form-group">
-                  <label class="form-label required">অ্যাকাউন্ট বন্ধের প্রধান কারণ (Closing Reason)</label>
+                  <label class="form-label required" data-bn="অ্যাকাউন্ট বন্ধের প্রধান কারণ" data-en="Primary Reason for Closure">অ্যাকাউন্ট বন্ধের প্রধান কারণ</label>
                   <select id="closureReasonSelect" class="form-control" required>
-                    <option value="">নির্বাচন করুন</option>
-                    <option value="ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ">ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ</option>
-                    <option value="অন্য ব্যাংকে হিসাব পরিচালনা করায়">অন্য ব্যাংকে হিসাব পরিচালনা করায়</option>
-                    <option value="স্থায়ীভাবে প্রবাসে গমন করায়">স্থায়ীভাবে প্রবাসে গমন করায়</option>
-                    <option value="উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি">উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি</option>
-                    <option value="অন্যান্য কারণ">অন্যান্য কারণ</option>
+                    <option value="" data-bn="নির্বাচন করুন" data-en="Select Reason">নির্বাচন করুন</option>
+                    <option value="ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ" data-bn="ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ" data-en="Personal choice / No longer needed">ব্যক্তিগত প্রয়োজনে হিসাব বন্ধ</option>
+                    <option value="অন্য ব্যাংকে হিসাব পরিচালনা করায়" data-bn="অন্য ব্যাংকে হিসাব পরিচালনা করায়" data-en="Banking with another institution">অন্য ব্যাংকে হিসাব পরিচালনা করায়</option>
+                    <option value="স্থায়ীভাবে প্রবাসে গমন করায়" data-bn="স্থায়ীভাবে প্রবাসে গমন করায়" data-en="Relocating abroad permanently">স্থায়ীভাবে প্রবাসে গমন করায়</option>
+                    <option value="উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি" data-bn="উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি" data-en="Charges / Service issues">উচ্চ চার্জ বা সার্ভিস সংক্রান্ত আপত্তি</option>
+                    <option value="অন্যান্য কারণ" data-bn="অন্যান্য কারণ" data-en="Other reason">অন্যান্য কারণ</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label required">অবশিষ্ট ব্যালেন্স পাওয়ার মাধ্যম (Settlement Method)</label>
+                  <label class="form-label required" data-bn="অবশিষ্ট ব্যালেন্স পাওয়ার মাধ্যম" data-en="Remaining Balance Settlement Method">অবশিষ্ট ব্যালেন্স পাওয়ার মাধ্যম</label>
                   <select id="settlementMethodSelect" class="form-control" required>
-                    <option value="CASH_COUNTER">ব্যাংক শাখা থেকে নগদ গ্রহণ (Cash over Counter)</option>
-                    <option value="TRANSFER_OTHER_BANK">অন্য ব্যাংক অ্যাকাউন্টে ট্রান্সফার (BEFTN/NPSB)</option>
-                    <option value="PAY_ORDER">পে অর্ডার ইস্যু (Pay Order)</option>
+                    <option value="CASH_COUNTER" data-bn="ব্যাংক শাখা থেকে নগদ গ্রহণ (Cash over Counter)" data-en="Cash over Counter at Branch">ব্যাংক শাখা থেকে নগদ গ্রহণ (Cash over Counter)</option>
+                    <option value="TRANSFER_OTHER_BANK" data-bn="অন্য ব্যাংক অ্যাকাউন্টে ট্রান্সফার (BEFTN/NPSB)" data-en="Transfer to Other Bank (BEFTN/NPSB)">অন্য ব্যাংক অ্যাকাউন্টে ট্রান্সফার (BEFTN/NPSB)</option>
+                    <option value="PAY_ORDER" data-bn="পে অর্ডার ইস্যু (Pay Order)" data-en="Issue Pay Order">পে অর্ডার ইস্যু (Pay Order)</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label required">বন্ধ করার বিস্তারিত কারণ ও আবেদনকারীর বক্তব্য</label>
-                <textarea id="closureReasonDetails" class="form-control" rows="3" placeholder="যেমন: ব্যক্তিগত প্রয়োজনে অ্যাকাউন্টটি বন্ধ করতে চাচ্ছি। প্রয়োজনীয় সকল নথি প্রদান করলাম..." required></textarea>
+                <label class="form-label required" data-bn="বন্ধ করার বিস্তারিত কারণ ও আবেদনকারীর বক্তব্য" data-en="Detailed Explanation & Statement">বন্ধ করার বিস্তারিত কারণ ও আবেদনকারীর বক্তব্য</label>
+                <textarea id="closureReasonDetails" class="form-control" rows="3" placeholder="যেমন: ব্যক্তিগত প্রয়োজনে অ্যাকাউন্টটি বন্ধ করতে চাচ্ছি। প্রয়োজনীয় সকল নথি প্রদান করলাম..." required data-bn="যেমন: ব্যক্তিগত প্রয়োজনে অ্যাকাউন্টটি বন্ধ করতে চাচ্ছি। প্রয়োজনীয় সকল নথি প্রদান করলাম..." data-en="e.g. Requesting account closure due to relocation. Submitting all requested documentation..."></textarea>
               </div>
 
               <div class="form-group" id="settlementDetailsGroup" style="display:none;">
-                <label class="form-label required">প্রাপক ব্যাংক অ্যাকাউন্টের বিস্তারিত বিবরণ (অন্য ব্যাংকে ট্রান্সফারের জন্য)</label>
-                <input type="text" id="settlementDetails" class="form-control" placeholder="ব্যাংকের নাম, শাখা, অ্যাকাউন্ট নম্বর এবং অ্যাকাউন্ট হোল্ডারের নাম">
+                <label class="form-label required" data-bn="প্রাপক ব্যাংক অ্যাকাউন্টের বিস্তারিত বিবরণ" data-en="Recipient Bank Account Details">প্রাপক ব্যাংক অ্যাকাউন্টের বিস্তারিত বিবরণ</label>
+                <input type="text" id="settlementDetails" class="form-control" placeholder="ব্যাংকের নাম, শাখা, অ্যাকাউন্ট নম্বর এবং অ্যাকাউন্ট হোল্ডারের নাম" data-bn="ব্যাংকের নাম, শাখা, অ্যাকাউন্ট নম্বর এবং অ্যাকাউন্ট হোল্ডারের নাম" data-en="Bank name, branch, account number, and holder name">
               </div>
 
               <!-- Required Documents Upload Section (As per Prime Bank Policy) -->
-              <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 24px 0 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-                📎 প্রয়োজনীয় নথিপত্র ও প্রমাণাদি আপলোড (Required Documents)
+              <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 24px 0 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;" data-bn="📎 প্রয়োজনীয় নথিপত্র ও প্রমাণাদি আপলোড" data-en="📎 Upload Required Supporting Documents">
+                📎 প্রয়োজনীয় নথিপত্র ও প্রমাণাদি আপলোড
               </h4>
 
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="upload-card-box">
-                  <label class="form-label required">১. অ্যাকাউন্ট হোল্ডারের এনআইডি (Account Holder's NID)</label>
+                  <label class="form-label required" data-bn="১. অ্যাকাউন্ট হোল্ডারের এনআইডি" data-en="1. Account Holder's NID">১. অ্যাকাউন্ট হোল্ডারের এনআইডি</label>
                   <input type="file" id="fileNid" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
-                  <small style="color:#64748b;">পরিচয় যাচাইয়ের জন্য বৈধ NID/পাসপোর্ট কপি</small>
+                  <small style="color:#64748b;" data-bn="পরিচয় যাচাইয়ের জন্য বৈধ NID/পাসপোর্ট কপি" data-en="Valid NID or passport copy for identity verification">পরিচয় যাচাইয়ের জন্য বৈধ NID/পাসপোর্ট কপি</small>
                 </div>
 
                 <div class="upload-card-box">
-                  <label class="form-label required">২. স্বাক্ষরিত আবেদনপত্র (Closure Application)</label>
+                  <label class="form-label required" data-bn="২. স্বাক্ষরিত আবেদনপত্র" data-en="2. Signed Closure Application">২. স্বাক্ষরিত আবেদনপত্র</label>
                   <input type="file" id="fileApp" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
-                  <small style="color:#64748b;">হিসাব বন্ধের জন্য পূরণকৃত ও স্বাক্ষরিত আবেদনপত্র</small>
+                  <small style="color:#64748b;" data-bn="হিসাব বন্ধের জন্য পূরণকৃত ও স্বাক্ষরিত আবেদনপত্র" data-en="Completed and physically signed closure application">হিসাব বন্ধের জন্য পূরণকৃত ও স্বাক্ষরিত আবেদনপত্র</small>
                 </div>
 
                 <div class="upload-card-box">
-                  <label class="form-label required">৩. গ্রাহকের নমুনা স্বাক্ষর (Signature Specimen)</label>
+                  <label class="form-label required" data-bn="৩. গ্রাহকের নমুনা স্বাক্ষর" data-en="3. Customer Specimen Signature">৩. গ্রাহকের নমুনা স্বাক্ষর</label>
                   <input type="file" id="fileSign" class="form-control" accept="image/png,image/jpeg" required>
-                  <small style="color:#64748b;">ব্যাংকের রেকর্ডে থাকা মূল স্বাক্ষরের ছবি</small>
+                  <small style="color:#64748b;" data-bn="ব্যাংকের রেকর্ডে থাকা মূল স্বাক্ষরের ছবি" data-en="Clear photo of specimen signature matching bank records">ব্যাংকের রেকর্ডে থাকা মূল স্বাক্ষরের ছবি</small>
                 </div>
 
                 <div class="upload-card-box">
-                  <label class="form-label required">৪. অব্যবহৃত চেকবই / পাতা (Unused Cheques)</label>
+                  <label class="form-label required" data-bn="৪. অব্যবহৃত চেকবই / পাতা" data-en="4. Unused Cheques / Leaves">৪. অব্যবহৃত চেকবই / পাতা</label>
                   <input type="file" id="fileCheques" class="form-control" accept="image/png,image/jpeg,application/pdf" required>
-                  <small style="color:#64748b;">অব্যবহৃত চেক পাতার ছবি অথবা জমা রসিদ</small>
+                  <small style="color:#64748b;" data-bn="অব্যবহৃত চেক পাতার ছবি অথবা জমা রসিদ" data-en="Photo of unused cheque leaves or destruction receipt">অব্যবহৃত চেক পাতার ছবি অথবা জমা রসিদ</small>
                 </div>
 
                 <div class="upload-card-box">
-                  <label class="form-label">৫. ডেবিট কার্ড সমর্পণ (Debit Card Surrender)</label>
+                  <label class="form-label" data-bn="৫. ডেবিট কার্ড সমর্পণ" data-en="5. Debit Card Surrender">৫. ডেবিট কার্ড সমর্পণ</label>
                   <input type="file" id="fileCard" class="form-control" accept="image/png,image/jpeg,application/pdf">
-                  <small style="color:#64748b;">ইস্যু করা কার্ড নষ্ট করা বা জমা দেওয়ার প্রমাণ (প্রযোজ্য ক্ষেত্রে)</small>
+                  <small style="color:#64748b;" data-bn="ইস্যু করা কার্ড নষ্ট করা বা জমা দেওয়ার প্রমাণ (প্রযোজ্য ক্ষেত্রে)" data-en="Proof of destroying or surrendering issued debit card (if applicable)">ইস্যু করা কার্ড নষ্ট করা বা জমা দেওয়ার প্রমাণ (প্রযোজ্য ক্ষেত্রে)</small>
                 </div>
 
                 <div class="upload-card-box">
-                  <label class="form-label">৬. অতিরিক্ত নথিপত্র (Additional Supporting Documents)</label>
+                  <label class="form-label" data-bn="৬. অতিরিক্ত নথিপত্র" data-en="6. Additional Supporting Documents">৬. অতিরিক্ত নথিপত্র</label>
                   <input type="file" id="fileAdditional" class="form-control" accept="image/png,image/jpeg,application/pdf">
-                  <small style="color:#64748b;">প্রয়োজনীয় অন্য কোনো কাগজপত্র বা অনুমোদন</small>
+                  <small style="color:#64748b;" data-bn="প্রয়োজনীয় অন্য কোনো কাগজপত্র বা অনুমোদন" data-en="Any other relevant supporting documents or clearance">প্রয়োজনীয় অন্য কোনো কাগজপত্র বা অনুমোদন</small>
                 </div>
               </div>
 
               <!-- Schedule of Charges Notice -->
               <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin: 20px 0; font-size:0.85rem; color:#1e40af;">
-                💡 <strong>ব্যাংকের Schedule of Charges ও নীতি নির্দেশিকা:</strong>
+                <span data-bn="💡 <strong>ব্যাংকের Schedule of Charges ও নীতি নির্দেশিকা:</strong>" data-en="💡 <strong>Bank Schedule of Charges & Regulatory Policy:</strong>">💡 <strong>ব্যাংকের Schedule of Charges ও নীতি নির্দেশিকা:</strong></span>
                 <ul style="margin:6px 0 0 20px; padding:0; line-height:1.5;">
-                  <li>অ্যাকাউন্ট ক্লোজিং ফি ব্যাংকের সর্বশেষ <strong>Schedule of Charges</strong> অনুযায়ী ধার্য হবে (সঞ্চয়ী হিসাব: ২০০ টাকা + ১৫% ভ্যাট)। কোনো হার্ডকোড ফি প্রযোজ্য নয়।</li>
-                  <li>কোনো বকেয়া ঋণ বা পেন্ডিং লেনদেন থাকলে তা নিষ্পত্তি ছাড়া অ্যাকাউন্ট বন্ধ করা যাবে না।</li>
-                  <li>অবশিষ্ট ব্যালেন্স আপনার পছন্দের মাধ্যমে নিষ্পত্তি শেষে চূড়ান্ত ক্লোজার সম্পন্ন হবে।</li>
+                  <li data-bn="অ্যাকাউন্ট ক্লোজিং ফি ব্যাংকের সর্বশেষ Schedule of Charges অনুযায়ী ধার্য হবে (সঞ্চয়ী হিসাব: ২০০ টাকা + ১৫% ভ্যাট)। কোনো হার্ডকোড ফি প্রযোজ্য নয়।" data-en="Account closing fees apply per official Schedule of Charges (Savings: 200 BDT + 15% VAT).">অ্যাকাউন্ট ক্লোজিং ফি ব্যাংকের সর্বশেষ Schedule of Charges অনুযায়ী ধার্য হবে (সঞ্চয়ী হিসাব: ২০০ টাকা + ১৫% ভ্যাট)। কোনো হার্ডকোড ফি প্রযোজ্য নয়।</li>
+                  <li data-bn="কোনো বকেয়া ঋণ বা পেন্ডিং লেনদেন থাকলে তা নিষ্পত্তি ছাড়া অ্যাকাউন্ট বন্ধ করা যাবে না।" data-en="Outstanding loans or pending transactions must be settled before closure.">কোনো বকেয়া ঋণ বা পেন্ডিং লেনদেন থাকলে তা নিষ্পত্তি ছাড়া অ্যাকাউন্ট বন্ধ করা যাবে না।</li>
+                  <li data-bn="অবশিষ্ট ব্যালেন্স আপনার পছন্দের মাধ্যমে নিষ্পত্তি শেষে চূড়ান্ত ক্লোজার সম্পন্ন হবে।" data-en="Remaining balance will be disbursed per your selected settlement method.">অবশিষ্ট ব্যালেন্স আপনার পছন্দের মাধ্যমে নিষ্পত্তি শেষে চূড়ান্ত ক্লোজার সম্পন্ন হবে।</li>
                 </ul>
               </div>
 
@@ -272,14 +272,14 @@
               <div style="margin: 20px 0; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px;">
                 <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
                   <input type="checkbox" id="customerConfirmation" required style="margin-top:3px; transform:scale(1.2);">
-                  <span style="font-size:0.88rem; color:#0f172a; line-height:1.4;">
+                  <span style="font-size:0.88rem; color:#0f172a; line-height:1.4;" data-bn="আমি প্রত্যয়ন করছি যে প্রদত্ত সকল তথ্য ও কাগজপত্র সঠিক। আমি স্বেচ্ছায় আমার এই ব্যাংক অ্যাকাউন্টটি স্থায়ীভাবে বন্ধ করার আবেদন করছি।" data-en="I hereby certify that all provided details and documents are authentic. I voluntarily request to permanently close this bank account.">
                     আমি প্রত্যয়ন করছি যে প্রদত্ত সকল তথ্য ও কাগজপত্র সঠিক। আমি স্বেচ্ছায় আমার এই ব্যাংক অ্যাকাউন্টটি স্থায়ীভাবে বন্ধ করার আবেদন করছি।
                   </span>
                 </label>
               </div>
 
-              <button type="submit" id="submitClosureBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700;">
-                📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন (Submit Request)
+              <button type="submit" id="submitClosureBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700;" data-bn="📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন" data-en="📤 Submit Account Closure Request">
+                📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন
               </button>
             </form>
           </div>
@@ -288,24 +288,24 @@
         <!-- Closure Requests History -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">অ্যাকাউন্ট ক্লোজার আবেদনের ইতিহাস (Request History)</h3>
+            <h3 class="card-title" data-bn="অ্যাকাউন্ট ক্লোজার আবেদনের ইতিহাস" data-en="Account Closure Request History">অ্যাকাউন্ট ক্লোজার আবেদনের ইতিহাস</h3>
           </div>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>আবেদন নম্বর</th>
-                  <th>অ্যাকাউন্ট নম্বর</th>
-                  <th>বন্ধের কারণ</th>
-                  <th>নিষ্পত্তি পদ্ধতি</th>
-                  <th>ক্লোজিং ফি</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>তারিখ</th>
+                  <th data-bn="আবেদন নম্বর" data-en="Request #">আবেদন নম্বর</th>
+                  <th data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</th>
+                  <th data-bn="বন্ধের কারণ" data-en="Reason">বন্ধের কারণ</th>
+                  <th data-bn="নিষ্পত্তি পদ্ধতি" data-en="Settlement Method">নিষ্পত্তি পদ্ধতি</th>
+                  <th data-bn="ক্লোজিং ফি" data-en="Closing Fee">ক্লোজিং ফি</th>
+                  <th data-bn="স্ট্যাটাস" data-en="Status">স্ট্যাটাস</th>
+                  <th data-bn="তারিখ" data-en="Date">তারিখ</th>
                 </tr>
               </thead>
               <tbody id="closureHistoryBody">
                 <tr>
-                  <td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">আবেদন তালিকা লোড হচ্ছে...</td>
+                  <td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;" data-bn="আবেদন তালিকা লোড হচ্ছে..." data-en="Loading requests list...">আবেদন তালিকা লোড হচ্ছে...</td>
                 </tr>
               </tbody>
             </table>

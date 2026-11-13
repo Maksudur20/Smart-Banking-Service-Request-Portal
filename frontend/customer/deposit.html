@@ -121,23 +121,23 @@
           <div>
             <!-- Bank guidelines alert -->
             <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:18px; margin-bottom:20px;">
-              <h4 style="margin:0 0 8px 0; color:#1e40af; font-size:0.95rem;">📌 ডিপোজিট সংক্রান্ত নির্দেশনাবলী:</h4>
+              <h4 style="margin:0 0 8px 0; color:#1e40af; font-size:0.95rem;" data-bn="📌 ডিপোজিট সংক্রান্ত নির্দেশনাবলী:" data-en="📌 Deposit Guidelines & Instructions:">📌 ডিপোজিট সংক্রান্ত নির্দেশনাবলী:</h4>
               <ul style="margin:0; padding-left:20px; font-size:0.85rem; color:#1e3a8a; line-height:1.6;">
-                <li>স্লিপ জমা দেওয়ার পর আপনার রিকোয়েস্টটি <strong>Pending Verification</strong> থাকবে।</li>
-                <li>ব্যাংক অফিসার ট্রানজেকশন স্লিপ ও TrxID যাচাই করে অনুমোদন দিলে তাৎক্ষণিকভাবে আপনার ব্যালেন্সে টাকা যুক্ত হবে।</li>
-                <li>একই TrxID একাধিকবার ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।</li>
-                <li>কেওয়াইসি পেন্ডিং অবস্থায়ও আপনার অ্যাকাউন্টে টাকা জমা দেওয়া যাবে।</li>
+                <li data-bn="স্লিপ জমা দেওয়ার পর আপনার রিকোয়েস্টটি <strong>Pending Verification</strong> থাকবে।" data-en="After submitting your slip, request will remain under <strong>Pending Verification</strong>.">স্লিপ জমা দেওয়ার পর আপনার রিকোয়েস্টটি <strong>Pending Verification</strong> থাকবে।</li>
+                <li data-bn="ব্যাংক অফিসার ট্রানজেকশন স্লিপ ও TrxID যাচাই করে অনুমোদন দিলে তাৎক্ষণিকভাবে আপনার ব্যালেন্সে টাকা যুক্ত হবে।" data-en="Funds will be credited instantly once the bank officer verifies slip and TrxID.">ব্যাংক অফিসার ট্রানজেকশন স্লিপ ও TrxID যাচাই করে অনুমোদন দিলে তাৎক্ষণিকভাবে আপনার ব্যালেন্সে টাকা যুক্ত হবে।</li>
+                <li data-bn="একই TrxID একাধিকবার ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।" data-en="Using the same TrxID multiple times is strictly prohibited.">একই TrxID একাধিকবার ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।</li>
+                <li data-bn="কেওয়াইসি পেন্ডিং অবস্থায়ও আপনার অ্যাকাউন্টে টাকা জমা দেওয়া যাবে।" data-en="Deposits can be made even while KYC status is pending.">কেওয়াইসি পেন্ডিং অবস্থায়ও আপনার অ্যাকাউন্টে টাকা জমা দেওয়া যাবে।</li>
               </ul>
             </div>
 
             <!-- Deposit History Table -->
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">আমার ডিপোজিট হিস্ট্রি (Deposit Requests)</h3>
+                <h3 class="card-title" data-bn="আমার ডিপোজিট হিস্ট্রি" data-en="My Deposit History">আমার ডিপোজিট হিস্ট্রি</h3>
               </div>
               <div class="card-body" style="padding:0;">
                 <div id="depositHistoryContainer">
-                  <p style="padding:24px; text-align:center; color:#94a3b8;">লোড হচ্ছে...</p>
+                  <p style="padding:24px; text-align:center; color:#94a3b8;" data-bn="লোড হচ্ছে..." data-en="Loading...">লোড হচ্ছে...</p>
                 </div>
               </div>
             </div>
@@ -147,9 +147,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/assets/js/api.js?v=3.5"></script>
+  <script src="/assets/js/auth.js?v=3.5"></script>
+  <script src="/assets/js/common.js?v=3.5"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('deposit');
@@ -174,12 +174,13 @@
 
     async function loadDepositHistory() {
       const container = document.getElementById('depositHistoryContainer');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         const res = await window.api.get('/api/deposits/my');
         const list = res.deposits || [];
 
         if (list.length === 0) {
-          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">কোনো পূর্ববর্তী ডিপোজিট রিকোয়েস্ট পাওয়া যায়নি।</p>`;
+          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">${isBn ? 'কোনো পূর্ববর্তী ডিপোজিট রিকোয়েস্ট পাওয়া যায়নি।' : 'No previous deposit requests found.'}</p>`;
           return;
         }
 
@@ -188,13 +189,13 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>আইডি</th>
-                  <th>পরিমাণ</th>
-                  <th>মেথড</th>
+                  <th>${isBn ? 'আইডি' : 'Deposit ID'}</th>
+                  <th>${isBn ? 'পরিমাণ' : 'Amount'}</th>
+                  <th>${isBn ? 'মেথড' : 'Method'}</th>
                   <th>TrxID</th>
-                  <th>স্লিপ</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>তারিখ</th>
+                  <th>${isBn ? 'স্লিপ' : 'Slip'}</th>
+                  <th>${isBn ? 'স্ট্যাটাস' : 'Status'}</th>
+                  <th>${isBn ? 'তারিখ' : 'Date'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -210,12 +211,12 @@
                       <td><span style="font-weight:600; color:#334155;">${d.deposit_method}</span></td>
                       <td><code>${d.transaction_id}</code></td>
                       <td>
-                        ${d.slip_url ? `<a href="${d.slip_url}" target="_blank" class="table-action-btn secondary">স্লিপ দেখুন 📄</a>` : '-'}
+                        ${d.slip_url ? `<a href="${d.slip_url}" target="_blank" class="table-action-btn secondary">${isBn ? 'স্লিপ দেখুন 📄' : 'View Slip 📄'}</a>` : '-'}
                       </td>
                       <td><span class="badge ${badgeClass}">${d.status}</span></td>
                       <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(d.created_at).toLocaleDateString()}</td>
                     </tr>
-                    ${d.admin_remarks ? `<tr><td colspan="7" style="background:#fff7ed; font-size:0.8rem; color:#c2410c; padding:10px 20px; border-bottom:1px solid #fed7aa;"><strong>অ্যাডমিন মন্তব্য:</strong> ${d.admin_remarks}</td></tr>` : ''}
+                    ${d.admin_remarks ? `<tr><td colspan="7" style="background:#fff7ed; font-size:0.8rem; color:#c2410c; padding:10px 20px; border-bottom:1px solid #fed7aa;"><strong>${isBn ? 'অ্যাডমিন মন্তব্য:' : 'Admin Remarks:'}</strong> ${d.admin_remarks}</td></tr>` : ''}
                   `;
                 }).join('')}
               </tbody>
@@ -223,7 +224,7 @@
           </div>
         `;
       } catch (err) {
-        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">হিস্ট্রি লোড করা যায়নি।</p>`;
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${isBn ? 'ডিপোজিট ইতিহাস লোড করা যায়নি।' : 'Failed to load deposit history.'}</p>`;
       }
     }
 

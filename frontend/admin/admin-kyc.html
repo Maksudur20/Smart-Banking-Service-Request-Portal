@@ -22,13 +22,33 @@
     }
     .modal-box {
       background: #fff;
-      border-radius: 12px;
+      border-radius: 16px;
       max-width: 900px;
       width: 100%;
       max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+    }
+    .modal-box-scroll {
       overflow-y: auto;
       padding: 28px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      flex: 1;
+    }
+    .modal-box-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .modal-box-scroll::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 10px 0;
+    }
+    .modal-box-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .modal-box-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
     .docs-viewer-grid {
       display: grid;
@@ -117,39 +137,41 @@
   <!-- Review Modal -->
   <div id="kycModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
-        <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:#0f172a;" id="modalCustomerName">আবেদনকারীর তথ্য ও ডকুমেন্টস</h3>
-        <button onclick="closeModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
-      </div>
-
-      <div id="modalCustomerBio" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px; font-size:0.85rem; line-height:1.6;">
-        <!-- Filled by JS -->
-      </div>
-
-      <h4 style="margin:16px 0 8px 0; font-size:1rem; color:#0f172a;" data-bn="সংযুক্ত ডকুমেন্টস:" data-en="Attached KYC Documents:">সংযুক্ত ডকুমেন্টস:</h4>
-      <div id="modalDocsContainer" class="docs-viewer-grid">
-        <!-- Docs injected by JS -->
-      </div>
-
-      <!-- Decision Form -->
-      <div style="border-top:1px solid #e2e8f0; padding-top:16px; margin-top:20px;">
-        <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;" data-bn="অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:" data-en="Admin Decision & Verification:">অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:</h4>
-        
-        <div class="form-group">
-          <label class="form-label" data-bn="মন্তব্য বা বাতিলের কারণ:" data-en="Remarks or Reason:">মন্তব্য বা বাতিলের কারণ:</label>
-          <textarea id="adminRemarks" class="form-control" rows="2" placeholder="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-bn="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-en="Reason is mandatory when rejecting or requesting additional documents"></textarea>
+      <div class="modal-box-scroll">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+          <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:#0f172a;" id="modalCustomerName">আবেদনকারীর তথ্য ও ডকুমেন্টস</h3>
+          <button onclick="closeModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
         </div>
 
-        <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
-          <button onclick="makeDecision('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ আবেদন বাতিল করুন" data-en="❌ Reject Application">
-            ❌ আবেদন বাতিল করুন
-          </button>
-          <button onclick="makeDecision('REQUEST_DOCS')" class="btn btn-secondary" style="background:#fffbeb; color:#d97706; border-color:#fde68a;" data-bn="⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন" data-en="⚠️ Request Additional Docs">
-            ⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন
-          </button>
-          <button onclick="makeDecision('APPROVE')" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন" data-en="✅ Approve KYC & Activate">
-            ✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন
-          </button>
+        <div id="modalCustomerBio" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px; font-size:0.85rem; line-height:1.6;">
+          <!-- Filled by JS -->
+        </div>
+
+        <h4 style="margin:16px 0 8px 0; font-size:1rem; color:#0f172a;" data-bn="সংযুক্ত ডকুমেন্টস:" data-en="Attached KYC Documents:">সংযুক্ত ডকুমেন্টস:</h4>
+        <div id="modalDocsContainer" class="docs-viewer-grid">
+          <!-- Docs injected by JS -->
+        </div>
+
+        <!-- Decision Form -->
+        <div style="border-top:1px solid #e2e8f0; padding-top:16px; margin-top:20px;">
+          <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;" data-bn="অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:" data-en="Admin Decision & Verification:">অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:</h4>
+          
+          <div class="form-group">
+            <label class="form-label" data-bn="মন্তব্য বা বাতিলের কারণ:" data-en="Remarks or Reason:">মন্তব্য বা বাতিলের কারণ:</label>
+            <textarea id="adminRemarks" class="form-control" rows="2" placeholder="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-bn="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-en="Reason is mandatory when rejecting or requesting additional documents"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
+            <button onclick="makeDecision('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ আবেদন বাতিল করুন" data-en="❌ Reject Application">
+              ❌ আবেদন বাতিল করুন
+            </button>
+            <button onclick="makeDecision('REQUEST_DOCS')" class="btn btn-secondary" style="background:#fffbeb; color:#d97706; border-color:#fde68a;" data-bn="⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন" data-en="⚠️ Request Additional Docs">
+              ⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন
+            </button>
+            <button onclick="makeDecision('APPROVE')" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন" data-en="✅ Approve KYC & Activate">
+              ✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন
+            </button>
+          </div>
         </div>
       </div>
     </div>
