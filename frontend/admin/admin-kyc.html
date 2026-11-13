@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
   <style>
     .modal-overlay {
       position: fixed;
@@ -155,9 +155,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.3"></script>
-  <script src="/assets/js/common.js?v=3.3"></script>
+  <script src="/assets/js/api.js?v=3.4"></script>
+  <script src="/assets/js/auth.js?v=3.4"></script>
+  <script src="/assets/js/common.js?v=3.4"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');
@@ -302,21 +302,6 @@
                     ${d.verification_status || 'Pending'}
                   </span>
                   <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem;">${isBn ? 'পূর্ণাঙ্গ দেখুন ↗' : 'View Full ↗'}</a>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-                    <span style="font-size:0.75rem;">PDF Document</span>
-                  </div>
-                ` : `
-                  <img src="${d.file_url}" alt="${d.doc_type}">
-                `}
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-                  <span class="badge ${['Approved', 'Verified'].includes(d.verification_status) ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}" style="font-size:0.7rem;">
-                    ${d.verification_status || 'Pending'}
-                  </span>
-                  <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem;">পূর্ণাঙ্গ দেখুন ↗</a>
                 </div>
               </div>
             `;

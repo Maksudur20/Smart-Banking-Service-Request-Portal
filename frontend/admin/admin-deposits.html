@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ডিপোজিট ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
   <style>
     .modal-overlay {
       position: fixed;
@@ -124,9 +124,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.3"></script>
-  <script src="/assets/js/common.js?v=3.3"></script>
+  <script src="/assets/js/api.js?v=3.4"></script>
+  <script src="/assets/js/auth.js?v=3.4"></script>
+  <script src="/assets/js/common.js?v=3.4"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('deposits');
@@ -166,11 +166,11 @@
               </thead>
               <tbody>
                 ${depositList.map(d => {
-          let badgeClass = 'badge-submitted';
-          if (d.status === 'Approved') badgeClass = 'badge-approved';
-          if (d.status === 'Rejected') badgeClass = 'badge-rejected';
+                  let badgeClass = 'badge-submitted';
+                  if (d.status === 'Approved') badgeClass = 'badge-approved';
+                  if (d.status === 'Rejected') badgeClass = 'badge-rejected';
 
-          return `
+                  return `
                     <tr>
                       <td><code>${d.deposit_number}</code></td>
                       <td>
@@ -196,17 +196,13 @@
                       </td>
                     </tr>
                   `;
-        }).join('')}
+                }).join('')}
               </tbody>
             </table>
           </div>
         `;
-              </tbody >
-            </table >
-          </div >
-          `;
       } catch (err) {
-        container.innerHTML = `< p style = "padding:20px; color:#ef4444; text-align:center;" > ডিপোজিট লোড করা যায়নি।</p > `;
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${isBn ? 'ডিপোজিট লোড করা যায়নি।' : 'Failed to load deposits.'}</p>`;
       }
     }
 
@@ -214,32 +210,33 @@
       selectedDeposit = depositList.find(d => d.id === depositId);
       if (!selectedDeposit) return;
 
-      document.getElementById('modalDepositTitle').innerText = `ডিপোজিট যাচাই — ${ selectedDeposit.deposit_number } `;
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
+      document.getElementById('modalDepositTitle').innerText = `${isBn ? 'ডিপোজিট যাচাই' : 'Deposit Verification'} — ${selectedDeposit.deposit_number}`;
       document.getElementById('depositRemarks').value = selectedDeposit.admin_remarks || '';
 
       document.getElementById('modalDepositDetails').innerHTML = `
-          < div style = "display:grid; grid-template-columns: 1fr 1fr; gap:6px;" >
-          <div><strong>গ্রাহকের নাম:</strong> ${selectedDeposit.customer_name}</div>
-          <div><strong>অ্যাকাউন্ট নম্বর:</strong> ${selectedDeposit.account_number}</div>
-          <div><strong>জমার পরিমাণ:</strong> <span style="font-size:1.1rem; color:#10b981; font-weight:800;">${parseFloat(selectedDeposit.amount).toFixed(2)} BDT</span></div>
-          <div><strong>পদ্ধতি:</strong> ${selectedDeposit.deposit_method}</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div><strong>${isBn ? 'গ্রাহকের নাম:' : 'Customer Name:'}</strong> ${selectedDeposit.customer_name}</div>
+          <div><strong>${isBn ? 'অ্যাকাউন্ট নম্বর:' : 'Account Number:'}</strong> ${selectedDeposit.account_number}</div>
+          <div><strong>${isBn ? 'জমার পরিমাণ:' : 'Deposit Amount:'}</strong> <span style="font-size:1.1rem; color:#10b981; font-weight:800;">${parseFloat(selectedDeposit.amount).toFixed(2)} BDT</span></div>
+          <div><strong>${isBn ? 'পদ্ধতি:' : 'Method:'}</strong> ${selectedDeposit.deposit_method}</div>
           <div><strong>TrxID:</strong> <code style="font-weight:700;">${selectedDeposit.transaction_id}</code></div>
-          <div><strong>প্রেরক:</strong> ${selectedDeposit.sender_name} (${selectedDeposit.sender_mobile})</div>
-          <div><strong>জমার তারিখ:</strong> ${selectedDeposit.deposit_date}</div>
-          <div><strong>বর্তমান স্ট্যাটাস:</strong> ${selectedDeposit.status}</div>
-        </div >
-          `;
+          <div><strong>${isBn ? 'প্রেরক:' : 'Sender:'}</strong> ${selectedDeposit.sender_name} (${selectedDeposit.sender_mobile})</div>
+          <div><strong>${isBn ? 'জমার তারিখ:' : 'Deposit Date:'}</strong> ${selectedDeposit.deposit_date}</div>
+          <div><strong>${isBn ? 'বর্তমান স্ট্যাটাস:' : 'Current Status:'}</strong> ${selectedDeposit.status}</div>
+        </div>
+      `;
 
       const slipBox = document.getElementById('modalSlipContainer');
       if (selectedDeposit.slip_url) {
         slipBox.innerHTML = `
-          < img src = "${selectedDeposit.slip_url}" alt = "Slip" class="slip-zoom" >
-            <div style="text-align:right;">
-              <a href="${selectedDeposit.slip_url}" target="_blank" class="table-action-btn secondary">পূর্ণাঙ্গ স্লিপ খুলুন ↗</a>
-            </div>
+          <img src="${selectedDeposit.slip_url}" alt="Slip" class="slip-zoom">
+          <div style="text-align:right; margin-top:8px;">
+            <a href="${selectedDeposit.slip_url}" target="_blank" class="table-action-btn secondary">${isBn ? 'পূর্ণাঙ্গ স্লিপ খুলুন ↗' : 'View Full Slip ↗'}</a>
+          </div>
         `;
       } else {
-        slipBox.innerHTML = `< p style = "color:#94a3b8;" > কোনো স্লিপ পাওয়া যায়নি।</p > `;
+        slipBox.innerHTML = `<p style="color:#94a3b8;">${isBn ? 'কোনো স্লিপ পাওয়া যায়নি।' : 'No slip file available.'}</p>`;
       }
 
       document.getElementById('depositModal').classList.add('open');
