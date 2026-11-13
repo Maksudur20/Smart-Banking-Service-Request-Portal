@@ -103,20 +103,278 @@ const UI = {
     return localStorage.getItem('smartbank_portal_lang') || 'bn';
   },
 
+  // Comprehensive Bilingual Dictionary (Bengali <-> English)
+  dictionary: {
+    bnToEn: {
+      "স্মার্ট ও নিরাপদ ব্যাংকিংয়ের <span>নতুন দিগন্ত</span>": "A New Era of <span>Smart & Secure Banking</span>",
+      "স্মার্ট ও নিরাপদ ব্যাংকিংয়ের নতুন দিগন্ত": "A New Era of Smart & Secure Banking",
+      "ঘরে বসেই সহজে অ্যাকাউন্ট ওপেনিং, তাৎক্ষণিক ই-কেওয়াইসি ভেরিফিকেশন, স্লিপ ডিপোজিট এবং নিরাপদ ডিজিটাল ফান্ড ট্রান্সফার সুবিধা।": "Seamless digital account opening, instant e-KYC verification, slip deposits, and secure digital fund transfers.",
+      "🏦 অনলাইনে অ্যাকাউন্ট খুলুন": "🏦 Open Account Online",
+      "🔑 ইন্টারনেট ব্যাংকিং লগইন": "🔑 Internet Banking Login",
+      "🛡️ ব্যাংক অফিসার পোর্টাল": "🛡️ Bank Officer Portal",
+      "📞 হেল্পলাইন:": "📞 Helpline:",
+      "লগইন করুন": "Sign In",
+      "+ নতুন অ্যাকাউন্ট খুলুন": "+ Open New Account",
+      "অ্যাকাউন্ট ও ডিপোজিট সেবা": "Account & Deposit Services",
+      "প্রাইম সেভিংস, কারেন্ট ও সেলারি অ্যাকাউন্ট। মাত্র ৫০০ টাকা প্রাথমিক জমায় তাৎক্ষণিক ডিজিটাল আবেদন।": "Prime Savings, Current & Salary Accounts. Instant digital application with only 500 BDT initial deposit.",
+      "আবেদন করুন →": "Apply Now →",
+      "আবেদন করুন &rarr;": "Apply Now &rarr;",
+      "কার্ড সেবা ও রিপ্লেসমেন্ট": "Card Services & Replacement",
+      "ডুয়াল কারেন্সি ডেবিট ও ক্রেডিট কার্ড। ঢাকা বিভাগে ৪ দিন এবং ঢাকার বাইরে ৫-৬ দিনের মধ্যে শাখা ডেলিভারি।": "Dual currency debit & credit cards. Branch delivery within 4 days in Dhaka and 5-6 days nationwide.",
+      "কার্ড সেবা দেখুন →": "Explore Cards →",
+      "কার্ড সেবা দেখুন &rarr;": "Explore Cards &rarr;",
+      "চেকবই রিকোয়েস্ট": "Cheque Book Request",
+      "স্বাক্ষর ভেরিফিকেশনের মাধ্যমে ২০, ৫০ বা ১০০ পাতার চেকবই অর্ডার করুন এবং নির্ধারিত শাখায় গ্রহণ করুন।": "Order 20, 50, or 100-leaf personalized cheque books with signature verification.",
+      "চেকবই অর্ডার →": "Order Cheque Book →",
+      "চেকবই অর্ডার &rarr;": "Order Cheque Book &rarr;",
+      "রিটেইল ও পার্সোনাল লোন": "Retail & Personal Loans",
+      "চাকরিজীবী ও ব্যবসায়ীদের জন্য সহজ শর্তে পার্সোনাল লোন, অটো লোন ও হোম লোন সুবিধা।": "Personal loans, auto loans, and home loans with easy terms for salaried and business clients.",
+      "লোন যোগ্যতা যাচাই →": "Check Eligibility →",
+      "লোন যোগ্যতা যাচাই &rarr;": "Check Eligibility &rarr;",
+      "জরুরি কার্ড ব্লকিং বা কাস্টমার সাপোর্ট?": "Emergency Card Blocking or Support?",
+      "কার্ড হারিয়ে গেলে বা অননুমোদিত লেনদেনের ক্ষেত্রে অবিলম্বে আমাদের কল সেন্টারে যোগাযোগ করুন।": "Contact our 24/7 call center immediately in case of lost cards or suspicious transactions.",
+      "অভিযোগ দাখিল করুন": "Submit Complaint",
+      "Smart Banking PLC Bangladesh — লাইসেন্সপ্রাপ্ত আধুনিক ডিজিটাল ব্যাংকিং পোর্টাল।": "Smart Banking PLC Bangladesh — Licensed modern digital banking portal.",
+      "গ্রাহক ইন্টারনেট ব্যাংকিং": "Customer Internet Banking",
+      "আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন": "Sign in to manage your banking account and digital services",
+      "ইমেইল ঠিকানা": "Email Address",
+      "পাসওয়ার্ড": "Password",
+      "🔑 লগইন করুন": "🔑 Sign In",
+      "নতুন গ্রাহক?": "New customer?",
+      "এখানে নতুন অ্যাকাউন্ট খুলুন": "Open an account here",
+      "ব্যাংক অফিসার পোর্টাল লগইন →": "Bank Officer Portal Login →",
+      "ব্যাংক অফিসার পোর্টাল লগইন &rarr;": "Bank Officer Portal Login &rarr;",
+      "ব্যাংক অফিসার পোর্টাল": "Bank Officer Portal",
+      "কর্মকর্তার ইমেইল ও পাসওয়ার্ড দিয়ে এডমিন ড্যাশবোর্ডে প্রবেশ করুন": "Sign in with your officer credentials to access admin dashboard",
+      "অফিসার ইমেইল ঠিকানা": "Officer Email Address",
+      "গ্রাহক লগইন পোর্টালে যান →": "Go to Customer Portal →",
+      "গ্রাহক লগইন পোর্টালে যান &rarr;": "Go to Customer Portal &rarr;",
+      "অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন": "Online Bank Account Application",
+      "জাতীয় পরিচয়পত্র ও প্রয়োজনীয় ডকুমেন্ট দিয়ে ঘরে বসেই অ্যাকাউন্ট খুলুন": "Open your bank account from home with NID and required documents",
+      "১. সাধারণ ও যোগাযোগের তথ্য": "1. General & Contact Information",
+      "২. নমিনি ও ব্যক্তিগত তথ্য": "2. Nominee & Personal Information",
+      "📁 ৩. ছবি ও ডকুমেন্ট আপলোড": "📁 3. Photo & Document Upload",
+      "১. আবেদনকারীর পাসপোর্ট সাইজ ছবি": "1. Applicant Passport Photo",
+      "২. আবেদনকারীর নমুনা স্বাক্ষর": "2. Specimen Signature",
+      "৩. জাতীয় পরিচয়পত্র - সামনের অংশ": "3. National ID - Front Side",
+      "৪. জাতীয় পরিচয়পত্র - পেছনের অংশ": "4. National ID - Back Side",
+      "৫. নমিনির পাসপোর্ট সাইজ ছবি": "5. Nominee Passport Photo",
+      "৬. নমিনির পরিচয়পত্র / জন্মনিবন্ধন": "6. Nominee ID / Birth Certificate",
+      "৭. বর্তমান ঠিকানার প্রমাণ (ইউটিলিটি বিল)": "7. Proof of Current Address (Utility Bill)",
+      "৮. আয়ের উৎসের প্রমাণ": "8. Proof of Income Source",
+      "📝 আবেদন ও কেওয়াইসি সাবমিট করুন": "📝 Submit Application & KYC",
+      "পূর্বেই অ্যাকাউন্ট আছে?": "Already have an account?",
+      "সরাসরি লগইন করুন": "Sign In directly",
+      "মোট অ্যাকাউন্ট ব্যালেন্স": "Total Account Balance",
+      "অ্যাকাউন্ট নম্বর": "Account Number",
+      "📥 ডিপোজিট করুন": "📥 Deposit",
+      "📤 ফান্ড ট্রান্সফার": "📤 Fund Transfer",
+      "টাকা ডিপোজিট": "Deposit Money",
+      "ব্যাংক / bKash স্লিপ আপলোড": "Bank / bKash Slip Upload",
+      "ফান্ড ট্রান্সফার": "Fund Transfer",
+      "অন্য অ্যাকাউন্টে টাকা পাঠান": "Transfer Money to Another Account",
+      "আমার কেওয়াইসি": "My KYC",
+      "আপলোডকৃত ডকুমেন্ট ও স্ট্যাটাস": "Uploaded Documents & Status",
+      "নতুন সার্ভিস রিকোয়েস্ট": "New Service Request",
+      "কার্ড, চেকবই ও লোন আবেদন": "Card, Cheque & Loan Requests",
+      "আমার অ্যাকাউন্ট বিবরণী": "My Account Details",
+      "আমার অ্যাকাউন্ট বিবরণী (Account Details)": "My Account Details",
+      "অ্যাকাউন্টের ধরন:": "Account Type:",
+      "অ্যাকাউন্ট নম্বর:": "Account Number:",
+      "বর্তমান ব্যালেন্স:": "Current Balance:",
+      "গ্রাহক রেফারেন্স:": "Customer Reference:",
+      "অ্যাকাউন্ট হোল্ডার:": "Account Holder:",
+      "+ ডিপোজিট জমা দিন": "+ Make Deposit",
+      "সাম্প্রতিক লেনদেন": "Recent Transactions",
+      "সব দেখুন →": "View All →",
+      "সব দেখুন &rarr;": "View All &rarr;",
+      "আমার সার্ভিস আবেদনসমূহ": "My Service Requests",
+      "সকল আবেদন →": "View All →",
+      "সকল আবেদন &rarr;": "View All &rarr;",
+      "🪪 আমার কেওয়াইসি ও ডকুমেন্টস": "🪪 My KYC & Documents",
+      "আপলোডকৃত পরিচয়পত্র ও ডকুমেন্টস": "Uploaded Identification & Documents",
+      "সকল ফাইল ব্যাংক সার্ভারে এনক্রিপ্টেড সংরক্ষিত": "All files encrypted on bank servers",
+      "ডকুমেন্ট পুনরায় আপলোড করুন": "Re-upload Document",
+      "ডকুমেন্টের ধরন নির্বাচন করুন": "Select Document Type",
+      "আবেদনকারীর পাসপোর্ট ছবি": "Applicant Passport Photo",
+      "জাতীয় পরিচয়পত্র - সামনের অংশ": "National ID - Front Side",
+      "জাতীয় পরিচয়পত্র - পেছনের অংশ": "National ID - Back Side",
+      "আবেদনকারীর নমুনা স্বাক্ষর": "Specimen Signature",
+      "নমিনির পাসপোর্ট ছবি": "Nominee Passport Photo",
+      "নমিনির পরিচয়পত্র / জন্মনিবন্ধন": "Nominee ID / Birth Certificate",
+      "বর্তমান ঠিকানার প্রমাণ (ইউটিলিটি বিল)": "Proof of Current Address (Utility Bill)",
+      "আয়ের উৎসের প্রমাণ": "Proof of Income Source",
+      "📤 নতুন ফাইল আপলোড করুন": "📤 Upload New File",
+      "👤 গ্রাহক প্রোফাইল ও কেওয়াইসি তথ্য": "👤 Customer Profile & KYC Details",
+      "ব্যক্তিগত ও ব্যাংকিং তথ্যাবলী": "Personal & Banking Information",
+      "🪪 কেওয়াইসি ডকুমেন্টস দেখুন →": "🪪 View KYC Documents →",
+      "🪪 কেওয়াইসি ডকুমেন্টস দেখুন &rarr;": "🪪 View KYC Documents &rarr;",
+      "গ্রাহক রেফারেন্স আইডি": "Customer Reference ID",
+      "পূর্ণ নাম": "Full Name",
+      "পিতার নাম": "Father's Name",
+      "মাতার নাম": "Mother's Name",
+      "বর্তমান ঠিকানা": "Present Address",
+      "মোবাইল নম্বর": "Mobile Number",
+      "💾 প্রোফাইল তথ্য সংরক্ষণ করুন": "💾 Save Profile Information",
+      "👥 নিবন্ধিত গ্রাহক তালিকা": "👥 Registered Customer Directory",
+      "সকল ব্যাংক গ্রাহক": "All Bank Customers",
+      "নাম, অ্যাকাউন্ট নম্বর বা কাস্টমার রেফারেন্স দিয়ে অনুসন্ধান করুন": "Search by name, account number or reference",
+      "গ্রাহক অনুসন্ধান করুন...": "Search customers...",
+      "গ্রাহক রেফারেন্স": "Reference",
+      "নাম ও যোগাযোগ": "Name & Contact",
+      "অ্যাকাউন্টের ধরন": "Account Type",
+      "ব্যালেন্স": "Balance",
+      "কেওয়াইসি স্ট্যাটাস": "KYC Status",
+      "রেজিস্ট্রেশন তারিখ": "Registered Date",
+      "অ্যাকশন": "Action",
+      "কেওয়াইসি রিভিউ →": "Review KYC →",
+      "কেওয়াইসি রিভিউ &rarr;": "Review KYC &rarr;",
+      "🪪 কেওয়াইসি ভেরিফিকেশন ডেস্ক": "🪪 KYC Verification Desk",
+      "অপেক্ষমাণ আবেদন": "Pending Applications",
+      "অনুমোদিত গ্রাহক": "Approved Customers",
+      "বাতিলকৃত আবেদন": "Rejected Applications",
+      "ফিল্টার:": "Filter:",
+      "সকল আবেদন": "All Applications",
+      "অপেক্ষমাণ": "Pending",
+      "অনুমোদিত": "Approved",
+      "বাতিলকৃত": "Rejected",
+      "🔄 রিফ্রেশ": "🔄 Refresh",
+      "আবেদনকারী তালিকা": "Applicant List",
+      "নাম ও ইমেইল": "Name & Email",
+      "ডকুমেন্ট সংখ্যা": "Documents",
+      "আবেদনের তারিখ": "Application Date",
+      "যাচাই করুন →": "Review →",
+      "যাচাই করুন &rarr;": "Review →",
+      "আবেদনকারীর তথ্য ও ডকুমেন্টস": "Applicant Information & Documents",
+      "সংযুক্ত ডকুমেন্টস:": "Attached Documents:",
+      "অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:": "Admin Decision & Verification:",
+      "মন্তব্য বা বাতিলের কারণ:": "Remarks / Reason:",
+      "❌ আবেদন বাতিল করুন": "❌ Reject Application",
+      "⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন": "⚠️ Request Additional Docs",
+      "✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন": "✅ Approve KYC & Activate",
+      "💵 ডিপোজিট ভেরিফিকেশন কিউ": "💵 Deposit Verification Queue",
+      "পেন্ডিং ও বিগত ডিপোজিট রিকোয়েস্টসমূহ": "Pending & Past Deposit Requests",
+      "আইডি": "ID",
+      "গ্রাহক ও অ্যাকাউন্ট": "Customer & Account",
+      "পরিমাণ": "Amount",
+      "পদ্ধতি": "Method",
+      "TrxID": "TrxID",
+      "প্রেরক": "Sender",
+      "স্ট্যাটাস": "Status",
+      "তারিখ": "Date",
+      "যাচাই ও ক্রেডিট →": "Verify & Credit →",
+      "যাচাই ও ক্রেডিট &rarr;": "Verify & Credit &rarr;",
+      "স্লিপ দেখুন 📄": "View Slip 📄",
+      "ডিপোজিট স্লিপ যাচাই": "Deposit Slip Verification",
+      "সংযুক্ত ডিপোজিট স্লিপ:": "Attached Deposit Slip:",
+      "অ্যাডমিন মন্তব্য:": "Admin Remarks:",
+      "❌ ডিপোজিট বাতিল করুন": "❌ Reject Deposit",
+      "✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন": "✅ Approve & Credit Account",
+      "🏛️ ব্যাংকিং সেবাসমূহ ও ডকুমেন্ট নির্দেশিকা": "🏛️ Banking Services & Document Requirements",
+      "কনফিগারকৃত ব্যাংকিং সেবা তালিকা": "Configured Banking Services Catalogue",
+      "১০টি প্রমিত ব্যাংকিং সেবা ক্যাটাগরি এবং সংযুক্ত ডকুমেন্ট ভেরিফিকেশন নিয়মাবলী": "10 standard banking service categories and attached document verification rules",
+      "সার্ভিস কোড": "Service Code",
+      "সেবার নাম": "Service Name",
+      "ক্যাটাগরি": "Category",
+      "বিবরণ": "Description",
+      "প্রসেসিং সময়": "Processing Time",
+      "প্রয়োজনীয় ডকুমেন্ট": "Required Documents",
+      "💳 লাইভ ব্যাংকিং ট্রানজেকশন লেজার": "💳 Live Banking Transaction Ledger",
+      "লেনদেন রেফারেন্স ও ট্রানজেকশন ইতিহাস": "Transaction References & History",
+      "লেনদেন আইডি": "TxID",
+      "অ্যাকাউন্ট": "Account",
+      "লেনদেনের ধরন": "Transaction Type",
+      "ডিপোজিট": "Deposit",
+      "উইথড্রয়াল": "Withdrawal",
+      "ট্রান্সফার": "Transfer",
+      "ফি / চার্জ": "Fee / Charge",
+      "রেফারেন্স / নোট": "Reference / Note",
+      "সময় ও তারিখ": "Date & Time",
+      "🗂️ অ্যাকাউন্ট ক্লোজার রিভিউ কিউ": "🗂️ Account Closure Review Queue",
+      "আবেদন রেফারেন্স": "Request ID",
+      "আবেদনের কারণ": "Reason",
+      "ব্যালেন্স নিষ্পত্তি": "Balance Settlement",
+      "পর্যালোচনা ও অনুমোদন →": "Review & Approve →",
+      "পর্যালোচনা ও অনুমোদন &rarr;": "Review & Approve &rarr;",
+      "নিরাপদ সাইন আউট": "Secure Sign Out",
+      "লগআউট": "Sign Out",
+      "Admin Dashboard": "অ্যাডমিন ড্যাশবোর্ড",
+      "Customer Internet Banking": "গ্রাহক ইন্টারনেট ব্যাংকিং",
+      "Total Customers": "মোট গ্রাহক",
+      "KYC Pending": "কেওয়াইসি পেন্ডিং",
+      "Deposits": "ডিপোজিটসমূহ",
+      "Service Requests": "সার্ভিস আবেদনসমূহ",
+      "Recent Transactions": "সাম্প্রতিক লেনদেন",
+      "Pending Verifications": "অপেক্ষমাণ ভেরিফিকেশন",
+      "View All": "সব দেখুন"
+    },
+    enToBn: {}
+  },
+
+  _initDict() {
+    if (Object.keys(this.dictionary.enToBn).length === 0) {
+      for (const [bn, en] of Object.entries(this.dictionary.bnToEn)) {
+        this.dictionary.enToBn[en] = bn;
+        const cleanBn = bn.replace(/<[^>]+>/g, '').trim();
+        const cleanEn = en.replace(/<[^>]+>/g, '').trim();
+        if (cleanEn && cleanBn) {
+          this.dictionary.enToBn[cleanEn] = cleanBn;
+        }
+      }
+    }
+  },
+
   setPortalLanguage(lang) {
+    if (lang !== 'bn' && lang !== 'en') lang = 'bn';
     localStorage.setItem('smartbank_portal_lang', lang);
     localStorage.setItem('smartbank_ai_lang', lang);
     this.aiLang = lang;
+
+    // Update switcher buttons UI immediately
+    document.querySelectorAll('.lang-switch-pill .lang-btn').forEach(btn => {
+      if ((lang === 'bn' && (btn.classList.contains('lang-btn-bn') || btn.innerText.includes('বাংলা'))) ||
+          (lang === 'en' && (btn.classList.contains('lang-btn-en') || btn.innerText.includes('English')))) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
     if (this.currentSidebarType === 'customer') {
       this.renderCustomerSidebar(this.activeSidebarPage);
     } else if (this.currentSidebarType === 'admin') {
       this.renderAdminSidebar(this.activeSidebarPage);
     }
-    this.mountLanguageSwitcher();
+
     this.applyPortalTranslations();
+
+    // Call dynamic loaders if available on the current page
+    const loaders = [
+      'loadApplications',
+      'loadCustomers',
+      'loadDeposits',
+      'loadServices',
+      'loadKYCData',
+      'loadTransactions',
+      'loadRequests',
+      'loadComplaints',
+      'loadDashboardData',
+      'initDashboard',
+      'loadProfile',
+      'loadClosureRequests',
+      'loadClosureStatus'
+    ];
+    loaders.forEach(fnName => {
+      if (typeof window[fnName] === 'function') {
+        try { window[fnName](); } catch (e) {}
+      }
+    });
+
     if (typeof window.onPortalLanguageChange === 'function') {
       try { window.onPortalLanguageChange(lang); } catch (e) {}
     }
+
+    document.dispatchEvent(new CustomEvent('portalLanguageChanged', { detail: { lang } }));
   },
 
   mountLanguageSwitcher() {
@@ -127,9 +385,14 @@ const UI = {
     pill.className = 'lang-switch-pill';
     pill.title = lang === 'bn' ? 'ভাষা পরিবর্তন (বাংলা / English)' : 'Switch Language (Bangla / English)';
     pill.innerHTML = `
-      <button type="button" class="lang-btn ${lang === 'bn' ? 'active' : ''}" onclick="window.UI.setPortalLanguage('bn')">বাংলা</button>
-      <button type="button" class="lang-btn ${lang === 'en' ? 'active' : ''}" onclick="window.UI.setPortalLanguage('en')">English</button>
+      <button type="button" class="lang-btn lang-btn-bn ${lang === 'bn' ? 'active' : ''}">বাংলা</button>
+      <button type="button" class="lang-btn lang-btn-en ${lang === 'en' ? 'active' : ''}">English</button>
     `;
+
+    const bnBtn = pill.querySelector('.lang-btn-bn');
+    const enBtn = pill.querySelector('.lang-btn-en');
+    if (bnBtn) bnBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.UI.setPortalLanguage('bn'); };
+    if (enBtn) enBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.UI.setPortalLanguage('en'); };
 
     // Try finding top navbar right section
     let rightNav = document.querySelector('.top-navbar .top-nav-right');
@@ -153,9 +416,11 @@ const UI = {
   },
 
   applyPortalTranslations() {
+    this._initDict();
     const lang = this.getLanguage();
     document.documentElement.lang = lang;
 
+    // 1. Elements with explicit data-bn and data-en
     document.querySelectorAll('[data-bn][data-en]').forEach(el => {
       const txt = el.getAttribute(`data-${lang}`);
       if (txt) {
@@ -166,6 +431,39 @@ const UI = {
         }
       }
     });
+
+    // 2. Global dictionary translations for elements without explicit data attributes
+    const dict = lang === 'en' ? this.dictionary.bnToEn : this.dictionary.enToBn;
+    if (dict) {
+      const candidates = document.querySelectorAll(
+        'h1, h2, h3, h4, h5, h6, p, label, a, button, span, th, td, option, .card-title, .card-subtitle, .page-heading, .brand-sub'
+      );
+      candidates.forEach(el => {
+        if (el.hasAttribute('data-bn') || el.closest('.lang-switch-pill')) return;
+
+        const raw = el.innerHTML.trim();
+        if (dict[raw]) {
+          el.innerHTML = dict[raw];
+          return;
+        }
+
+        if (el.children.length === 0) {
+          const txt = el.textContent.trim();
+          if (dict[txt]) {
+            el.textContent = dict[txt];
+          }
+        }
+      });
+
+      // Also translate input/textarea placeholders
+      document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(input => {
+        if (input.hasAttribute('data-bn')) return;
+        const ph = input.getAttribute('placeholder').trim();
+        if (dict[ph]) {
+          input.setAttribute('placeholder', dict[ph]);
+        }
+      });
+    }
   },
 
   /**
