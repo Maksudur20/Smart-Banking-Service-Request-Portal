@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ডিপোজিট ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.9">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
   <style>
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(4px);
       display: none;
@@ -17,9 +21,11 @@
       z-index: 1000;
       padding: 20px;
     }
+
     .modal-overlay.open {
       display: flex;
     }
+
     .modal-box {
       background: #fff;
       border-radius: 12px;
@@ -28,6 +34,7 @@
       padding: 24px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
     }
+
     .slip-zoom {
       width: 100%;
       max-height: 320px;
@@ -39,6 +46,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-layout">
     <div id="app-sidebar"></div>
@@ -46,7 +54,8 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="💵 ডিপোজিট ভেরিফিকেশন কিউ" data-en="💵 Deposit Verifications Queue">💵 ডিপোজিট ভেরিফিকেশন কিউ</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="💵 ডিপোজিট ভেরিফিকেশন কিউ"
+            data-en="💵 Deposit Verifications Queue">💵 ডিপোজিট ভেরিফিকেশন কিউ</h2>
         </div>
         <div class="top-nav-right">
           <span style="font-size:0.85rem; color:#64748b;">ক্যাশ ও মোবাইল ব্যাংকিং স্লিপ ভেরিফিকেশন</span>
@@ -73,17 +82,22 @@
   <!-- Deposit Verification Modal -->
   <div id="depositModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
-        <h3 style="margin:0; font-size:1.15rem; font-weight:700; color:#0f172a;" id="modalDepositTitle">ডিপোজিট স্লিপ যাচাই</h3>
-        <button onclick="closeDepositModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+        <h3 style="margin:0; font-size:1.15rem; font-weight:700; color:#0f172a;" id="modalDepositTitle">ডিপোজিট স্লিপ
+          যাচাই</h3>
+        <button onclick="closeDepositModal()" class="table-action-btn secondary"
+          style="font-size:1.2rem; padding:2px 10px;">&times;</button>
       </div>
 
-      <div id="modalDepositDetails" style="margin-top:14px; font-size:0.85rem; line-height:1.6; background:#f8fafc; padding:12px; border-radius:6px;">
+      <div id="modalDepositDetails"
+        style="margin-top:14px; font-size:0.85rem; line-height:1.6; background:#f8fafc; padding:12px; border-radius:6px;">
         <!-- Injected by JS -->
       </div>
 
       <div>
-        <h4 style="margin:12px 0 4px 0; font-size:0.9rem;" data-bn="সংযুক্ত ডিপোজিট স্লিপ:" data-en="Attached Deposit Slip:">সংযুক্ত ডিপোজিট স্লিপ:</h4>
+        <h4 style="margin:12px 0 4px 0; font-size:0.9rem;" data-bn="সংযুক্ত ডিপোজিট স্লিপ:"
+          data-en="Attached Deposit Slip:">সংযুক্ত ডিপোজিট স্লিপ:</h4>
         <div id="modalSlipContainer">
           <!-- Injected by JS -->
         </div>
@@ -91,14 +105,19 @@
 
       <div class="form-group" style="margin-top:14px;">
         <label class="form-label" data-bn="অ্যাডমিন মন্তব্য:" data-en="Admin Remarks:">অ্যাডমিন মন্তব্য:</label>
-        <textarea id="depositRemarks" class="form-control" rows="2" placeholder="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন" data-bn="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন" data-en="Reason is mandatory when rejecting"></textarea>
+        <textarea id="depositRemarks" class="form-control" rows="2" placeholder="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন"
+          data-bn="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন" data-en="Reason is mandatory when rejecting"></textarea>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px; flex-wrap:wrap;">
-        <button onclick="verifyDeposit('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ ডিপোজিট বাতিল করুন" data-en="❌ Reject Deposit">
+        <button onclick="verifyDeposit('REJECT')" class="btn btn-secondary"
+          style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ ডিপোজিট বাতিল করুন"
+          data-en="❌ Reject Deposit">
           ❌ ডিপোজিট বাতিল করুন
         </button>
-        <button onclick="verifyDeposit('ACCEPT')" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন" data-en="✅ Accept & Credit Balance">
+        <button onclick="verifyDeposit('ACCEPT')" class="btn btn-primary"
+          style="background:#059669; border-color:#059669;" data-bn="✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন"
+          data-en="✅ Accept & Credit Balance">
           ✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন
         </button>
       </div>
@@ -106,8 +125,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.9"></script>
-  <script src="/assets/js/common.js?v=2.9"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('deposits');
@@ -147,18 +166,18 @@
               </thead>
               <tbody>
                 ${depositList.map(d => {
-                  let badgeClass = 'badge-submitted';
-                  if (d.status === 'Approved') badgeClass = 'badge-approved';
-                  if (d.status === 'Rejected') badgeClass = 'badge-rejected';
+          let badgeClass = 'badge-submitted';
+          if (d.status === 'Approved') badgeClass = 'badge-approved';
+          if (d.status === 'Rejected') badgeClass = 'badge-rejected';
 
-                  return `
+          return `
                     <tr>
                       <td><code>${d.deposit_number}</code></td>
                       <td>
                         <div style="font-weight:700; color:#0f172a; font-size:0.92rem;">${d.customer_name}</div>
                         <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">A/C: <span style="font-family:monospace; color:#0369a1; font-weight:700;">${d.account_number}</span></div>
                       </td>
-                      <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(d.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}</span></td>
+                      <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span></td>
                       <td><span style="font-weight:600; color:#334155;">${d.deposit_method}</span></td>
                       <td><code>${d.transaction_id}</code></td>
                       <td><div style="font-weight:600; font-size:0.86rem; color:#1e293b;">${d.sender_name}</div><div style="font-size:0.76rem; color:#64748b; margin-top:2px;">${d.sender_mobile}</div></td>
@@ -177,17 +196,17 @@
                       </td>
                     </tr>
                   `;
-                }).join('')}
+        }).join('')}
               </tbody>
             </table>
           </div>
         `;
-              </tbody>
-            </table>
-          </div>
-        `;
+              </tbody >
+            </table >
+          </div >
+          `;
       } catch (err) {
-        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">ডিপোজিট লোড করা যায়নি।</p>`;
+        container.innerHTML = `< p style = "padding:20px; color:#ef4444; text-align:center;" > ডিপোজিট লোড করা যায়নি।</p > `;
       }
     }
 
@@ -195,11 +214,11 @@
       selectedDeposit = depositList.find(d => d.id === depositId);
       if (!selectedDeposit) return;
 
-      document.getElementById('modalDepositTitle').innerText = `ডিপোজিট যাচাই — ${selectedDeposit.deposit_number}`;
+      document.getElementById('modalDepositTitle').innerText = `ডিপোজিট যাচাই — ${ selectedDeposit.deposit_number } `;
       document.getElementById('depositRemarks').value = selectedDeposit.admin_remarks || '';
 
       document.getElementById('modalDepositDetails').innerHTML = `
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+          < div style = "display:grid; grid-template-columns: 1fr 1fr; gap:6px;" >
           <div><strong>গ্রাহকের নাম:</strong> ${selectedDeposit.customer_name}</div>
           <div><strong>অ্যাকাউন্ট নম্বর:</strong> ${selectedDeposit.account_number}</div>
           <div><strong>জমার পরিমাণ:</strong> <span style="font-size:1.1rem; color:#10b981; font-weight:800;">${parseFloat(selectedDeposit.amount).toFixed(2)} BDT</span></div>
@@ -208,19 +227,19 @@
           <div><strong>প্রেরক:</strong> ${selectedDeposit.sender_name} (${selectedDeposit.sender_mobile})</div>
           <div><strong>জমার তারিখ:</strong> ${selectedDeposit.deposit_date}</div>
           <div><strong>বর্তমান স্ট্যাটাস:</strong> ${selectedDeposit.status}</div>
-        </div>
-      `;
+        </div >
+          `;
 
       const slipBox = document.getElementById('modalSlipContainer');
       if (selectedDeposit.slip_url) {
         slipBox.innerHTML = `
-          <img src="${selectedDeposit.slip_url}" alt="Slip" class="slip-zoom">
-          <div style="text-align:right;">
-            <a href="${selectedDeposit.slip_url}" target="_blank" class="table-action-btn secondary">পূর্ণাঙ্গ স্লিপ খুলুন ↗</a>
-          </div>
+          < img src = "${selectedDeposit.slip_url}" alt = "Slip" class="slip-zoom" >
+            <div style="text-align:right;">
+              <a href="${selectedDeposit.slip_url}" target="_blank" class="table-action-btn secondary">পূর্ণাঙ্গ স্লিপ খুলুন ↗</a>
+            </div>
         `;
       } else {
-        slipBox.innerHTML = `<p style="color:#94a3b8;">কোনো স্লিপ পাওয়া যায়নি।</p>`;
+        slipBox.innerHTML = `< p style = "color:#94a3b8;" > কোনো স্লিপ পাওয়া যায়নি।</p > `;
       }
 
       document.getElementById('depositModal').classList.add('open');
@@ -241,21 +260,21 @@
       }
 
       try {
-        const res = await window.api.post(`/api/deposits/admin/${selectedDeposit.id}/verify`, {
-          action,
+        const res = await window.api.post(`/ api / deposits / admin / ${ selectedDeposit.id }/verify`, {
+        action,
           remarks
-        });
+      });
 
-        window.showToast(res.message || 'ভেরিফিকেশন সম্পন্ন হয়েছে।', 'success');
-        closeDepositModal();
-        loadDeposits();
-      } catch (err) {
-        window.showToast(err.message || 'ভেরিফিকেশন সম্পন্ন করা যায়নি।', 'error');
-      }
+      window.showToast(res.message || 'ভেরিফিকেশন সম্পন্ন হয়েছে।', 'success');
+      closeDepositModal();
+      loadDeposits();
+    } catch (err) {
+      window.showToast(err.message || 'ভেরিফিকেশন সম্পন্ন করা যায়নি।', 'error');
+    }
     }
 
     loadDeposits();
   </script>
 </body>
-</html>
 
+</html>

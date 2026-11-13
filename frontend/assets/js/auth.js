@@ -84,7 +84,7 @@ const Auth = {
       } else {
         localStorage.clear();
       }
-      try { sessionStorage.clear(); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) { }
       window.location.replace(isAdmin ? '/admin-login.html' : '/login.html');
     }
   }
