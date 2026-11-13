@@ -217,10 +217,11 @@
       const reference = document.getElementById('transferReference').value.trim();
 
       const btn = document.getElementById('transferSubmitBtn');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
 
       try {
         btn.disabled = true;
-        btn.innerText = '⏳ ট্রান্সফার প্রক্রিয়াধীন...';
+        btn.innerText = isBn ? '⏳ ট্রান্সফার প্রক্রিয়াধীন...' : '⏳ Processing Transfer...';
 
         const res = await window.api.post('/api/transfers', {
           recipient_account,
@@ -228,14 +229,14 @@
           reference
         });
 
-        window.showToast(`✅ ${amount} BDT সফলভাবে ট্রান্সফার হয়েছে! নতুন ব্যালেন্স: ${parseFloat(res.sender_balance).toFixed(2)} BDT`, 'success');
+        window.showToast(isBn ? `✅ ${amount} BDT সফলভাবে ট্রান্সফার হয়েছে! নতুন ব্যালেন্স: ${parseFloat(res.sender_balance).toFixed(2)} BDT` : `✅ Successfully transferred ${amount} BDT! New balance: ${parseFloat(res.sender_balance).toFixed(2)} BDT`, 'success');
         document.getElementById('transferForm').reset();
         loadData();
       } catch (err) {
-        window.showToast(err.message || 'ট্রান্সফার ব্যর্থ হয়েছে।', 'error');
+        window.showToast(err.message || (isBn ? 'ট্রান্সফার ব্যর্থ হয়েছে।' : 'Transfer failed.'), 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = '📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন' : '📤 Complete Instant Transfer');
       }
     });
 

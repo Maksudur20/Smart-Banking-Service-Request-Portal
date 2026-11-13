@@ -240,12 +240,8 @@
             </table>
           </div>
         `;
-              </tbody>
-            </table>
-          </div>
-        `;
       } catch (err) {
-        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">আবেদন তালিকা লোড করা যায়নি।</p>`;
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${window.UI && window.UI.getLanguage() === 'en' ? 'Failed to load applications list.' : 'আবেদন তালিকা লোড করা যায়নি।'}</p>`;
       }
     }
 
@@ -254,35 +250,38 @@
       selectedCustomerId = customerId;
       document.getElementById('adminRemarks').value = '';
 
+      const lang = window.UI ? window.UI.getLanguage() : 'bn';
+      const isBn = lang === 'bn';
+
       try {
         const res = await window.api.get(`/api/kyc/admin/applications/${customerId}`);
         const c = res.customer;
         const docs = res.documents || [];
 
-        document.getElementById('modalCustomerName').innerText = `${c.full_name} — KYC Review`;
+        document.getElementById('modalCustomerName').innerText = `${c.full_name} — ${isBn ? 'কেওয়াইসি রিভিউ' : 'KYC Review'}`;
 
         document.getElementById('modalCustomerBio').innerHTML = `
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-            <div><strong>অ্যাকাউন্ট নম্বর:</strong> ${c.account_number}</div>
-            <div><strong>অ্যাকাউন্টের ধরন:</strong> ${c.account_type}</div>
-            <div><strong>পিতার নাম:</strong> ${c.father_name || 'N/A'}</div>
-            <div><strong>মাতার নাম:</strong> ${c.mother_name || 'N/A'}</div>
-            <div><strong>জাতীয় পরিচয়পত্র (NID):</strong> ${c.nid_number || 'N/A'}</div>
-            <div><strong>মোবাইল:</strong> ${c.phone || 'N/A'}</div>
-            <div><strong>পেশা:</strong> ${c.occupation || 'N/A'} (আয়: ${c.monthly_income || 0} BDT)</div>
-            <div><strong>বর্তমান ব্যালেন্স:</strong> ${parseFloat(c.balance || 0).toFixed(2)} BDT</div>
-            <div><strong>বর্তমান ঠিকানা:</strong> ${c.present_address || c.address || 'N/A'}</div>
-            <div><strong>নমিনির তথ্য:</strong> ${c.nominee_name || 'N/A'} (${c.nominee_relation || '-'}) NID: ${c.nominee_nid || '-'}</div>
+            <div><strong>${isBn ? 'অ্যাকাউন্ট নম্বর:' : 'Account Number:'}</strong> ${c.account_number}</div>
+            <div><strong>${isBn ? 'অ্যাকাউন্টের ধরন:' : 'Account Type:'}</strong> ${c.account_type}</div>
+            <div><strong>${isBn ? 'পিতার নাম:' : "Father's Name:"}</strong> ${c.father_name || 'N/A'}</div>
+            <div><strong>${isBn ? 'মাতার নাম:' : "Mother's Name:"}</strong> ${c.mother_name || 'N/A'}</div>
+            <div><strong>${isBn ? 'জাতীয় পরিচয়পত্র (NID):' : 'National ID (NID):'}</strong> ${c.nid_number || 'N/A'}</div>
+            <div><strong>${isBn ? 'মোবাইল:' : 'Mobile:'}</strong> ${c.phone || 'N/A'}</div>
+            <div><strong>${isBn ? 'পেশা:' : 'Occupation:'}</strong> ${c.occupation || 'N/A'} (${isBn ? 'আয়:' : 'Income:'} ${c.monthly_income || 0} BDT)</div>
+            <div><strong>${isBn ? 'বর্তমান ব্যালেন্স:' : 'Current Balance:'}</strong> ${parseFloat(c.balance || 0).toFixed(2)} BDT</div>
+            <div><strong>${isBn ? 'বর্তমান ঠিকানা:' : 'Present Address:'}</strong> ${c.present_address || c.address || 'N/A'}</div>
+            <div><strong>${isBn ? 'নমিনির তথ্য:' : 'Nominee Info:'}</strong> ${c.nominee_name || 'N/A'} (${c.nominee_relation || '-'}) NID: ${c.nominee_nid || '-'}</div>
           </div>
           <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;">
-            <strong>বর্তমান কেওয়াইসি স্ট্যাটাস:</strong> <span class="badge ${c.kyc_status === 'Approved' ? 'badge-approved' : (c.kyc_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">${c.kyc_status}</span>
-            ${c.kyc_rejection_reason ? `<span style="color:#dc2626; margin-left:12px;">(পূর্বের কারণ: ${c.kyc_rejection_reason})</span>` : ''}
+            <strong>${isBn ? 'বর্তমান কেওয়াইসি স্ট্যাটাস:' : 'Current KYC Status:'}</strong> <span class="badge ${c.kyc_status === 'Approved' ? 'badge-approved' : (c.kyc_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">${c.kyc_status}</span>
+            ${c.kyc_rejection_reason ? `<span style="color:#dc2626; margin-left:12px;">(${isBn ? 'পূর্বের কারণ:' : 'Previous Reason:'} ${c.kyc_rejection_reason})</span>` : ''}
           </div>
         `;
 
         const docsContainer = document.getElementById('modalDocsContainer');
         if (docs.length === 0) {
-          docsContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">কোনো ডকুমেন্ট ফাইল পাওয়া যায়নি।</p>`;
+          docsContainer.innerHTML = `<p style="color:#94a3b8; grid-column:1/-1;">${isBn ? 'কোনো ডকুমেন্ট ফাইল পাওয়া যায়নি।' : 'No document files found.'}</p>`;
         } else {
           docsContainer.innerHTML = docs.map(d => {
             const isPdf = (d.mime_type || '').includes('pdf') || (d.file_name || '').endsWith('.pdf');
@@ -293,6 +292,21 @@
                 ${isPdf ? `
                   <div style="height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff; border:1px solid #e2e8f0; border-radius:4px; margin:6px 0;">
                     <span style="font-size:2rem;">📄</span>
+                    <span style="font-size:0.75rem;">PDF Document</span>
+                  </div>
+                ` : `
+                  <img src="${d.file_url}" alt="${d.doc_type}">
+                `}
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                  <span class="badge ${['Approved', 'Verified'].includes(d.verification_status) ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}" style="font-size:0.7rem;">
+                    ${d.verification_status || 'Pending'}
+                  </span>
+                  <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem;">${isBn ? 'পূর্ণাঙ্গ দেখুন ↗' : 'View Full ↗'}</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
                     <span style="font-size:0.75rem;">PDF Document</span>
                   </div>
                 ` : `

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ব্যাংক অফিসার পোর্টাল লগইন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
 </head>
 <body class="auth-page">
   <div class="auth-card" style="max-width: 440px;">
@@ -38,9 +38,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/api.js?v=3.3"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 
@@ -49,29 +49,30 @@
       const btn = document.getElementById('submitBtn');
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
 
       try {
         btn.disabled = true;
-        btn.innerText = 'যাচাই করা হচ্ছে...';
+        btn.innerText = isBn ? 'যাচাই করা হচ্ছে...' : 'Verifying...';
 
         const res = await window.api.post('/api/auth/login', { email, password });
 
         if (res.user.role !== 'ADMIN') {
-          throw new Error('অ্যাক্সেস প্রত্যাখ্যান করা হয়েছে। এই অ্যাকাউন্টে ব্যাংক অফিসারের অনুমোদন নেই।');
+          throw new Error(isBn ? 'অ্যাক্সেস প্রত্যাখ্যান করা হয়েছে। এই অ্যাকাউন্টে ব্যাংক অফিসারের অনুমোদন নেই।' : 'Access denied. Account is not authorized as a bank officer.');
         }
 
         window.api.setToken(res.token);
         window.api.setUser(res.user);
 
-        window.showToast('✅ অফিসার প্রমাণীকরণ সফল হয়েছে!', 'success');
+        window.showToast(isBn ? '✅ অফিসার প্রমাণীকরণ সফল হয়েছে!' : '✅ Officer authenticated successfully!', 'success');
 
         setTimeout(() => {
           window.location.href = '/admin/admin-dashboard.html';
         }, 500);
       } catch (err) {
-        window.showToast(err.message || 'ভুল ইমেইল বা পাসওয়ার্ড।', 'error');
+        window.showToast(err.message || (isBn ? 'ভুল ইমেইল বা পাসওয়ার্ড।' : 'Invalid email or password.'), 'error');
         btn.disabled = false;
-        btn.innerText = '🛡️ অফিসার পোর্টালে প্রবেশ করুন';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '🛡️ অফিসার পোর্টালে প্রবেশ করুন' : '🛡️ Access Officer Portal');
       }
     });
   </script>

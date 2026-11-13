@@ -298,15 +298,26 @@ const UI = {
       "পর্যালোচনা ও অনুমোদন &rarr;": "Review & Approve &rarr;",
       "নিরাপদ সাইন আউট": "Secure Sign Out",
       "লগআউট": "Sign Out",
-      "Admin Dashboard": "অ্যাডমিন ড্যাশবোর্ড",
-      "Customer Internet Banking": "গ্রাহক ইন্টারনেট ব্যাংকিং",
-      "Total Customers": "মোট গ্রাহক",
-      "KYC Pending": "কেওয়াইসি পেন্ডিং",
-      "Deposits": "ডিপোজিটসমূহ",
-      "Service Requests": "সার্ভিস আবেদনসমূহ",
-      "Recent Transactions": "সাম্প্রতিক লেনদেন",
-      "Pending Verifications": "অপেক্ষমাণ ভেরিফিকেশন",
-      "View All": "সব দেখুন",
+      "অ্যাডমিন ড্যাশবোর্ড": "Admin Dashboard",
+      "গ্রাহক ইন্টারনেট ব্যাংকিং": "Customer Internet Banking",
+      "মোট গ্রাহক": "Total Customers",
+      "কেওয়াইসি পেন্ডিং": "KYC Pending",
+      "ডিপোজিটসমূহ": "Deposits",
+      "সার্ভিস আবেদনসমূহ": "Service Requests",
+      "সাম্প্রতিক লেনদেন": "Recent Transactions",
+      "অপেক্ষমাণ ভেরিফিকেশন": "Pending Verifications",
+      "সব দেখুন": "View All",
+      "সার্ভিস রিকোয়েস্ট": "Service Requests",
+      "সাম্প্রতিক অ্যালার্ট": "Recent Alerts",
+      "লেনদেন কার্যক্রম": "Transaction Activity",
+      "ক্যাটাগরি অনুযায়ী আবেদন": "Requests by Category",
+      "আবেদন আইডি": "Request ID",
+      "গ্রাহক": "Customer",
+      "সেবার ধরন": "Service Type",
+      "দাখিলের সময়": "Submitted",
+      "যাচাই": "Verify",
+      "ওভারভিউ": "Overview",
+      "কিউতে কোনো অপেক্ষমাণ আবেদন নেই।": "No pending requests in queue.",
       "টাকা পাঠান": "Send Money",
       "প্রাপকের অ্যাকাউন্ট নম্বর": "Recipient Account Number",
       "ট্রান্সফারের পরিমাণ": "Transfer Amount",
@@ -529,37 +540,70 @@ const UI = {
     });
 
     // 2. Global dictionary translations for elements without explicit data attributes
-    const dict = lang === 'en' ? this.dictionary.bnToEn : this.dictionary.enToBn;
-    if (dict) {
-      const candidates = document.querySelectorAll(
-        'h1, h2, h3, h4, h5, h6, p, label, a, button, span, th, td, option, .card-title, .card-subtitle, .page-heading, .brand-sub'
-      );
-      candidates.forEach(el => {
-        if (el.hasAttribute('data-bn') || el.closest('.lang-switch-pill')) return;
+    const candidates = document.querySelectorAll(
+      'h1, h2, h3, h4, h5, h6, p, label, a, button, span, th, td, option, .card-title, .card-subtitle, .page-heading, .brand-sub'
+    );
+    candidates.forEach(el => {
+      if (el.hasAttribute('data-bn') || el.closest('.lang-switch-pill')) return;
 
+      let bVal = el.getAttribute('data-dict-bn');
+      let eVal = el.getAttribute('data-dict-en');
+
+      if (!bVal && !eVal) {
         const raw = el.innerHTML.trim();
-        if (dict[raw]) {
-          el.innerHTML = dict[raw];
-          return;
-        }
-
-        if (el.children.length === 0) {
+        if (this.dictionary.bnToEn[raw]) {
+          bVal = raw;
+          eVal = this.dictionary.bnToEn[raw];
+        } else if (this.dictionary.enToBn[raw]) {
+          eVal = raw;
+          bVal = this.dictionary.enToBn[raw];
+        } else if (el.children.length === 0) {
           const txt = el.textContent.trim();
-          if (dict[txt]) {
-            el.textContent = dict[txt];
+          if (this.dictionary.bnToEn[txt]) {
+            bVal = txt;
+            eVal = this.dictionary.bnToEn[txt];
+          } else if (this.dictionary.enToBn[txt]) {
+            eVal = txt;
+            bVal = this.dictionary.enToBn[txt];
           }
         }
-      });
 
-      // Also translate input/textarea placeholders
-      document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(input => {
-        if (input.hasAttribute('data-bn')) return;
-        const ph = input.getAttribute('placeholder').trim();
-        if (dict[ph]) {
-          input.setAttribute('placeholder', dict[ph]);
+        if (bVal && eVal) {
+          el.setAttribute('data-dict-bn', bVal);
+          el.setAttribute('data-dict-en', eVal);
         }
-      });
-    }
+      }
+
+      if (bVal && eVal) {
+        el.innerHTML = lang === 'en' ? eVal : bVal;
+      }
+    });
+
+    // Also translate input/textarea placeholders
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(input => {
+      if (input.hasAttribute('data-bn')) return;
+      let bVal = input.getAttribute('data-dict-bn');
+      let eVal = input.getAttribute('data-dict-en');
+
+      if (!bVal && !eVal) {
+        const ph = input.getAttribute('placeholder').trim();
+        if (this.dictionary.bnToEn[ph]) {
+          bVal = ph;
+          eVal = this.dictionary.bnToEn[ph];
+        } else if (this.dictionary.enToBn[ph]) {
+          eVal = ph;
+          bVal = this.dictionary.enToBn[ph];
+        }
+        if (bVal && eVal) {
+          input.setAttribute('data-dict-bn', bVal);
+          input.setAttribute('data-dict-en', eVal);
+        }
+      }
+
+      if (bVal && eVal) {
+        input.setAttribute('placeholder', lang === 'en' ? eVal : bVal);
+      }
+    });
   },
 
   /**

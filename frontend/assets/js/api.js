@@ -61,17 +61,18 @@ class ApiClient {
       const response = await fetch(url, config);
 
       if (response.status === 401) {
+        const isEn = (localStorage.getItem('smartbank_portal_lang') === 'en');
         if (endpoint.includes('/auth/login')) {
           let errData = {};
           try { errData = await response.json(); } catch (e) {}
-          throw new Error(errData.message || 'ভুল ইমেইল বা পাসওয়ার্ড।');
+          throw new Error(errData.message || (isEn ? 'Invalid email or password.' : 'ভুল ইমেইল বা পাসওয়ার্ড।'));
         }
         this.clearSession();
         // Redirect to login if on protected page
         if (!window.location.pathname.includes('login') && !window.location.pathname.includes('register')) {
           window.location.href = window.location.pathname.includes('/admin/') ? '/admin-login.html' : '/login.html';
         }
-        throw new Error('Session expired. Please log in again.');
+        throw new Error(isEn ? 'Session expired. Please log in again.' : 'সেশন মেয়াদোত্তীর্ণ হয়েছে। অনুগ্রহ করে আবার লগইন করুন।');
       }
 
       // If returning CSV or binary
@@ -128,6 +129,16 @@ window.showToast = function(message, type = 'success') {
     container = document.createElement('div');
     container.id = 'toast-container';
     document.body.appendChild(container);
+  }
+
+  // Auto-translate toast if UI dictionary is available
+  if (window.UI && typeof window.UI.getLanguage === 'function' && window.UI.dictionary) {
+    const lang = window.UI.getLanguage();
+    if (lang === 'en' && window.UI.dictionary.bnToEn) {
+      message = window.UI.dictionary.bnToEn[message] || message;
+    } else if (lang === 'bn' && window.UI.dictionary.enToBn) {
+      message = window.UI.dictionary.enToBn[message] || message;
+    }
   }
 
   const toast = document.createElement('div');

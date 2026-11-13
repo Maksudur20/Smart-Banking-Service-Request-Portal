@@ -71,13 +71,13 @@
       <header class="top-navbar">
         <div class="top-nav-left">
           <div>
-            <h1 class="page-heading">Admin Dashboard</h1>
-            <div class="page-breadcrumbs">🏠 / Overview</div>
+            <h1 class="page-heading" data-bn="অ্যাডমিন ড্যাশবোর্ড" data-en="Admin Dashboard">অ্যাডমিন ড্যাশবোর্ড</h1>
+            <div class="page-breadcrumbs" data-bn="🏠 / ওভারভিউ" data-en="🏠 / Overview">🏠 / Overview</div>
           </div>
         </div>
 
         <div class="top-nav-search">
-          <input type="text" placeholder="Search customers, requests, transactions...">
+          <input type="text" placeholder="গ্রাহক, আবেদন ও লেনদেন খুঁজুন..." data-bn="গ্রাহক, আবেদন ও লেনদেন খুঁজুন..." data-en="Search customers, requests, transactions...">
         </div>
 
         <div class="top-nav-right">
@@ -88,7 +88,7 @@
           <div class="user-mini-profile" style="cursor:pointer;">
             <div class="user-avatar" style="background:#0284c7;">AD</div>
             <div class="user-info-text">
-              <span class="user-name">Admin User ▾</span>
+              <span class="user-name" data-bn="অ্যাডমিন ইউজার ▾" data-en="Admin User ▾">অ্যাডমিন ইউজার ▾</span>
             </div>
           </div>
         </div>
@@ -148,24 +148,24 @@
           <!-- Service Requests Table Card -->
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
-              <h3 class="card-title">Service Requests</h3>
-              <a href="/admin/admin-requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rarr;</a>
+              <h3 class="card-title" data-bn="সার্ভিস আবেদনসমূহ" data-en="Service Requests">সার্ভিস আবেদনসমূহ</h3>
+              <a href="/admin/admin-requests.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;" data-bn="সব দেখুন &rarr;" data-en="View All &rarr;">সব দেখুন &rarr;</a>
             </div>
             <div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Request ID</th>
-                    <th>Customer</th>
-                    <th>Service Type</th>
-                    <th>Submitted</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th data-bn="আবেদন আইডি" data-en="Request ID">আবেদন আইডি</th>
+                    <th data-bn="গ্রাহক" data-en="Customer">গ্রাহক</th>
+                    <th data-bn="সেবার ধরন" data-en="Service Type">সেবার ধরন</th>
+                    <th data-bn="দাখিলের সময়" data-en="Submitted">দাখিলের সময়</th>
+                    <th data-bn="স্ট্যাটাস" data-en="Status">স্ট্যাটাস</th>
+                    <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
                   </tr>
                 </thead>
                 <tbody id="priorityQueueBody">
                   <tr>
-                    <td colspan="6" style="text-align:center; padding:30px; color:var(--text-light);">Loading priority queue...</td>
+                    <td colspan="6" style="text-align:center; padding:30px; color:var(--text-light);" data-bn="অগ্রাধিকার কিউ লোড হচ্ছে..." data-en="Loading priority queue...">অগ্রাধিকার কিউ লোড হচ্ছে...</td>
                   </tr>
                 </tbody>
               </table>
@@ -175,35 +175,35 @@
           <!-- Recent Alerts Card -->
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
-              <h3 class="card-title">Recent Alerts</h3>
-              <a href="/admin/admin-transactions.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;">View All &rarr;</a>
+              <h3 class="card-title" data-bn="সাম্প্রতিক অ্যালার্ট" data-en="Recent Alerts">সাম্প্রতিক অ্যালার্ট</h3>
+              <a href="/admin/admin-transactions.html" class="table-action-btn secondary" style="padding:4px 10px; font-size:0.8rem;" data-bn="সব দেখুন &rarr;" data-en="View All &rarr;">সব দেখুন &rarr;</a>
             </div>
             <div class="card-body" style="padding:16px 20px;">
               <div class="alert-item">
                 <div class="alert-icon-circle alert-icon-amber">⚠️</div>
                 <div style="flex:1;">
-                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Unusual transaction pattern</div>
-                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">A customer's transaction shows velocity alert exceeding threshold.</div>
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);" data-bn="অস্বাভাবিক লেনদেন প্যাটার্ন" data-en="Unusual transaction pattern">অস্বাভাবিক লেনদেন প্যাটার্ন</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;" data-bn="একজন গ্রাহকের লেনদেনের গতিসীমা সীমা অতিক্রম করেছে।" data-en="A customer's transaction shows velocity alert exceeding threshold.">একজন গ্রাহকের লেনদেনের গতিসীমা সীমা অতিক্রম করেছে।</div>
                 </div>
-                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Today, 09:42 AM</div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;" data-bn="আজ, ০৯:৪২ পূর্বাহ্ন" data-en="Today, 09:42 AM">আজ, ০৯:৪২ পূর্বাহ্ন</div>
               </div>
 
               <div class="alert-item">
                 <div class="alert-icon-circle alert-icon-blue">ℹ️</div>
                 <div style="flex:1;">
-                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Document mismatch detected</div>
-                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">AI vision flagged readability issue on uploaded utility bill.</div>
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);" data-bn="ডকুমেন্ট অমিল ধরা পড়েছে" data-en="Document mismatch detected">ডকুমেন্ট অমিল ধরা পড়েছে</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;" data-bn="আপলোডকৃত ইউটিলিটি বিলে স্পষ্টতা সমস্যা চিহ্নিত হয়েছে।" data-en="AI vision flagged readability issue on uploaded utility bill.">আপলোডকৃত ইউটিলিটি বিলে স্পষ্টতা সমস্যা চিহ্নিত হয়েছে।</div>
                 </div>
-                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Today, 08:17 AM</div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;" data-bn="আজ, ০৮:১৭ পূর্বাহ্ন" data-en="Today, 08:17 AM">আজ, ০৮:১৭ পূর্বাহ্ন</div>
               </div>
 
               <div class="alert-item">
                 <div class="alert-icon-circle alert-icon-red">🚩</div>
                 <div style="flex:1;">
-                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);">Customer complaint escalated</div>
-                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Complaint #CMP-2026-00001 requires card delivery dispatch resolution.</div>
+                  <div style="font-weight:700; font-size:0.88rem; color:var(--navy);" data-bn="গ্রাহকের অভিযোগ বৃদ্ধি পেয়েছে" data-en="Customer complaint escalated">গ্রাহকের অভিযোগ বৃদ্ধি পেয়েছে</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;" data-bn="অভিযোগ #CMP-2026-00001 কার্ড ডেলিভারি নিশ্চিত করতে সমাধান প্রয়োজন।" data-en="Complaint #CMP-2026-00001 requires card delivery dispatch resolution.">অভিযোগ #CMP-2026-00001 কার্ড ডেলিভারি নিশ্চিত করতে সমাধান প্রয়োজন।</div>
                 </div>
-                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;">Yesterday, 05:32 PM</div>
+                <div style="font-size:0.75rem; color:var(--text-light); white-space:nowrap;" data-bn="গতকাল, ০৫:৩২ অপরাহ্ন" data-en="Yesterday, 05:32 PM">গতকাল, ০৫:৩২ অপরাহ্ন</div>
               </div>
             </div>
           </div>
@@ -214,10 +214,10 @@
           <!-- Transaction Activity Chart Card -->
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
-              <h3 class="card-title">Transaction Activity</h3>
+              <h3 class="card-title" data-bn="লেনদেন কার্যক্রম" data-en="Transaction Activity">লেনদেন কার্যক্রম</h3>
               <select class="form-control" style="width:auto; padding:4px 10px; font-size:0.8rem;">
-                <option>Last 7 Days</option>
-                <option>Last 30 Days</option>
+                <option data-bn="গত ৭ দিন" data-en="Last 7 Days">গত ৭ দিন</option>
+                <option data-bn="গত ৩০ দিন" data-en="Last 30 Days">গত ৩০ দিন</option>
               </select>
             </div>
             <div class="card-body">
@@ -270,7 +270,7 @@
           <!-- Requests by Category Donut Chart Card -->
           <div class="card" style="margin-bottom:0;">
             <div class="card-header">
-              <h3 class="card-title">Requests by Category</h3>
+              <h3 class="card-title" data-bn="ক্যাটাগরি অনুযায়ী আবেদন" data-en="Requests by Category">ক্যাটাগরি অনুযায়ী আবেদন</h3>
             </div>
             <div class="card-body" style="display:flex; align-items:center; gap:20px;">
               <!-- Donut SVG -->
@@ -284,30 +284,30 @@
                 </svg>
                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
                   <div style="font-weight:800; font-size:1.1rem; color:var(--navy); line-height:1;" id="donutTotalCount">128</div>
-                  <div style="font-size:0.65rem; color:var(--text-light); text-transform:uppercase;">Requests</div>
+                  <div style="font-size:0.65rem; color:var(--text-light); text-transform:uppercase;" data-bn="আবেদনসমূহ" data-en="Requests">আবেদনসমূহ</div>
                 </div>
               </div>
 
               <!-- Legend -->
               <div style="flex:1;">
                 <div class="donut-legend-item">
-                  <span><span class="legend-bullet" style="background:#0ea5e9;"></span>Account Services</span>
+                  <span><span class="legend-bullet" style="background:#0ea5e9;"></span><span data-bn="অ্যাকাউন্ট সেবাসমূহ" data-en="Account Services">অ্যাকাউন্ট সেবাসমূহ</span></span>
                   <strong>34% (44)</strong>
                 </div>
                 <div class="donut-legend-item">
-                  <span><span class="legend-bullet" style="background:#0284c7;"></span>Card Services</span>
+                  <span><span class="legend-bullet" style="background:#0284c7;"></span><span data-bn="কার্ড সেবাসমূহ" data-en="Card Services">কার্ড সেবাসমূহ</span></span>
                   <strong>22% (28)</strong>
                 </div>
                 <div class="donut-legend-item">
-                  <span><span class="legend-bullet" style="background:#10b981;"></span>Doc Verification</span>
+                  <span><span class="legend-bullet" style="background:#10b981;"></span><span data-bn="ডকুমেন্ট ভেরিফিকেশন" data-en="Doc Verification">ডকুমেন্ট ভেরিফিকেশন</span></span>
                   <strong>18% (23)</strong>
                 </div>
                 <div class="donut-legend-item">
-                  <span><span class="legend-bullet" style="background:#8b5cf6;"></span>Fund Transfer Query</span>
+                  <span><span class="legend-bullet" style="background:#8b5cf6;"></span><span data-bn="ফান্ড ট্রান্সফার তথ্য" data-en="Fund Transfer Query">ফান্ড ট্রান্সফার তথ্য</span></span>
                   <strong>14% (18)</strong>
                 </div>
                 <div class="donut-legend-item">
-                  <span><span class="legend-bullet" style="background:#f59e0b;"></span>Others</span>
+                  <span><span class="legend-bullet" style="background:#f59e0b;"></span><span data-bn="অন্যান্য" data-en="Others">অন্যান্য</span></span>
                   <strong>12% (15)</strong>
                 </div>
               </div>
@@ -319,13 +319,16 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('dashboard');
 
     async function loadDashboard() {
+      const lang = window.UI ? window.UI.getLanguage() : 'bn';
+      const isBn = lang === 'bn';
+
       try {
         const res = await window.api.get('/api/admin/dashboard');
         const summary = res.summary || {};
@@ -354,7 +357,7 @@
         const recent = summary.recentRequests || [];
 
         if (recent.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">No pending requests in queue.</td></tr>';
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">${isBn ? 'কিউতে কোনো অপেক্ষমাণ আবেদন নেই।' : 'No pending requests in queue.'}</td></tr>`;
           return;
         }
 
@@ -369,7 +372,7 @@
             <td>${window.UI.renderStatusBadge(r.status)}</td>
             <td>
               <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn primary">
-                যাচাই &rarr;
+                ${isBn ? 'যাচাই &rarr;' : 'Verify &rarr;'}
               </a>
             </td>
           </tr>

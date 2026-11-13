@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ইন্টারনেট ব্যাংকিং লগইন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
 </head>
 <body class="auth-page">
   <div class="auth-card" style="max-width: 440px;">
@@ -39,9 +39,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/api.js?v=3.3"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 
@@ -50,17 +50,18 @@
       const btn = document.getElementById('submitBtn');
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
 
       try {
         btn.disabled = true;
-        btn.innerText = 'যাচাই করা হচ্ছে...';
+        btn.innerText = isBn ? 'যাচাই করা হচ্ছে...' : 'Verifying...';
 
         const res = await window.api.post('/api/auth/login', { email, password });
 
         window.api.setToken(res.token);
         window.api.setUser(res.user);
 
-        window.showToast('✅ লগইন সফল হয়েছে!', 'success');
+        window.showToast(isBn ? '✅ লগইন সফল হয়েছে!' : '✅ Logged in successfully!', 'success');
 
         setTimeout(() => {
           if (res.user.role === 'ADMIN') {
@@ -70,9 +71,9 @@
           }
         }, 500);
       } catch (err) {
-        window.showToast(err.message || 'ভুল ইমেইল বা পাসওয়ার্ড।', 'error');
+        window.showToast(err.message || (isBn ? 'ভুল ইমেইল বা পাসওয়ার্ড।' : 'Invalid email or password.'), 'error');
         btn.disabled = false;
-        btn.innerText = '🔑 লগইন করুন (Log In)';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '🔑 লগইন করুন' : '🔑 Sign In');
       }
     });
   </script>

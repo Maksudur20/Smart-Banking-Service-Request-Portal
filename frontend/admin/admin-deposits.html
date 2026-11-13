@@ -260,17 +260,17 @@
       }
 
       try {
-        const res = await window.api.post(`/ api / deposits / admin / ${ selectedDeposit.id }/verify`, {
-        action,
+        const res = await window.api.post(`/api/deposits/admin/${selectedDeposit.id}/verify`, {
+          action,
           remarks
-      });
+        });
 
-      window.showToast(res.message || 'ভেরিফিকেশন সম্পন্ন হয়েছে।', 'success');
-      closeDepositModal();
-      loadDeposits();
-    } catch (err) {
-      window.showToast(err.message || 'ভেরিফিকেশন সম্পন্ন করা যায়নি।', 'error');
-    }
+        window.showToast(res.message || 'ভেরিফিকেশন সম্পন্ন হয়েছে।', 'success');
+        closeDepositModal();
+        loadDeposits();
+      } catch (err) {
+        window.showToast(err.message || 'ভেরিফিকেশন সম্পন্ন করা যায়নি।', 'error');
+      }
     }
 
     loadDeposits();

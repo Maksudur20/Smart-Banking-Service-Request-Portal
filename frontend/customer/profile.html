@@ -161,17 +161,19 @@
         address: document.getElementById('profAddress').value,
       };
 
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
+
       try {
         btn.disabled = true;
-        btn.innerText = 'সংরক্ষণ হচ্ছে...';
+        btn.innerText = isBn ? 'সংরক্ষণ হচ্ছে...' : 'Saving...';
 
         await window.api.patch('/api/auth/me', payload);
-        window.showToast('✅ প্রোফাইল সফলভাবে আপডেট করা হয়েছে।', 'success');
+        window.showToast(isBn ? '✅ প্রোফাইল সফলভাবে আপডেট করা হয়েছে।' : '✅ Profile updated successfully.', 'success');
       } catch (err) {
-        window.showToast(err.message || 'আপডেট ব্যর্থ হয়েছে।', 'error');
+        window.showToast(err.message || (isBn ? 'আপডেট ব্যর্থ হয়েছে।' : 'Failed to update profile.'), 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = 'তথ্য সংরক্ষণ করুন (Save Changes)';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? 'তথ্য সংরক্ষণ করুন' : 'Save Changes');
       }
     });
 

@@ -260,10 +260,11 @@
       const form = e.target;
       const formData = new FormData(form);
       const btn = document.getElementById('reuploadBtn');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
 
       try {
         btn.disabled = true;
-        btn.innerText = '⏳ আপলোড হচ্ছে...';
+        btn.innerText = isBn ? '⏳ আপলোড হচ্ছে...' : '⏳ Uploading...';
 
         const token = window.api.getToken();
         const res = await fetch('/api/kyc/reupload', {
@@ -274,17 +275,17 @@
 
         const data = await res.json();
         if (!res.ok || !data.success) {
-          throw new Error(data.message || 'আপলোড ব্যর্থ হয়েছে।');
+          throw new Error(data.message || (isBn ? 'আপলোড ব্যর্থ হয়েছে।' : 'Upload failed.'));
         }
 
-        window.showToast('✅ ডকুমেন্ট সফলভাবে পুনরায় আপলোড হয়েছে! অ্যাডমিন যাচাই করবেন।', 'success');
+        window.showToast(isBn ? '✅ ডকুমেন্ট সফলভাবে পুনরায় আপলোড হয়েছে! অ্যাডমিন যাচাই করবেন।' : '✅ Document re-uploaded successfully! Admin will verify.', 'success');
         form.reset();
         loadKYCData();
       } catch (err) {
         window.showToast(err.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = '📤 নতুন ফাইল আপলোড করুন';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '📤 নতুন ফাইল আপলোড করুন' : '📤 Upload New File');
       }
     });
 

@@ -484,9 +484,11 @@
       if (fileCard) formData.append('doc_debit_card', fileCard);
       if (fileAdditional) formData.append('doc_additional', fileAdditional);
 
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
+
       try {
         btn.disabled = true;
-        btn.innerText = 'আবেদন আপলোড ও যাচাই হচ্ছে...';
+        btn.innerText = isBn ? 'আবেদন আপলোড ও যাচাই হচ্ছে...' : 'Uploading and verifying request...';
 
         const token = window.Auth.getToken();
         const res = await fetch('/api/account-closure', {
@@ -498,14 +500,14 @@
         });
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'ক্লোজার আবেদন সাবমিট ব্যর্থ হয়েছে।');
+        if (!res.ok) throw new Error(data.message || (isBn ? 'ক্লোজার আবেদন সাবমিট ব্যর্থ হয়েছে।' : 'Failed to submit closure request.'));
 
-        window.showToast('✅ অ্যাকাউন্ট ক্লোজার আবেদন সফলভাবে জমা হয়েছে!', 'success');
+        window.showToast(isBn ? '✅ অ্যাকাউন্ট ক্লোজার আবেদন সফলভাবে জমা হয়েছে!' : '✅ Account closure request submitted successfully!', 'success');
         setTimeout(() => window.location.reload(), 1000);
       } catch (err) {
         window.showToast(err.message, 'error');
         btn.disabled = false;
-        btn.innerText = '📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন (Submit Request)';
+        btn.innerHTML = btn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '📤 অ্যাকাউন্ট ক্লোজার আবেদন জমা দিন' : '📤 Submit Closure Request');
       }
     });
 

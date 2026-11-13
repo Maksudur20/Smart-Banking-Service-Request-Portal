@@ -312,24 +312,24 @@
 
         document.getElementById('accountInfoStrip').innerHTML = `
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
-            <div><strong>গ্রাহকের নাম:</strong> ${w.customer_name}</div>
-            <div><strong>অ্যাকাউন্ট নম্বর:</strong> <span style="font-family:ui-monospace, monospace; color:#0284c7; font-weight:700;">${w.account_number}</span></div>
-            <div><strong>অ্যাকাউন্টের ধরন:</strong> ${w.account_type || 'Prime Savings'}</div>
-            <div><strong>কেওয়াইসি স্ট্যাটাস:</strong> <span class="badge ${w.kyc_status === 'Approved' ? 'badge-approved' : 'badge-rejected'}">${w.kyc_status || 'Pending'}</span></div>
-            <div><strong>বর্তমান ব্যালেন্স:</strong> <span style="font-weight:800; color:${hasSufficient ? '#059669' : '#dc2626'};">৳${bal.toLocaleString('en-US', {minimumFractionDigits:2})}</span></div>
-            <div><strong>উত্তোলনের পরিমাণ:</strong> <span style="font-weight:800; color:#0284c7;">৳${reqAmount.toLocaleString('en-US', {minimumFractionDigits:2})}</span></div>
+            <div><strong>${isBn ? 'গ্রাহকের নাম:' : 'Customer Name:'}</strong> ${w.customer_name}</div>
+            <div><strong>${isBn ? 'অ্যাকাউন্ট নম্বর:' : 'Account Number:'}</strong> <span style="font-family:ui-monospace, monospace; color:#0284c7; font-weight:700;">${w.account_number}</span></div>
+            <div><strong>${isBn ? 'অ্যাকাউন্টের ধরন:' : 'Account Type:'}</strong> ${w.account_type || 'Prime Savings'}</div>
+            <div><strong>${isBn ? 'কেওয়াইসি স্ট্যাটাস:' : 'KYC Status:'}</strong> <span class="badge ${w.kyc_status === 'Approved' ? 'badge-approved' : 'badge-rejected'}">${w.kyc_status || 'Pending'}</span></div>
+            <div><strong>${isBn ? 'বর্তমান ব্যালেন্স:' : 'Current Balance:'}</strong> <span style="font-weight:800; color:${hasSufficient ? '#059669' : '#dc2626'};">৳${bal.toLocaleString('en-US', {minimumFractionDigits:2})}</span></div>
+            <div><strong>${isBn ? 'উত্তোলনের পরিমাণ:' : 'Withdrawal Amount:'}</strong> <span style="font-weight:800; color:#0284c7;">৳${reqAmount.toLocaleString('en-US', {minimumFractionDigits:2})}</span></div>
           </div>
-          ${!hasSufficient ? `<div style="margin-top:8px; color:#dc2626; font-weight:700;">⚠️ সতর্কতা: গ্রাহকের অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই! ক্যাশ পরিশোধ করা যাবে না।</div>` : ''}
+          ${!hasSufficient ? `<div style="margin-top:8px; color:#dc2626; font-weight:700;">${isBn ? '⚠️ সতর্কতা: গ্রাহকের অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই! ক্যাশ পরিশোধ করা যাবে না।' : '⚠️ Warning: Insufficient balance in customer account! Cash payment cannot be disbursed.'}</div>` : ''}
         `;
 
         // Cheque image
         document.getElementById('modalChequeImg').src = w.cheque_image_url;
         document.getElementById('chequeFullLink').href = w.cheque_image_url;
         document.getElementById('chequeMetaInfo').innerHTML = `
-          <div><strong>চেক নম্বর:</strong> ${w.cheque_number}</div>
-          <div><strong>চেকের তারিখ:</strong> ${new Date(w.cheque_date).toLocaleDateString()}</div>
-          <div><strong>প্রাপকের নাম:</strong> ${w.payee_name}</div>
-          <div><strong>বর্তমান স্ট্যাটাস:</strong> <span class="badge badge-submitted">${w.status}</span></div>
+          <div><strong>${isBn ? 'চেক নম্বর:' : 'Cheque Number:'}</strong> ${w.cheque_number}</div>
+          <div><strong>${isBn ? 'চেকের তারিখ:' : 'Cheque Date:'}</strong> ${new Date(w.cheque_date).toLocaleDateString()}</div>
+          <div><strong>${isBn ? 'প্রাপকের নাম:' : 'Payee Name:'}</strong> ${w.payee_name}</div>
+          <div><strong>${isBn ? 'বর্তমান স্ট্যাটাস:' : 'Current Status:'}</strong> <span class="badge badge-submitted">${w.status}</span></div>
         `;
 
         // KYC Signature comparison
@@ -340,7 +340,7 @@
         if (w.customer_signature_url) {
           sigContainer.innerHTML = `<img src="${w.customer_signature_url}" class="signature-display-img" alt="KYC Signature">`;
         } else {
-          sigContainer.innerHTML = `<p style="padding:20px; color:#94a3b8; text-align:center; font-size:0.8rem;">সংরক্ষিত কোনো নমুনা স্বাক্ষর পাওয়া যায়নি।</p>`;
+          sigContainer.innerHTML = `<p style="padding:20px; color:#94a3b8; text-align:center; font-size:0.8rem;">${isBn ? 'সংরক্ষিত কোনো নমুনা স্বাক্ষর পাওয়া যায়নি।' : 'No specimen signature on file.'}</p>`;
         }
 
         document.getElementById('verifyModal').classList.add('open');
