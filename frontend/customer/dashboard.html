@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ড্যাশবোর্ড - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.1">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
   <style>
     .customer-header-balances {
       display: flex;
@@ -118,8 +118,11 @@
         </div>
 
         <div class="top-nav-right">
-          <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#10b981; border:none;" data-bn="📥 ডিপোজিট করুন" data-en="📥 Deposit Money">
-            📥 ডিপোজিট করুন
+          <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#10b981; border:none;" data-bn="📥 টাকা ডিপোজিট" data-en="📥 Deposit Money">
+            📥 টাকা ডিপোজিট
+          </a>
+          <a href="/customer/withdraw.html" class="btn btn-primary btn-sm" style="background:#0284c7; border:none;" data-bn="💵 টাকা উত্তোলন" data-en="💵 Withdraw Money">
+            💵 টাকা উত্তোলন
           </a>
           <a href="/customer/transfer.html" class="btn btn-primary btn-sm" data-bn="📤 ফান্ড ট্রান্সফার" data-en="📤 Fund Transfer">
             📤 ফান্ড ট্রান্সফার
@@ -139,32 +142,40 @@
           <a href="/customer/deposit.html" class="quick-action-card">
             <div class="quick-action-icon" style="background:#dcfce7; color:#15803d;">📥</div>
             <div>
-              <div style="font-weight:700; font-size:0.95rem;">টাকা ডিপোজিট</div>
-              <div style="font-size:0.75rem; color:#64748b;">ব্যাংক / bKash স্লিপ আপলোড</div>
+              <div style="font-weight:700; font-size:0.95rem;" data-bn="টাকা ডিপোজিট" data-en="Deposit Money">টাকা ডিপোজিট</div>
+              <div style="font-size:0.75rem; color:#64748b;" data-bn="ব্যাংক / bKash স্লিপ আপলোড" data-en="Bank / bKash Slip Upload">ব্যাংক / bKash স্লিপ আপলোড</div>
+            </div>
+          </a>
+
+          <a href="/customer/withdraw.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background:#e0f2fe; color:#0284c7;">💵</div>
+            <div>
+              <div style="font-weight:700; font-size:0.95rem;" data-bn="টাকা উত্তোলন" data-en="Withdraw Money">টাকা উত্তোলন</div>
+              <div style="font-size:0.75rem; color:#64748b;" data-bn="চেকের মাধ্যমে নগদ উত্তোলন" data-en="Cash Withdrawal via Cheque">চেকের মাধ্যমে নগদ উত্তোলন</div>
             </div>
           </a>
 
           <a href="/customer/transfer.html" class="quick-action-card">
             <div class="quick-action-icon" style="background:#e0f2fe; color:#0369a1;">📤</div>
             <div>
-              <div style="font-weight:700; font-size:0.95rem;">ফান্ড ট্রান্সফার</div>
-              <div style="font-size:0.75rem; color:#64748b;">অন্য অ্যাকাউন্টে টাকা পাঠান</div>
+              <div style="font-weight:700; font-size:0.95rem;" data-bn="ফান্ড ট্রান্সফার" data-en="Fund Transfer">ফান্ড ট্রান্সফার</div>
+              <div style="font-size:0.75rem; color:#64748b;" data-bn="অন্য অ্যাকাউন্টে টাকা পাঠান" data-en="Transfer to Other Accounts">অন্য অ্যাকাউন্টে টাকা পাঠান</div>
             </div>
           </a>
 
           <a href="/customer/kyc.html" class="quick-action-card">
             <div class="quick-action-icon" style="background:#fef3c7; color:#b45309;">🪪</div>
             <div>
-              <div style="font-weight:700; font-size:0.95rem;">আমার কেওয়াইসি</div>
-              <div style="font-size:0.75rem; color:#64748b;">আপলোডকৃত ডকুমেন্ট ও স্ট্যাটাস</div>
+              <div style="font-weight:700; font-size:0.95rem;" data-bn="আমার কেওয়াইসি" data-en="My KYC & Docs">আমার কেওয়াইসি</div>
+              <div style="font-size:0.75rem; color:#64748b;" data-bn="আপলোডকৃত ডকুমেন্ট ও স্ট্যাটাস" data-en="Uploaded Documents & Status">আপলোডকৃত ডকুমেন্ট ও স্ট্যাটাস</div>
             </div>
           </a>
 
           <a href="/customer/service-request.html" class="quick-action-card">
             <div class="quick-action-icon" style="background:#ede9fe; color:#6d28d9;">📝</div>
             <div>
-              <div style="font-weight:700; font-size:0.95rem;">নতুন সার্ভিস রিকোয়েস্ট</div>
-              <div style="font-size:0.75rem; color:#64748b;">কার্ড, চেকবই ও লোন আবেদন</div>
+              <div style="font-weight:700; font-size:0.95rem;" data-bn="নতুন সার্ভিস রিকোয়েস্ট" data-en="New Service Request">নতুন সার্ভিস রিকোয়েস্ট</div>
+              <div style="font-size:0.75rem; color:#64748b;" data-bn="কার্ড, চেকবই ও লোন আবেদন" data-en="Cards, Cheque & Loan Application">কার্ড, চেকবই ও লোন আবেদন</div>
             </div>
           </a>
         </div>
@@ -174,30 +185,33 @@
           <!-- My Account Card -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">আমার অ্যাকাউন্ট বিবরণী (Account Details)</h3>
+              <h3 class="card-title" data-bn="আমার অ্যাকাউন্ট বিবরণী" data-en="My Account Details">আমার অ্যাকাউন্ট বিবরণী</h3>
               <span class="badge" id="accountKycBadge">Loading...</span>
             </div>
             <div class="card-body">
               <div style="margin-bottom:16px;">
-                <div style="font-size:0.8rem; color:#64748b;">অ্যাকাউন্টের ধরন:</div>
+                <div style="font-size:0.8rem; color:#64748b;" data-bn="অ্যাকাউন্টের ধরন:" data-en="Account Type:">অ্যাকাউন্টের ধরন:</div>
                 <div style="font-size:1.1rem; font-weight:700; color:#0f172a;" id="displayAccountType">Prime Savings Account</div>
               </div>
               <div style="margin-bottom:16px;">
-                <div style="font-size:0.8rem; color:#64748b;">অ্যাকাউন্ট নম্বর:</div>
+                <div style="font-size:0.8rem; color:#64748b;" data-bn="অ্যাকাউন্ট নম্বর:" data-en="Account Number:">অ্যাকাউন্ট নম্বর:</div>
                 <div style="font-size:1.25rem; font-weight:800; color:#0284c7; letter-spacing:1px;" id="displayAccountNumber">---------</div>
               </div>
               <div style="margin-bottom:16px;">
-                <div style="font-size:0.8rem; color:#64748b;">বর্তমান ব্যালেন্স:</div>
+                <div style="font-size:0.8rem; color:#64748b;" data-bn="বর্তমান ব্যালেন্স:" data-en="Current Balance:">বর্তমান ব্যালেন্স:</div>
                 <div style="font-size:1.6rem; font-weight:800; color:#10b981;" id="displayBalance">0.00 BDT</div>
               </div>
               <div style="border-top:1px solid #f1f5f9; padding-top:12px; font-size:0.85rem; color:#64748b;">
-                <div>গ্রাহক রেফারেন্স: <strong id="displayCustRef" style="color:#1e293b;">-</strong></div>
-                <div>অ্যাকাউন্ট হোল্ডার: <strong id="displayName" style="color:#1e293b;">-</strong></div>
+                <div><span data-bn="গ্রাহক রেফারেন্স:" data-en="Customer Reference:">গ্রাহক রেফারেন্স:</span> <strong id="displayCustRef" style="color:#1e293b;">-</strong></div>
+                <div><span data-bn="অ্যাকাউন্ট হোল্ডার:" data-en="Account Holder:">অ্যাকাউন্ট হোল্ডার:</span> <strong id="displayName" style="color:#1e293b;">-</strong></div>
               </div>
             </div>
-            <div class="card-footer">
-              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="width:100%; text-align:center;">
-                + ডিপোজিট জমা দিন
+            <div class="card-footer" style="display:flex; gap:10px;">
+              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="flex:1; text-align:center;" data-bn="+ ডিপোজিট করুন" data-en="+ Make Deposit">
+                + ডিপোজিট করুন
+              </a>
+              <a href="/customer/withdraw.html" class="btn btn-secondary btn-sm" style="flex:1; text-align:center;" data-bn="- টাকা উত্তোলন" data-en="- Withdraw Money">
+                - টাকা উত্তোলন
               </a>
             </div>
           </div>
@@ -229,8 +243,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.1"></script>
-  <script src="/assets/js/common.js?v=3.1"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');
@@ -271,45 +285,49 @@
       const badge = document.getElementById('accountKycBadge');
       if (!banner) return;
 
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       const normStatus = String(status || '').trim().toLowerCase();
 
       if (normStatus === 'approved') {
         badge.className = 'badge badge-approved';
-        badge.innerText = 'KYC Approved';
+        badge.innerText = isBn ? 'কেওয়াইসি অনুমোদিত' : 'KYC Approved';
         banner.innerHTML = `
           <div class="kyc-banner approved">
             <div>
-              <strong>✅ আপনার ব্যাংক অ্যাকাউন্ট সম্পূর্ণ ভেরিফাইড (KYC Approved)</strong><br>
-              <span style="font-size:0.85rem;">আপনি এখন অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার এবং সকল ডিজিটাল ব্যাংকিং সুবিধা ব্যবহার করতে পারবেন।</span>
+              <strong>${isBn ? '✅ আপনার ব্যাংক অ্যাকাউন্ট সম্পূর্ণ ভেরিফাইড (KYC Approved)' : '✅ Your Bank Account is Fully Verified (KYC Approved)'}</strong><br>
+              <span style="font-size:0.85rem;">${isBn ? 'আপনি এখন নগদ উত্তোলন, ফান্ড ট্রান্সফার এবং সকল ডিজিটাল ব্যাংকিং সুবিধা ব্যবহার করতে পারবেন।' : 'You can now withdraw cash, transfer funds and access all banking services.'}</span>
             </div>
-            <a href="/customer/transfer.html" class="btn btn-primary btn-sm" style="background:#059669; border:none;">টাকা পাঠান</a>
+            <div style="display:flex; gap:8px;">
+              <a href="/customer/withdraw.html" class="btn btn-primary btn-sm" style="background:#0284c7; border:none;">${isBn ? 'টাকা উত্তোলন' : 'Withdraw Money'}</a>
+              <a href="/customer/transfer.html" class="btn btn-primary btn-sm" style="background:#059669; border:none;">${isBn ? 'টাকা পাঠান' : 'Transfer Funds'}</a>
+            </div>
           </div>
         `;
       } else if (normStatus === 'rejected') {
         badge.className = 'badge badge-rejected';
-        badge.innerText = 'KYC Rejected';
+        badge.innerText = isBn ? 'কেওয়াইসি বাতিল' : 'KYC Rejected';
         banner.innerHTML = `
           <div class="kyc-banner rejected">
             <div>
-              <strong>❌ আপনার কেওয়াইসি (KYC) আবেদন বাতিল করা হয়েছে</strong><br>
-              <span style="font-size:0.85rem;">কারণ: <strong>${rejectionReason || 'প্রদত্ত ডকুমেন্টে অস্পষ্টতা'}</strong>। আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে স্থগিত।</span>
+              <strong>${isBn ? '❌ আপনার কেওয়াইসি (KYC) আবেদন বাতিল করা হয়েছে' : '❌ Your KYC Application Was Rejected'}</strong><br>
+              <span style="font-size:0.85rem;">${isBn ? 'কারণ:' : 'Reason:'} <strong>${rejectionReason || (isBn ? 'প্রদত্ত ডকুমেন্টে অস্পষ্টতা' : 'Document verification issue')}</strong>। ${isBn ? 'আউটগোয়িং লেনদেন সাময়িকভাবে স্থগিত।' : 'Outgoing transactions temporarily suspended.'}</span>
             </div>
-            <a href="/customer/kyc.html" class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#991b1b; border:1px solid #fecaca; font-weight:700;">ডকুমেন্ট পুনরায় আপলোড করুন</a>
+            <a href="/customer/kyc.html" class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#991b1b; border:1px solid #fecaca; font-weight:700;">${isBn ? 'ডকুমেন্ট পুনরায় আপলোড করুন' : 'Re-upload Documents'}</a>
           </div>
         `;
       } else {
         // Pending or Under Review
         badge.className = 'badge badge-submitted';
-        badge.innerText = status || 'Pending';
+        badge.innerText = isBn ? 'কেওয়াইসি প্রক্রিয়াধীন' : (status || 'Pending');
         banner.innerHTML = `
           <div class="kyc-banner pending">
             <div>
-              <strong>⚠️ অ্যাকাউন্ট কেওয়াইসি ভেরিফিকেশন প্রক্রিয়াধীন (KYC Pending)</strong><br>
-              <span style="font-size:0.85rem;">আপনার দেওয়া পরিচয়পত্র ও ডকুমেন্টস ব্যাংক অ্যাডমিন কর্তৃক যাচাই করা হচ্ছে। KYC অনুমোদনের পূর্বে অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার স্থগিত থাকবে। তবে আপনি নিজের অ্যাকাউন্টে যেকোনো পরিমাণ ডিপোজিট করতে পারবেন।</span>
+              <strong>${isBn ? '⚠️ অ্যাকাউন্ট কেওয়াইসি ভেরিফিকেশন প্রক্রিয়াধীন' : '⚠️ Account KYC Verification Pending'}</strong><br>
+              <span style="font-size:0.85rem;">${isBn ? 'আপনার দেওয়া পরিচয়পত্র ও ডকুমেন্টস ব্যাংক কর্মকর্তা কর্তৃক যাচাই করা হচ্ছে। অনুমোদনের পূর্বে অন্য অ্যাকাউন্টে ফান্ড ট্রান্সফার স্থগিত থাকবে। তবে আপনি নিজের অ্যাকাউন্টে যেকোনো পরিমাণ ডিপোজিট করতে পারবেন।' : 'Your submitted identification documents are under review by bank officers. Outgoing transfers will be activated once approved. You can still deposit funds anytime.'}</span>
             </div>
             <div style="display:flex; gap:8px;">
-              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#b45309; border:none;">ডিপোজিট করুন</a>
-              <a href="/customer/kyc.html" class="btn btn-secondary btn-sm">ডকুমেন্ট দেখুন</a>
+              <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#b45309; border:none;">${isBn ? 'ডিপোজিট করুন' : 'Deposit Money'}</a>
+              <a href="/customer/kyc.html" class="btn btn-secondary btn-sm">${isBn ? 'ডকুমেন্ট দেখুন' : 'View Documents'}</a>
             </div>
           </div>
         `;
@@ -318,6 +336,7 @@
 
     async function loadRecentTransactions() {
       const container = document.getElementById('recentTxContainer');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         const res = await window.api.get('/api/transfers/my');
         const txList = res.transactions || [];
@@ -326,8 +345,8 @@
           container.innerHTML = `
             <div style="text-align:center; padding:30px; color:#94a3b8;">
               <span style="font-size:2rem; display:block; margin-bottom:8px;">💳</span>
-              এখনো কোনো ট্রানজেকশন সম্পন্ন হয়নি।<br>
-              <a href="/customer/deposit.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ প্রথম ডিপোজিট করুন</a>
+              ${isBn ? 'এখনো কোনো লেনদেন সম্পন্ন হয়নি।' : 'No transactions recorded yet.'}<br>
+              <a href="/customer/deposit.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ ${isBn ? 'প্রথম ডিপোজিট করুন' : 'Make First Deposit'}</a>
             </div>
           `;
           return;
@@ -350,18 +369,19 @@
                 <div style="font-weight:800; font-size:0.95rem; color:${isCredit ? '#10b981' : '#ef4444'};">
                   ${isCredit ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)} BDT
                 </div>
-                <div style="font-size:0.72rem; color:#64748b;">ব্যালেন্স: ${parseFloat(tx.balance_after).toFixed(2)} BDT</div>
+                <div style="font-size:0.72rem; color:#64748b;">${isBn ? 'ব্যালেন্স:' : 'Balance:'} ${parseFloat(tx.balance_after).toFixed(2)} BDT</div>
               </div>
             </div>
           `;
         }).join('');
       } catch (err) {
-        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">লেনদেন লোড করা যায়নি।</p>`;
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${isBn ? 'লেনদেন লোড করা যায়নি।' : 'Failed to load transactions.'}</p>`;
       }
     }
 
     async function loadRecentRequests() {
       const container = document.getElementById('recentRequestsContainer');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         const res = await window.api.get('/api/requests/my');
         const list = res.requests || [];
@@ -369,8 +389,8 @@
         if (list.length === 0) {
           container.innerHTML = `
             <div style="text-align:center; padding:24px; color:#94a3b8;">
-              কোনো সাম্প্রতিক সার্ভিস রিকোয়েস্ট নেই।<br>
-              <a href="/customer/service-request.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ নতুন আবেদন তৈরি করুন</a>
+              ${isBn ? 'কোনো সাম্প্রতিক সার্ভিস রিকোয়েস্ট নেই।' : 'No recent service requests.'}<br>
+              <a href="/customer/service-request.html" style="color:#0284c7; font-weight:600; text-decoration:none; margin-top:6px; display:inline-block;">+ ${isBn ? 'নতুন আবেদন তৈরি করুন' : 'Submit New Request'}</a>
             </div>
           `;
           return;
@@ -381,12 +401,12 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>আবেদন নম্বর</th>
-                  <th>সেবা</th>
-                  <th>বিষয়</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>তারিখ</th>
-                  <th>অ্যাকশন</th>
+                  <th>${isBn ? 'আবেদন নম্বর' : 'Request ID'}</th>
+                  <th>${isBn ? 'সেবা' : 'Service'}</th>
+                  <th>${isBn ? 'বিষয়' : 'Subject'}</th>
+                  <th>${isBn ? 'স্ট্যাটাস' : 'Status'}</th>
+                  <th>${isBn ? 'তারিখ' : 'Date'}</th>
+                  <th>${isBn ? 'অ্যাকশন' : 'Action'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -399,7 +419,7 @@
                     <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${window.UI.formatDateOnly(r.created_at)}</td>
                     <td>
                       <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn primary">
-                        বিস্তারিত &rarr;
+                        ${isBn ? 'বিস্তারিত &rarr;' : 'Details &rarr;'}
                       </a>
                     </td>
                   </tr>
@@ -409,7 +429,7 @@
           </div>
         `;
       } catch (err) {
-        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">আবেদন লোড করা যায়নি।</p>`;
+        container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${isBn ? 'আবেদন লোড করা যায়নি।' : 'Failed to load requests.'}</p>`;
       }
     }
 

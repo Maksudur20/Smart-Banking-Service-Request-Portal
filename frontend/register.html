@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>নতুন অ্যাকাউন্ট আবেদন ও কেওয়াইসি ভেরিফিকেশন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.1">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
   <style>
     .reg-container {
       max-width: 860px;
@@ -322,8 +322,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.1"></script>
-  <script src="/assets/js/common.js?v=3.1"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 
@@ -333,19 +333,21 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Client-side validation for email and phone
+      // Client-side validation for email, phone and nid_number
       const emailInput = form.querySelector('input[name="email"]');
       const phoneInput = form.querySelector('input[name="phone"]');
+      const nidInput = form.querySelector('input[name="nid_number"]');
       const email = (emailInput ? emailInput.value : '').toLowerCase().trim();
       const phone = (phoneInput ? phoneInput.value : '').trim().replace(/[\s-]/g, '');
+      const nid = (nidInput ? nidInput.value : '').trim().replace(/[\s-]/g, '');
 
-      if (!email || !phone) {
-        window.showToast('ইমেইল এবং মোবাইল নম্বর অবশ্যই প্রদান করতে হবে।', 'error');
+      if (!email || !phone || !nid) {
+        window.showToast('ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর অবশ্যই প্রদান করতে হবে।', 'error');
         return;
       }
 
-      if (email === phone) {
-        window.showToast('ইমেইল এবং মোবাইল নম্বর একই হতে পারবে না।', 'error');
+      if (email === phone || email === nid || phone === nid) {
+        window.showToast('ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর কোনোভাবেই পরস্পর এক হতে পারবে না। প্রতিটির জন্য ভিন্ন তথ্য প্রদান করুন।', 'error');
         return;
       }
 

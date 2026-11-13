@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.1">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
   <style>
     .modal-overlay {
       position: fixed;
@@ -62,7 +62,7 @@
           <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="🪪 কেওয়াইসি ভেরিফিকেশন ডেস্ক" data-en="🪪 KYC Verification Desk">🪪 কেওয়াইসি ভেরিফিকেশন ডেস্ক</h2>
         </div>
         <div class="top-nav-right">
-          <span style="font-size:0.85rem; color:#64748b;">অ্যাডমিন ওয়ার্কস্পেস</span>
+          <span style="font-size:0.85rem; color:#64748b;" data-bn="অ্যাডমিন ওয়ার্কস্পেস" data-en="Admin Workspace">অ্যাডমিন ওয়ার্কস্পেস</span>
         </div>
       </header>
 
@@ -156,8 +156,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.1"></script>
-  <script src="/assets/js/common.js?v=3.1"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');
@@ -250,6 +250,7 @@
     }
 
     async function openReviewModal(customerId) {
+      if (!customerId || customerId === 'undefined' || customerId === 'null') return;
       selectedCustomerId = customerId;
       document.getElementById('adminRemarks').value = '';
 
@@ -348,7 +349,7 @@
     loadApplications().then(() => {
       const urlParams = new URLSearchParams(window.location.search);
       const targetCustomerId = urlParams.get('customerId');
-      if (targetCustomerId) {
+      if (targetCustomerId && targetCustomerId !== 'undefined' && targetCustomerId !== 'null') {
         openReviewModal(targetCustomerId);
       }
     });

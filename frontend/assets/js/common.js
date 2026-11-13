@@ -365,7 +365,37 @@ const UI = {
       "ভাই": "Brother",
       "বোন": "Sister",
       "অন্যান্য": "Other",
-      "🔑 লগইন": "🔑 Sign In"
+      "🔑 লগইন": "🔑 Sign In",
+      "টাকা উত্তোলন": "Withdraw Money",
+      "চেকের মাধ্যমে নগদ উত্তোলন": "Cash Withdrawal via Cheque",
+      "ক্যাশ উত্তোলন ভেরিফিকেশন": "Cash Withdrawals",
+      "চেক দ্বারা নগদ টাকা উত্তোলন": "Cash Withdrawal by Cheque",
+      "নগদ উত্তোলনের আবেদনপত্র": "Cash Withdrawal Request Form",
+      "উত্তোলনের পরিমাণ": "Withdrawal Amount",
+      "চেক নম্বর": "Cheque Number",
+      "চেকের তারিখ": "Cheque Date",
+      "প্রাপকের নাম": "Payee Name",
+      "চেকের ছবি আপলোড": "Cheque Image Upload",
+      "আমার নগদ উত্তোলনের ইতিহাস ও স্ট্যাটাস": "My Withdrawal History & Status",
+      "ক্যাশ পরিশোধিত": "Cash Paid",
+      "যাচাইাধীন": "Under Review",
+      "অপেক্ষমাণ চেক আবেদন": "Pending Cheque Requests",
+      "বাতিলকৃত আবেদন": "Rejected Requests",
+      "রশিদ / অ্যাকশন": "Receipt / Action",
+      "রশিদ দেখুন": "View Receipt",
+      "রসিদ প্রিন্ট করুন": "Print Receipt",
+      "অফিসিয়াল ক্যাশ উত্তোলন রসিদ": "Official Cash Payment Receipt",
+      "টেলার ও ক্যাশ অপারেশনস": "Teller & Cash Operations",
+      "রিয়েল-টাইম গ্রাহক ও ব্যালেন্স তথ্য": "Real-time Customer & Balance Info",
+      "অ্যাডমিন ওয়ার্কস্পেস": "Admin Workspace",
+      "অ্যাডমিন ওয়ার্কস্পেস": "Admin Workspace",
+      "গ্রাহক ডিরেক্টরি": "Customer Directory",
+      "কেওয়াইসি ভেরিফিকেশন": "KYC Verifications",
+      "ডিপোজিট ভেরিফিকেশন": "Deposit Verifications",
+      "ব্যবহারযোগ্য ব্যালেন্স": "Available Balance",
+      "উপলব্ধ ব্যালেন্স": "Available Balance",
+      "অ্যাকাউন্ট হোল্ডার": "Account Holder",
+      "আবেদন জমা হচ্ছে...": "Submitting Request..."
     },
     enToBn: {}
   },
@@ -421,7 +451,10 @@ const UI = {
       'initDashboard',
       'loadProfile',
       'loadClosureRequests',
-      'loadClosureStatus'
+      'loadClosureStatus',
+      'loadWithdrawals',
+      'initPage',
+      'loadDashboard'
     ];
     loaders.forEach(fnName => {
       if (typeof window[fnName] === 'function') {
@@ -559,6 +592,9 @@ const UI = {
         <a href="/customer/deposit.html" class="nav-item ${activePage === 'deposit' ? 'active' : ''}">
           <span>📥</span> ${isBn ? 'টাকা ডিপোজিট' : 'Deposit Money'}
         </a>
+        <a href="/customer/withdraw.html" class="nav-item ${activePage === 'withdraw' ? 'active' : ''}">
+          <span>💵</span> ${isBn ? 'টাকা উত্তোলন' : 'Withdraw Money'}
+        </a>
         <a href="/customer/transfer.html" class="nav-item ${activePage === 'transfer' ? 'active' : ''}">
           <span>📤</span> ${isBn ? 'ফান্ড ট্রান্সফার' : 'Fund Transfer'}
         </a>
@@ -644,6 +680,9 @@ const UI = {
         </a>
         <a href="/admin/admin-deposits.html" class="nav-item ${activePage === 'deposits' ? 'active' : ''}">
           <span>💵</span> ${isBn ? 'ডিপোজিট ভেরিফিকেশন' : 'Deposit Verifications'}
+        </a>
+        <a href="/admin/admin-withdrawals.html" class="nav-item ${activePage === 'withdrawals' ? 'active' : ''}">
+          <span>🏧</span> ${isBn ? 'ক্যাশ উত্তোলন ভেরিফিকেশন' : 'Cash Withdrawals'}
         </a>
         <a href="/admin/admin-account-closure.html" class="nav-item ${activePage === 'account-closure' ? 'active' : ''}">
           <span>🗂️</span> ${isBn ? 'অ্যাকাউন্ট ক্লোজার রিভিউ' : 'Account Closure Queue'}

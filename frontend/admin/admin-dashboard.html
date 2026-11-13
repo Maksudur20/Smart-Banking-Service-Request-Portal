@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.1">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
   <style>
     .dashboard-two-col {
       display: grid;
@@ -122,6 +122,15 @@
               <div class="metric-trend up" style="color:#059669;" data-bn="স্লিপ ও TrxID যাচাই &rarr;" data-en="Slip & TrxID review &rarr;">স্লিপ ও TrxID যাচাই &rarr;</div>
             </div>
             <div class="metric-icon-box" style="background:#dcfce7; color:#059669;">💵</div>
+          </div>
+
+          <div class="metric-card" onclick="window.location.href='/admin/admin-withdrawals.html'" style="cursor:pointer; border-left:4px solid #0284c7;">
+            <div class="metric-left">
+              <span class="metric-title" data-bn="ক্যাশ উত্তোলন ভেরিফিকেশন" data-en="Cash Withdrawals">ক্যাশ উত্তোলন ভেরিফিকেশন</span>
+              <div class="metric-value" id="mWithdrawalCount" style="color:#0284c7;">0</div>
+              <div class="metric-trend up" style="color:#0284c7;" data-bn="চেক ও স্বাক্ষর যাচাই &rarr;" data-en="Cheque & Signature verify &rarr;">চেক ও স্বাক্ষর যাচাই &rarr;</div>
+            </div>
+            <div class="metric-icon-box" style="background:#e0f2fe; color:#0284c7;">🏧</div>
           </div>
 
           <div class="metric-card" onclick="window.location.href='/admin/admin-requests.html'" style="cursor:pointer;">
@@ -310,8 +319,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.1"></script>
-  <script src="/assets/js/common.js?v=3.1"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('dashboard');
@@ -333,6 +342,13 @@
         if (summary.pendingCount !== undefined) {
           document.getElementById('mPendingCount').innerText = summary.pendingCount;
         }
+
+        try {
+          const withRes = await window.api.get('/api/withdrawals/admin?limit=1');
+          if (withRes.pagination && document.getElementById('mWithdrawalCount')) {
+            document.getElementById('mWithdrawalCount').innerText = withRes.pagination.total || 0;
+          }
+        } catch (e) {}
 
         const tbody = document.getElementById('priorityQueueBody');
         const recent = summary.recentRequests || [];

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ডিরেক্টরি - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.1">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
 </head>
 <body>
   <div class="app-layout">
@@ -16,7 +16,7 @@
           <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="👥 নিবন্ধিত গ্রাহক তালিকা" data-en="👥 Registered Customer Directory">👥 নিবন্ধিত গ্রাহক তালিকা</h2>
         </div>
         <div class="top-nav-right">
-          <span style="font-size:0.85rem; color:#64748b;">রিয়েল-টাইম গ্রাহক ও ব্যালেন্স তথ্য</span>
+          <span style="font-size:0.85rem; color:#64748b;" data-bn="রিয়েল-টাইম গ্রাহক ও ব্যালেন্স তথ্য" data-en="Real-time Customer & Balance Info">রিয়েল-টাইম গ্রাহক ও ব্যালেন্স তথ্য</span>
         </div>
       </header>
 
@@ -24,11 +24,11 @@
         <div class="card">
           <div class="card-header" style="flex-wrap:wrap; gap:16px;">
             <div>
-              <h3 class="card-title">সকল ব্যাংক গ্রাহক</h3>
-              <p class="card-subtitle">নাম, অ্যাকাউন্ট নম্বর বা কাস্টমার রেফারেন্স দিয়ে অনুসন্ধান করুন</p>
+              <h3 class="card-title" data-bn="সকল ব্যাংক গ্রাহক" data-en="All Bank Customers">সকল ব্যাংক গ্রাহক</h3>
+              <p class="card-subtitle" data-bn="নাম, অ্যাকাউন্ট নম্বর বা কাস্টমার রেফারেন্স দিয়ে অনুসন্ধান করুন" data-en="Search by name, account number or customer reference">নাম, অ্যাকাউন্ট নম্বর বা কাস্টমার রেফারেন্স দিয়ে অনুসন্ধান করুন</p>
             </div>
             <div>
-              <input type="text" id="custSearch" class="form-control" placeholder="গ্রাহক অনুসন্ধান করুন..." style="width:260px; padding:6px 12px; font-size:0.85rem;">
+              <input type="text" id="custSearch" class="form-control" placeholder="গ্রাহক অনুসন্ধান করুন..." data-bn="গ্রাহক অনুসন্ধান করুন..." data-en="Search customers..." style="width:260px; padding:6px 12px; font-size:0.85rem;">
             </div>
           </div>
           <div class="table-responsive">
@@ -58,8 +58,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.1"></script>
-  <script src="/assets/js/common.js?v=3.1"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('customers');
@@ -99,7 +99,7 @@
               <td><span class="badge ${badgeClass}">${c.kyc_status || 'Pending'}</span></td>
               <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(c.created_at).toLocaleDateString()}</td>
               <td>
-                <a href="/admin/admin-kyc.html?customerId=${c.id}" class="table-action-btn primary">
+                <a href="/admin/admin-kyc.html?customerId=${c.customer_id || c.id}" class="table-action-btn primary">
                   ${isBn ? 'কেওয়াইসি রিভিউ &rarr;' : 'Review KYC &rarr;'}
                 </a>
               </td>

@@ -33,20 +33,21 @@ async function register(req, res, next) {
       address
     } = req.body;
 
-    if (!full_name || !email || !password || !phone) {
+    if (!full_name || !email || !password || !phone || !nid_number) {
       return res.status(400).json({
         success: false,
-        message: 'পূর্ণ নাম, ইমেইল ঠিকানা, মোবাইল নম্বর এবং পাসওয়ার্ড আবশ্যক।',
+        message: 'পূর্ণ নাম, ইমেইল ঠিকানা, মোবাইল নম্বর, পাসওয়ার্ড এবং জাতীয় পরিচয়পত্র (NID) নম্বর আবশ্যক।',
       });
     }
 
     const cleanEmail = email.toLowerCase().trim();
     const cleanPhone = phone.trim().replace(/[\s-]/g, '');
+    const cleanNid = nid_number.trim().replace(/[\s-]/g, '');
 
-    if (cleanEmail === cleanPhone) {
+    if (cleanEmail === cleanPhone || cleanEmail === cleanNid || cleanPhone === cleanNid) {
       return res.status(400).json({
         success: false,
-        message: 'ইমেইল এবং মোবাইল নম্বর একই হতে পারবে না।',
+        message: 'ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর কোনোভাবেই পরস্পর এক হতে পারবে না। প্রতিটির জন্য আলাদা তথ্য প্রদান করুন।',
       });
     }
 
@@ -79,6 +80,16 @@ async function register(req, res, next) {
       });
     }
 
+    // 3. Strict Check: NID Number must be unique across all accounts
+    const existingNid = await client.query('SELECT id FROM customers WHERE nid_number = $1', [cleanNid]);
+    if (existingNid.rows.length > 0) {
+      await client.query('ROLLBACK');
+      return res.status(409).json({
+        success: false,
+        message: 'এই জাতীয় পরিচয়পত্র (NID) নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। একই NID নম্বর দিয়ে একাধিক অ্যাকাউন্ট খোলা যাবে না।',
+      });
+    }
+
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
@@ -104,9 +115,9 @@ async function register(req, res, next) {
          user_id, customer_reference, account_number, date_of_birth, address,
          father_name, mother_name, permanent_address, occupation, monthly_income,
          source_of_funds, account_type, kyc_status, account_operational_status, balance,
-         nominee_name, nominee_relation, nominee_nid
+         nominee_name, nominee_relation, nominee_nid, nid_number
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'Pending', 'Restricted', 0.00, $13, $14, $15)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'Pending', 'Restricted', 0.00, $13, $14, $15, $16)
        RETURNING *`,
       [
         user.id,
@@ -123,7 +134,8 @@ async function register(req, res, next) {
         account_type || 'Prime Savings Account',
         nominee_name || null,
         nominee_relation || null,
-        nominee_nid || null
+        nominee_nid || null,
+        cleanNid
       ]
     );
     const customer = custRes.rows[0];

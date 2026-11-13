@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>নগদ টাকা উত্তোলন - Smart Banking PLC</title>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <style>
+    .withdraw-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .info-summary-card {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    }
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-label {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .summary-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .cheque-preview-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .cheque-preview-box:hover {
+      border-color: #0284c7;
+      background: #f0f9ff;
+    }
+    .cheque-preview-img {
+      max-height: 180px;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+      display: none;
+      margin: 10px auto 0 auto;
+      border: 1px solid #e2e8f0;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .receipt-modal-box {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 580px;
+      width: 100%;
+      padding: 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+      position: relative;
+    }
+    .receipt-header {
+      text-align: center;
+      border-bottom: 2px dashed #e2e8f0;
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+    }
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #receiptModal, #receiptModal * {
+        visibility: visible;
+      }
+      #receiptModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar"></div>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="top-nav-left">
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="💵 চেক দ্বারা নগদ টাকা উত্তোলন" data-en="💵 Cash Withdrawal by Cheque">💵 চেক দ্বারা নগদ টাকা উত্তোলন</h2>
+        </div>
+        <div class="top-nav-right">
+          <a href="/customer/dashboard.html" class="table-action-btn secondary" data-bn="← ড্যাশবোর্ডে ফিরে যান" data-en="← Back to Dashboard">← ড্যাশবোর্ডে ফিরে যান</a>
+        </div>
+      </header>
+
+      <main class="content-container withdraw-container">
+        <!-- Live Account Info Banner -->
+        <div class="info-summary-card">
+          <div class="summary-item">
+            <span class="summary-label" data-bn="অ্যাকাউন্ট হোল্ডার" data-en="Account Holder">অ্যাকাউন্ট হোল্ডার</span>
+            <span class="summary-val" id="holderNameDisplay">লোড হচ্ছে...</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label" data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</span>
+            <span class="summary-val" id="accountNoDisplay" style="font-family:ui-monospace, monospace;">---------</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label" data-bn="ব্যবহারযোগ্য ব্যালেন্স" data-en="Available Balance">ব্যবহারযোগ্য ব্যালেন্স</span>
+            <span class="summary-val" id="balanceDisplay" style="color:#a7f3d0;">৳0.00</span>
+          </div>
+        </div>
+
+        <!-- Withdrawal Submission Form Card -->
+        <div class="card" style="margin-bottom:28px;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" data-bn="নগদ উত্তোলনের আবেদনপত্র (Withdrawal Form)" data-en="Cash Withdrawal Request Form">নগদ উত্তোলনের আবেদনপত্র (Withdrawal Form)</h3>
+              <p class="card-subtitle" data-bn="নিচের তথ্যগুলো সতর্কতার সাথে পূরণ করুন এবং চেকের পরিষ্কার ছবি সংযুক্ত করুন" data-en="Fill in cheque details carefully and attach a clear image of the cheque">নিচের তথ্যগুলো সতর্কতার সাথে পূরণ করুন এবং চেকের পরিষ্কার ছবি সংযুক্ত করুন</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="withdrawalForm" enctype="multipart/form-data">
+              <div class="form-grid-3" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:18px;">
+                <div class="form-group">
+                  <label class="form-label" data-bn="অ্যাকাউন্টধারীর নাম (Auto-filled)" data-en="Account Holder Name (Auto-filled)">অ্যাকাউন্টধারীর নাম (Auto-filled)</label>
+                  <input type="text" id="holderNameInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-bn="অ্যাকাউন্ট নম্বর (Auto-filled)" data-en="Account Number (Auto-filled)">অ্যাকাউন্ট নম্বর (Auto-filled)</label>
+                  <input type="text" id="accountNoInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed; font-family:ui-monospace, monospace;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-bn="উপলব্ধ ব্যালেন্স (Auto-filled)" data-en="Available Balance (Auto-filled)">উপলব্ধ ব্যালেন্স (Auto-filled)</label>
+                  <input type="text" id="availableBalInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed; font-weight:700; color:#059669;">
+                </div>
+              </div>
+
+              <div class="form-grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:18px;">
+                <div class="form-group">
+                  <label class="form-label required" data-bn="উত্তোলনের পরিমাণ (Withdrawal Amount in BDT)" data-en="Withdrawal Amount (BDT)">উত্তোলনের পরিমাণ (Withdrawal Amount in BDT)</label>
+                  <input type="number" id="withdrawAmount" name="amount" class="form-control" placeholder="যেমন: 5000" min="100" step="any" required data-bn="যেমন: 5000" data-en="e.g. 5000">
+                  <small style="color:#64748b; font-size:0.75rem;" data-bn="সর্বনিম্ন উত্তোলন: ৳১০০ । উপলব্ধ ব্যালেন্সের বেশি উত্তোলন সম্ভব নয়।" data-en="Minimum withdrawal: BDT 100. Cannot exceed available balance.">সর্বনিম্ন উত্তোলন: ৳১০০ । উপলব্ধ ব্যালেন্সের বেশি উত্তোলন সম্ভব নয়।</small>
+                </div>
+                <div class="form-group">
+                  <label class="form-label required" data-bn="প্রাপকের নাম (Payee Name)" data-en="Payee Name">প্রাপকের নাম (Payee Name)</label>
+                  <input type="text" id="payeeName" name="payee_name" class="form-control" placeholder="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা নির্দিষ্ট ব্যক্তি)" required data-bn="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা ব্যক্তি)" data-en="Payee as written on cheque (e.g. Self or Name)">
+                </div>
+              </div>
+
+              <div class="form-grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:20px;">
+                <div class="form-group">
+                  <label class="form-label required" data-bn="চেক নম্বর (Cheque Number)" data-en="Cheque Number">চেক নম্বর (Cheque Number)</label>
+                  <input type="text" id="chequeNumber" name="cheque_number" class="form-control" placeholder="যেমন: CHQ-8891023" required data-bn="যেমন: CHQ-8891023" data-en="e.g. CHQ-8891023">
+                </div>
+                <div class="form-group">
+                  <label class="form-label required" data-bn="চেকের তারিখ (Cheque Date)" data-en="Cheque Date">চেকের তারিখ (Cheque Date)</label>
+                  <input type="date" id="chequeDate" name="cheque_date" class="form-control" required>
+                </div>
+              </div>
+
+              <!-- Mandatory Cheque Image Upload -->
+              <div class="form-group" style="margin-bottom:24px;">
+                <label class="form-label required" data-bn="চেকের ছবি আপলোড (Cheque Image Upload - Mandatory)" data-en="Cheque Image Upload (Mandatory)">চেকের ছবি আপলোড (Cheque Image Upload - Mandatory)</label>
+                <div class="cheque-preview-box" onclick="document.getElementById('chequeFileInput').click()">
+                  <div id="uploadPrompt">
+                    <span style="font-size:2.2rem; display:block; margin-bottom:6px;">🧾</span>
+                    <strong style="color:#0284c7;" data-bn="চেকের স্পষ্ট ছবি আপলোড করতে ক্লিক করুন" data-en="Click to upload clear cheque photo">চেকের স্পষ্ট ছবি আপলোড করতে ক্লিক করুন</strong>
+                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px;" data-bn="সমর্থিত ফরম্যাট: JPG, JPEG, PNG (সর্বোচ্চ ১০MB)। চেকের সম্পূর্ণ অংশ ও স্বাক্ষর দৃশ্যমান থাকতে হবে।" data-en="Supported formats: JPG, JPEG, PNG (Max 10MB). Entire cheque and signature must be visible.">
+                      সমর্থিত ফরম্যাট: JPG, JPEG, PNG (সর্বোচ্চ ১০MB)। চেকের সম্পূর্ণ অংশ ও স্বাক্ষর দৃশ্যমান থাকতে হবে।
+                    </div>
+                  </div>
+                  <input type="file" id="chequeFileInput" name="cheque_image" accept="image/jpeg,image/png,image/jpg" style="display:none;" required>
+                  <img id="chequePreviewImg" class="cheque-preview-img" alt="Cheque Preview">
+                </div>
+              </div>
+
+              <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="background:#0284c7; font-weight:700;" data-bn="🚀 নগদ উত্তোলনের আবেদন জমা দিন" data-en="🚀 Submit Withdrawal Request">
+                🚀 নগদ উত্তোলনের আবেদন জমা দিন
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Recent Withdrawal Requests Table Card -->
+        <div class="card">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3 class="card-title" data-bn="আমার নগদ উত্তোলনের ইতিহাস ও স্ট্যাটাস" data-en="My Withdrawal History & Status">আমার নগদ উত্তোলনের ইতিহাস ও স্ট্যাটাস</h3>
+              <p class="card-subtitle" data-bn="আবেদনের রিয়েল-টাইম অগ্রগতি পর্যবেক্ষণ করুন এবং ক্যাশ পরিশোধের রসিদ সংগ্রহ করুন" data-en="Track request progress in real-time and collect cash payment receipt">আবেদনের রিয়েল-টাইম অগ্রগতি পর্যবেক্ষণ করুন এবং ক্যাশ পরিশোধের রসিদ সংগ্রহ করুন</p>
+            </div>
+            <button onclick="loadWithdrawals()" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-bn="রেফারেন্স আইডি" data-en="Request ID">রেফারেন্স আইডি</th>
+                    <th data-bn="চেক নম্বর ও তারিখ" data-en="Cheque No & Date">চেক নম্বর ও তারিখ</th>
+                    <th data-bn="প্রাপক" data-en="Payee">প্রাপক</th>
+                    <th data-bn="পরিমাণ" data-en="Amount">পরিমাণ</th>
+                    <th data-bn="স্ট্যাটাস" data-en="Status">স্ট্যাটাস</th>
+                    <th data-bn="আবেদনের তারিখ" data-en="Submitted On">আবেদনের তারিখ</th>
+                    <th data-bn="রশিদ / অ্যাকশন" data-en="Receipt / Action">রশিদ / অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody id="withdrawalsTableBody">
+                  <tr>
+                    <td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;" data-bn="উত্তোলন ইতিহাস লোড হচ্ছে..." data-en="Loading withdrawal history...">উত্তোলন ইতিহাস লোড হচ্ছে...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Official Bank Payment Receipt Modal -->
+  <div id="receiptModal" class="modal-overlay">
+    <div class="receipt-modal-box">
+      <div class="no-print" style="position:absolute; top:16px; right:16px;">
+        <button onclick="closeReceiptModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
+      </div>
+
+      <div class="receipt-header">
+        <div style="font-weight:900; font-size:1.4rem; color:#0f172a; letter-spacing:-0.5px;">Smart Banking PLC</div>
+        <div style="font-size:0.8rem; color:#64748b; margin-top:2px;" data-bn="অফিসিয়াল ক্যাশ উত্তোলন রসিদ (Cash Payment Receipt)" data-en="Official Cash Payment Receipt">অফিসিয়াল ক্যাশ উত্তোলন রসিদ (Cash Payment Receipt)</div>
+        <div style="margin-top:8px;">
+          <span class="badge badge-approved" id="receiptStatusBadge">Completed</span>
+        </div>
+      </div>
+
+      <div id="receiptBody">
+        <!-- Injected by JS -->
+      </div>
+
+      <div class="no-print" style="margin-top:24px; display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="window.print()" class="btn btn-primary btn-sm" data-bn="🖨️ রসিদ প্রিন্ট করুন" data-en="🖨️ Print Receipt">🖨️ রসিদ প্রিন্ট করুন</button>
+        <button onclick="closeReceiptModal()" class="btn btn-secondary btn-sm" data-bn="বন্ধ করুন" data-en="Close">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
+  <script>
+    window.Auth.requireAuth('CUSTOMER');
+    window.UI.renderCustomerSidebar('withdraw');
+
+    let currentCustomer = null;
+
+    // Load Profile & Balance
+    async function initPage() {
+      try {
+        const meRes = await window.api.get('/api/auth/me');
+        const user = meRes.user || {};
+        currentCustomer = user.customer || {};
+
+        const fullName = user.full_name || 'Customer';
+        const accNo = currentCustomer.account_number || 'N/A';
+        const bal = parseFloat(currentCustomer.balance || 0);
+
+        document.getElementById('holderNameDisplay').innerText = fullName;
+        document.getElementById('accountNoDisplay').innerText = accNo;
+        document.getElementById('balanceDisplay').innerText = `৳${bal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+        document.getElementById('holderNameInput').value = fullName;
+        document.getElementById('accountNoInput').value = accNo;
+        document.getElementById('availableBalInput').value = `৳${bal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+        // Default cheque date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('chequeDate').value = today;
+
+        loadWithdrawals();
+      } catch (err) {
+        window.showToast('গ্রাহক তথ্য লোড ব্যর্থ হয়েছে।', 'error');
+      }
+    }
+
+    // Image preview handler
+    const fileInput = document.getElementById('chequeFileInput');
+    const previewImg = document.getElementById('chequePreviewImg');
+    const uploadPrompt = document.getElementById('uploadPrompt');
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+          window.showToast('ফাইলের সাইজ ১০MB-এর বেশি হতে পারবে না।', 'error');
+          fileInput.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          previewImg.src = event.target.result;
+          previewImg.style.display = 'block';
+          uploadPrompt.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Form Submission
+    document.getElementById('withdrawalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
+      const amountVal = parseFloat(document.getElementById('withdrawAmount').value);
+      const curBal = parseFloat(currentCustomer ? currentCustomer.balance : 0);
+
+      if (amountVal > curBal) {
+        window.showToast(
+          isBn ? 'উত্তোলনের পরিমাণ বর্তমান ব্যালেন্সের চেয়ে বেশি হতে পারবে না!' : 'Withdrawal amount cannot exceed available balance!',
+          'error'
+        );
+        return;
+      }
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        window.showToast(
+          isBn ? 'চেকের ছবি আপলোড করা আবশ্যক!' : 'Cheque image upload is mandatory!',
+          'error'
+        );
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = isBn ? 'আবেদন জমা হচ্ছে...' : 'Submitting Request...';
+
+      try {
+        const formData = new FormData(document.getElementById('withdrawalForm'));
+        const res = await window.api.postForm('/api/withdrawals', formData);
+
+        window.showToast(
+          isBn ? `✅ আবেদন সফল! আইডি: ${res.withdrawal.withdrawal_reference}` : `✅ Success! Request ID: ${res.withdrawal.withdrawal_reference}`,
+          'success'
+        );
+
+        // Reset form
+        document.getElementById('withdrawalForm').reset();
+        previewImg.style.display = 'none';
+        uploadPrompt.style.display = 'block';
+        initPage();
+      } catch (err) {
+        window.showToast(err.message || 'উত্তোলনের আবেদন জমা ব্যর্থ হয়েছে।', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = isBn ? '🚀 নগদ উত্তোলনের আবেদন জমা দিন' : '🚀 Submit Withdrawal Request';
+      }
+    });
+
+    // Load recent withdrawals
+    async function loadWithdrawals() {
+      const tbody = document.getElementById('withdrawalsTableBody');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
+
+      try {
+        const res = await window.api.get('/api/withdrawals/my');
+        const list = res.withdrawals || [];
+
+        if (list.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center; padding:32px; color:#94a3b8;">
+                ${isBn ? 'এখনো কোনো উত্তোলনের আবেদন করা হয়নি।' : 'No withdrawal requests submitted yet.'}
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = list.map(w => {
+          let badgeClass = 'badge-submitted';
+          if (w.status === 'Completed') badgeClass = 'badge-approved';
+          else if (w.status === 'Approved') badgeClass = 'badge-approved';
+          else if (w.status === 'Under Review' || w.status === 'Processing') badgeClass = 'badge-under-review';
+          else if (w.status === 'Rejected') badgeClass = 'badge-rejected';
+
+          return `
+            <tr>
+              <td><code style="font-weight:700;">${w.withdrawal_reference}</code></td>
+              <td>
+                <div style="font-weight:700; color:#0f172a;">${w.cheque_number}</div>
+                <div style="font-size:0.75rem; color:#64748b;">${new Date(w.cheque_date).toLocaleDateString()}</div>
+              </td>
+              <td><span style="color:#334155; font-weight:600;">${w.payee_name}</span></td>
+              <td><span style="font-weight:800; color:#0284c7; font-size:0.95rem;">৳${parseFloat(w.amount).toLocaleString('en-US', {minimumFractionDigits:2})}</span></td>
+              <td><span class="badge ${badgeClass}">${w.status}</span></td>
+              <td style="font-size:0.8rem; color:#64748b;">${new Date(w.created_at).toLocaleDateString()}</td>
+              <td>
+                <button onclick="viewReceipt(${w.id})" class="table-action-btn secondary" style="font-size:0.8rem; padding:4px 10px;">
+                  ${isBn ? '🧾 রসিদ দেখুন' : '🧾 View Receipt'}
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#ef4444; padding:20px;">উত্তোলন তালিকা লোড করা যায়নি।</td></tr>`;
+      }
+    }
+
+    // View Receipt Modal
+    async function viewReceipt(id) {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
+      try {
+        const res = await window.api.get(`/api/withdrawals/${id}/receipt`);
+        const r = res.receipt;
+        const badge = document.getElementById('receiptStatusBadge');
+        badge.innerText = r.status;
+        badge.className = `badge ${r.status === 'Completed' || r.status === 'Approved' ? 'badge-approved' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}`;
+
+        document.getElementById('receiptBody').innerHTML = `
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'উত্তোলন রেফারেন্স:' : 'Withdrawal Ref:'}</span>
+            <strong style="color:#0f172a; font-family:ui-monospace, monospace;">${r.withdrawal_reference}</strong>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'অ্যাকাউন্ট হোল্ডার:' : 'Account Holder:'}</span>
+            <strong style="color:#0f172a;">${r.account_holder_name}</strong>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'অ্যাকাউন্ট নম্বর:' : 'Account Number:'}</span>
+            <strong style="color:#0284c7; font-family:ui-monospace, monospace;">${r.account_number}</strong>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'চেক নম্বর:' : 'Cheque Number:'}</span>
+            <strong style="color:#0f172a;">${r.cheque_number}</strong>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'চেকের তারিখ:' : 'Cheque Date:'}</span>
+            <span>${new Date(r.cheque_date).toLocaleDateString()}</span>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'প্রাপকের নাম:' : 'Payee Name:'}</span>
+            <strong>${r.payee_name}</strong>
+          </div>
+          <div class="receipt-row" style="background:#f0f9ff; padding:12px; border-radius:6px; margin:10px 0;">
+            <span style="font-weight:700; color:#0369a1;">${isBn ? 'পরিশোধিত নগদ পরিমাণ:' : 'Paid Amount:'}</span>
+            <strong style="font-size:1.25rem; font-weight:800; color:#0284c7;">৳${parseFloat(r.amount).toLocaleString('en-US', {minimumFractionDigits:2})} BDT</strong>
+          </div>
+          <div class="receipt-row">
+            <span style="color:#64748b;">${isBn ? 'আবেদনের সময়:' : 'Request Time:'}</span>
+            <span>${new Date(r.created_at).toLocaleString()}</span>
+          </div>
+          ${r.processed_at ? `
+            <div class="receipt-row">
+              <span style="color:#64748b;">${isBn ? 'ক্যাশ পেমেন্ট সম্পন্ন:' : 'Payment Processed:'}</span>
+              <span>${new Date(r.processed_at).toLocaleString()}</span>
+            </div>
+          ` : ''}
+          ${r.reviewed_by_name ? `
+            <div class="receipt-row">
+              <span style="color:#64748b;">${isBn ? 'অনুমোদনকারী কর্মকর্তা:' : 'Approved By Officer:'}</span>
+              <span>${r.reviewed_by_name} (${r.reviewed_by_staff_ref || 'Authorized Teller'})</span>
+            </div>
+          ` : ''}
+          ${r.admin_remarks ? `
+            <div class="receipt-row">
+              <span style="color:#64748b;">${isBn ? 'অফিসার মন্তব্য:' : 'Officer Remarks:'}</span>
+              <span style="color:#334155;">${r.admin_remarks}</span>
+            </div>
+          ` : ''}
+          <div style="margin-top:14px; text-align:center;">
+            <a href="${r.cheque_image_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem;">
+              ${isBn ? '🔍 আপলোডকৃত চেক ইমেজ দেখুন ↗' : '🔍 View Uploaded Cheque Image ↗'}
+            </a>
+          </div>
+        `;
+
+        document.getElementById('receiptModal').classList.add('open');
+      } catch (err) {
+        window.showToast('রসিদ প্রদর্শন করা যায়নি।', 'error');
+      }
+    }
+
+    function closeReceiptModal() {
+      document.getElementById('receiptModal').classList.remove('open');
+    }
+
+    initPage();
+  </script>
+</body>
+</html>
