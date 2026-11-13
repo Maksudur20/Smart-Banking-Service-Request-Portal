@@ -436,10 +436,25 @@ const UI = {
     document.dispatchEvent(new CustomEvent('portalLanguageChanged', { detail: { lang } }));
   },
 
-  mountLanguageSwitcher() {
-    const lang = this.getLanguage();
-    document.querySelectorAll('.lang-switch-pill').forEach(el => el.remove());
+  isHomePage() {
+    const p = (window.location.pathname || '').toLowerCase();
+    return p === '/' || p === '' || p.endsWith('/index.html') || p === '/index.html' || p === 'index.html';
+  },
 
+  mountLanguageSwitcher() {
+    // Remove existing switchers from DOM
+    document.querySelectorAll('.lang-switch-pill').forEach(el => el.remove());
+    const floatWrap = document.getElementById('floating-lang-pill-wrap');
+    if (floatWrap) floatWrap.remove();
+    const floatContainer = document.getElementById('floating-lang-container');
+    if (floatContainer) floatContainer.remove();
+
+    // Language toggle option MUST ONLY appear on the Home page (index.html)!
+    if (!this.isHomePage()) {
+      return;
+    }
+
+    const lang = this.getLanguage();
     const pill = document.createElement('div');
     pill.className = 'lang-switch-pill';
     pill.title = lang === 'bn' ? 'ভাষা পরিবর্তন (বাংলা / English)' : 'Switch Language (Bangla / English)';
@@ -453,37 +468,13 @@ const UI = {
     if (bnBtn) bnBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.UI.setPortalLanguage('bn'); };
     if (enBtn) enBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.UI.setPortalLanguage('en'); };
 
-    // Try finding top navbar right section
-    let rightNav = document.querySelector('.top-navbar .top-nav-right');
-    const topNavbar = document.querySelector('.top-navbar');
-    const authHeader = document.querySelector('.auth-header');
-    const regActions = document.querySelector('.reg-header-actions') || document.querySelector('.auth-header-actions');
+    // On Home page, mount cleanly inside .landing-nav-actions
     const landingNav = document.querySelector('.landing-nav-actions');
-
-    if (!rightNav && topNavbar) {
-      rightNav = document.createElement('div');
-      rightNav.className = 'top-nav-right';
-      topNavbar.appendChild(rightNav);
-    }
-
-    if (rightNav) {
-      rightNav.insertBefore(pill, rightNav.firstChild);
-    } else if (regActions) {
-      regActions.insertBefore(pill, regActions.firstChild);
-    } else if (authHeader) {
-      authHeader.appendChild(pill);
-    } else if (landingNav) {
+    if (landingNav) {
       landingNav.insertBefore(pill, landingNav.firstChild);
     } else {
-      let floatContainer = document.getElementById('floating-lang-container');
-      if (!floatContainer) {
-        floatContainer = document.createElement('div');
-        floatContainer.id = 'floating-lang-container';
-        floatContainer.style.cssText = 'position:fixed; top:14px; right:18px; z-index:99999; box-shadow:0 4px 12px rgba(0,0,0,0.15); border-radius:24px; background:#fff;';
-        document.body.appendChild(floatContainer);
-      }
-      floatContainer.innerHTML = '';
-      floatContainer.appendChild(pill);
+      const header = document.querySelector('.landing-header') || document.body;
+      header.appendChild(pill);
     }
   },
 
