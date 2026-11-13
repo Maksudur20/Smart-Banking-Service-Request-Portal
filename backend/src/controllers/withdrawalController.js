@@ -537,3 +537,4 @@ module.exports = {
   getAdminWithdrawalDetails,
   updateWithdrawalStatus
 };
+

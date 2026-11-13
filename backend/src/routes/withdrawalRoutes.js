@@ -19,3 +19,4 @@ router.get('/admin/:id', requireRole('ADMIN'), withdrawalController.getAdminWith
 router.patch('/admin/:id/status', requireRole('ADMIN'), withdrawalController.updateWithdrawalStatus);
 
 module.exports = router;
+
