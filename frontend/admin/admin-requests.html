@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="bn">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>??????? ????? ??? - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <title>Admin Request Review Queue - Smart Banking Portal</title>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
 </head>
 <body>
   <div class="app-layout">
@@ -13,7 +13,7 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading" data-bn="??????? ????? ????? ???" data-en="Service Request Review Queue">??????? ????? ????? ???</h1>
+          <h1 class="page-heading">Service Request Review Queue</h1>
         </div>
       </header>
 
@@ -21,21 +21,21 @@
         <div class="card">
           <div class="card-header" style="flex-wrap:wrap; gap:16px;">
             <div>
-              <h3 class="card-title" data-bn="??? ?????? ?????????" data-en="All Customer Applications">??? ?????? ?????????</h3>
-              <p class="card-subtitle" data-bn="??????? ????????? ?? ???????? ??? ? ????????? ???? ??????? ????" data-en="Filter by application status or search by customer name / reference">??????? ????????? ?? ???????? ??? ? ????????? ???? ??????? ????</p>
+              <h3 class="card-title">All Customer Applications</h3>
+              <p class="card-subtitle">Filter by application status or search by customer name / reference</p>
             </div>
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <input type="text" id="searchInput" class="form-control" placeholder="?????? ?? ????? ?????..." data-bn="?????? ?? ????? ?????..." data-en="Search customer or #..." style="width:200px; padding:6px 12px; font-size:0.85rem;">
+              <input type="text" id="searchInput" class="form-control" placeholder="Search customer or #..." style="width:200px; padding:6px 12px; font-size:0.85rem;">
               <select id="statusFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
-                <option value="" data-bn="??? ?????????" data-en="All Statuses">??? ?????????</option>
-                <option value="Pending Admin Review" data-bn="???????? ??????????? ????????" data-en="Pending Admin Review" selected>???????? ??????????? ????????</option>
-                <option value="AI Validation" data-bn="??? ?????" data-en="AI Validation">??? ?????</option>
-                <option value="Document Review" data-bn="???????? ?????" data-en="Document Review">???????? ?????</option>
-                <option value="Submitted" data-bn="????????" data-en="Submitted">????????</option>
-                <option value="Correction Required" data-bn="?????? ??????" data-en="Correction Required">?????? ??????</option>
-                <option value="Approved" data-bn="????????" data-en="Approved">????????</option>
-                <option value="Rejected" data-bn="????????" data-en="Rejected">????????</option>
-                <option value="Completed" data-bn="???????" data-en="Completed">???????</option>
+                <option value="">All Statuses</option>
+                <option value="Pending Admin Review" selected>Pending Admin Review</option>
+                <option value="AI Validation">AI Validation</option>
+                <option value="Document Review">Document Review</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Correction Required">Correction Required</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
               </select>
             </div>
           </div>
@@ -43,19 +43,19 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th data-bn="????? #" data-en="Request #">????? #</th>
-                  <th data-bn="???????? ???" data-en="Customer Name">???????? ???</th>
-                  <th data-bn="?????????" data-en="Customer Ref">?????????</th>
-                  <th data-bn="????" data-en="Service">????</th>
-                  <th data-bn="??????? ???" data-en="Submitted Date">??????? ???</th>
-                  <th data-bn="?????????" data-en="Documents">?????????</th>
-                  <th data-bn="?????????" data-en="Status">?????????</th>
-                  <th data-bn="???????" data-en="Action">???????</th>
+                  <th>Request #</th>
+                  <th>Customer Name</th>
+                  <th>Customer Ref</th>
+                  <th>Service</th>
+                  <th>Submitted Date</th>
+                  <th>Documents</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="adminRequestsBody">
                 <tr>
-                  <td colspan="8" style="text-align:center; padding:32px; color:var(--text-light);" data-bn="????? ??? ??? ?????..." data-en="Loading requests queue...">????? ??? ??? ?????...</td>
+                  <td colspan="8" style="text-align:center; padding:32px; color:var(--text-light);">Loading requests queue...</td>
                 </tr>
               </tbody>
             </table>
@@ -65,15 +65,14 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('requests');
 
     async function loadRequests() {
-      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       const status = document.getElementById('statusFilter').value;
       const search = document.getElementById('searchInput').value;
       const params = {};
@@ -86,7 +85,7 @@
         const tbody = document.getElementById('adminRequestsBody');
 
         if (list.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">${isBn ? '???? ????? ????? ??????' : 'No requests found matching criteria.'}</td></tr>`;
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">No requests found matching criteria.</td></tr>';
           return;
         }
 
@@ -98,19 +97,19 @@
             <td><strong style="color:#0369a1;">${r.service_name}</strong></td>
             <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${window.UI.formatDateTime(r.created_at)}</td>
             <td>
-              <span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">?? ${r.document_count} ${isBn ? '?? ????' : 'files'}</span>
-              ${r.ai_validated_count > 0 ? `<span class="badge badge-ai-validation" title="AI Scanned">?? ${r.ai_validated_count} AI</span>` : ''}
+              <span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${r.document_count} files</span>
+              ${r.ai_validated_count > 0 ? `<span class="badge badge-ai-validation" title="AI Scanned">🤖 ${r.ai_validated_count} AI</span>` : ''}
             </td>
             <td>${window.UI.renderStatusBadge(r.status)}</td>
             <td>
               <a href="/admin/admin-request-details.html?id=${r.id}" class="table-action-btn primary">
-                ${isBn ? '????? ? ????????? &rarr;' : 'Review & Decision &rarr;'}
+                যাচাই ও সিদ্ধান্ত &rarr;
               </a>
             </td>
           </tr>
         `).join('');
       } catch (err) {
-        window.showToast(isBn ? '????? ?????? ??? ??? ??????' : 'Failed to load request queue.', 'error');
+        window.showToast('Failed to load request queue.', 'error');
       }
     }
 

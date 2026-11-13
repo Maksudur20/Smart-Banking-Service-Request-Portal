@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Service Requests - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
 </head>
 <body>
   <div class="app-layout">
@@ -66,9 +66,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js?v=3.2"></script>
+  <script src="/assets/js/common.js?v=3.2"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('requests');
@@ -100,11 +100,11 @@
             <td><strong style="color:#0369a1;">${r.service_name}</strong></td>
             <td style="color:#1e293b; font-weight:500;">${r.subject}</td>
             <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${window.UI.formatDateTime(r.created_at)}</td>
-            <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">?? ${r.document_count} files</span></td>
+            <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${r.document_count} files</span></td>
             <td>${window.UI.renderStatusBadge(r.status)}</td>
             <td>
               <a href="/customer/request-details.html?id=${r.id}" class="table-action-btn primary">
-                ????????? ? ????? &rarr;
+                বিস্তারিত ও আপলোড &rarr;
               </a>
             </td>
           </tr>
