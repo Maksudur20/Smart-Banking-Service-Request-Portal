@@ -306,7 +306,66 @@ const UI = {
       "Service Requests": "সার্ভিস আবেদনসমূহ",
       "Recent Transactions": "সাম্প্রতিক লেনদেন",
       "Pending Verifications": "অপেক্ষমাণ ভেরিফিকেশন",
-      "View All": "সব দেখুন"
+      "View All": "সব দেখুন",
+      "টাকা পাঠান": "Send Money",
+      "প্রাপকের অ্যাকাউন্ট নম্বর": "Recipient Account Number",
+      "ট্রান্সফারের পরিমাণ": "Transfer Amount",
+      "রেফারেন্স / নোট": "Reference / Note",
+      "📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন": "📤 Complete Instant Transfer",
+      "আমার লেনদেন হিস্ট্রি": "My Transaction History",
+      "নতুন ডিপোজিট সাবমিট করুন": "Submit New Deposit",
+      "আপনার রিসিভার অ্যাকাউন্ট নম্বর:": "Your Receiving Account Number:",
+      "ডিপোজিটের পরিমাণ": "Deposit Amount",
+      "ডিপোজিট মেথড": "Deposit Method",
+      "প্রেরকের নাম ও মোবাইল নম্বর": "Sender Name & Mobile",
+      "ট্রানজেকশন আইডি (TrxID)": "Transaction ID (TrxID)",
+      "ডিপোজিটের তারিখ": "Deposit Date",
+      "ডিপোজিট স্লিপ / মানি রিসিট আপলোড": "Deposit Slip / Receipt Upload",
+      "📥 ডিপোজিট রিকোয়েস্ট জমা দিন": "📥 Submit Deposit Request",
+      "নতুন অভিযোগ বা জিজ্ঞাসা দাখিল করুন": "Submit a New Complaint or Query",
+      "অভিযোগের ক্যাটাগরি": "Complaint Category",
+      "বিষয়": "Subject",
+      "বিস্তারিত বিবরণ": "Detailed Description",
+      "অভিযোগ দাখিল করুন →": "Submit Complaint Ticket →",
+      "অভিযোগ দাখিল করুন &rarr;": "Submit Complaint Ticket &rarr;",
+      "আমার দাখিলকৃত অভিযোগসমূহ ও সমাধান": "My Registered Complaints & Resolutions",
+      "টিকেট #": "Ticket #",
+      "দাখিলের তারিখ": "Submitted Date",
+      "ব্যাংকের সমাধান মন্তব্য": "Resolution Remarks",
+      "আবেদন আইডি": "Request ID",
+      "গ্রাহকের নাম ও রেফারেন্স": "Customer Name & Ref",
+      "ডকুমেন্টস": "Documents",
+      "⚙️ ফি ম্যানেজমেন্ট": "⚙️ Fee Management",
+      "অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন ও ই-কেওয়াইসি": "Online Bank Account Application & e-KYC",
+      "বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী সঠিক তথ্য ও প্রয়োজনীয় কাগজপত্র সংযুক্ত করে আবেদন সম্পন্ন করুন।": "Complete your application with accurate details and required KYC documents.",
+      "১. আবেদনকারীর ব্যক্তিগত তথ্য": "1. Personal Information",
+      "২. নমিনির তথ্য": "2. Nominee Information",
+      "৩. ছবি ও ডকুমেন্ট আপলোড": "3. Photo & Document Upload",
+      "আবেদনকারীর পূর্ণ নাম": "Full Legal Name",
+      "পিতার নাম": "Father's Name",
+      "মাতার নাম": "Mother's Name",
+      "জন্ম তারিখ": "Date of Birth",
+      "জাতীয় পরিচয়পত্র নম্বর": "NID Number",
+      "পেশা ও মাসিক আয়": "Occupation & Monthly Income",
+      "বর্তমান ঠিকানা": "Present Address",
+      "স্থায়ী ঠিকানা": "Permanent Address",
+      "নমিনির নাম": "Nominee Name",
+      "সম্পর্ক": "Relationship",
+      "নমিনির NID / জন্মনিবন্ধন নম্বর": "Nominee NID / Birth Cert No",
+      "চাকরিজীবী": "Salaried",
+      "ব্যবসায়ী": "Business",
+      "পেশাজীবী": "Self-employed",
+      "শিক্ষার্থী": "Student",
+      "গৃহিণী": "Homemaker",
+      "স্বামী / স্ত্রী": "Spouse",
+      "পিতা": "Father",
+      "মাতা": "Mother",
+      "পুত্র": "Son",
+      "কন্যা": "Daughter",
+      "ভাই": "Brother",
+      "বোন": "Sister",
+      "অন্যান্য": "Other",
+      "🔑 লগইন": "🔑 Sign In"
     },
     enToBn: {}
   },
@@ -398,6 +457,7 @@ const UI = {
     let rightNav = document.querySelector('.top-navbar .top-nav-right');
     const topNavbar = document.querySelector('.top-navbar');
     const authHeader = document.querySelector('.auth-header');
+    const regActions = document.querySelector('.reg-header-actions') || document.querySelector('.auth-header-actions');
     const landingNav = document.querySelector('.landing-nav-actions');
 
     if (!rightNav && topNavbar) {
@@ -408,10 +468,22 @@ const UI = {
 
     if (rightNav) {
       rightNav.insertBefore(pill, rightNav.firstChild);
+    } else if (regActions) {
+      regActions.insertBefore(pill, regActions.firstChild);
     } else if (authHeader) {
       authHeader.appendChild(pill);
     } else if (landingNav) {
       landingNav.insertBefore(pill, landingNav.firstChild);
+    } else {
+      let floatContainer = document.getElementById('floating-lang-container');
+      if (!floatContainer) {
+        floatContainer = document.createElement('div');
+        floatContainer.id = 'floating-lang-container';
+        floatContainer.style.cssText = 'position:fixed; top:14px; right:18px; z-index:99999; box-shadow:0 4px 12px rgba(0,0,0,0.15); border-radius:24px; background:#fff;';
+        document.body.appendChild(floatContainer);
+      }
+      floatContainer.innerHTML = '';
+      floatContainer.appendChild(pill);
     }
   },
 

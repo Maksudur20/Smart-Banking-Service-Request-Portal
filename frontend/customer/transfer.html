@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফান্ড ট্রান্সফার - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.9">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.0">
   <style>
     .transfer-layout {
       display: grid;
@@ -34,10 +34,10 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">📤 ফান্ড ট্রান্সফার (Fund Transfer)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="📤 ফান্ড ট্রান্সফার" data-en="📤 Fund Transfer">📤 ফান্ড ট্রান্সফার</h2>
         </div>
         <div class="top-nav-right">
-          <span style="font-size:0.85rem; color:#64748b;">বর্তমান ব্যালেন্স: <strong id="currentBalDisplay" style="color:#10b981;">0.00 BDT</strong></span>
+          <span style="font-size:0.85rem; color:#64748b;"><span data-bn="বর্তমান ব্যালেন্স:" data-en="Current Balance:">বর্তমান ব্যালেন্স:</span> <strong id="currentBalDisplay" style="color:#10b981;">0.00 BDT</strong></span>
         </div>
       </header>
 
@@ -46,15 +46,15 @@
         <div id="kycLockContainer" style="display:none;">
           <div class="kyc-lock-box">
             <span style="font-size:2.5rem; display:block; margin-bottom:8px;">🔒</span>
-            <h3 style="margin:0 0 8px 0; font-size:1.2rem; font-weight:700;">আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে সীমাবদ্ধ</h3>
-            <p style="font-size:0.9rem; max-width:550px; margin:0 auto 16px auto; line-height:1.5;">
-              বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী, আপনার জাতীয় পরিচয়পত্র ও প্রয়োজনীয় কেওয়াইসি (KYC) ভেরিফিকেশন ব্যাংক অফিসার কর্তৃক অনুমোদিত (Approved) না হওয়া পর্যন্ত অন্য অ্যাকাউন্টে টাকা পাঠানো সীমাবদ্ধ থাকবে।
+            <h3 style="margin:0 0 8px 0; font-size:1.2rem; font-weight:700;" data-bn="আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে সীমাবদ্ধ" data-en="Outgoing Fund Transfer Temporarily Restricted">আউটগোয়িং ফান্ড ট্রান্সফার সাময়িকভাবে সীমাবদ্ধ</h3>
+            <p style="font-size:0.9rem; max-width:550px; margin:0 auto 16px auto; line-height:1.5;" data-bn="বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী, আপনার জাতীয় পরিচয়পত্র ও প্রয়োজনীয় কেওয়াইসি ভেরিফিকেশন ব্যাংক অফিসার কর্তৃক অনুমোদিত না হওয়া পর্যন্ত অন্য অ্যাকাউন্টে টাকা পাঠানো সীমাবদ্ধ থাকবে।" data-en="As per banking regulations, outgoing fund transfers remain restricted until your KYC verification is reviewed and approved by a bank officer.">
+              বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী, আপনার জাতীয় পরিচয়পত্র ও প্রয়োজনীয় কেওয়াইসি ভেরিফিকেশন ব্যাংক অফিসার কর্তৃক অনুমোদিত না হওয়া পর্যন্ত অন্য অ্যাকাউন্টে টাকা পাঠানো সীমাবদ্ধ থাকবে।
             </p>
-            <div style="display:flex; justify-content:center; gap:12px;">
-              <a href="/customer/kyc.html" class="btn btn-primary btn-sm" style="background:#dc2626; border:none;">
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <a href="/customer/kyc.html" class="btn btn-primary btn-sm" style="background:#dc2626; border:none;" data-bn="🪪 আমার KYC স্ট্যাটাস দেখুন" data-en="🪪 View KYC Status">
                 🪪 আমার KYC স্ট্যাটাস দেখুন
               </a>
-              <a href="/customer/deposit.html" class="btn btn-secondary btn-sm">
+              <a href="/customer/deposit.html" class="btn btn-secondary btn-sm" data-bn="📥 নিজের অ্যাকাউন্টে ডিপোজিট করুন" data-en="📥 Deposit into Account">
                 📥 নিজের অ্যাকাউন্টে ডিপোজিট করুন
               </a>
             </div>
@@ -65,28 +65,28 @@
           <!-- Transfer Form -->
           <div class="card" id="transferFormCard">
             <div class="card-header">
-              <h3 class="card-title">টাকা পাঠান (Send Money)</h3>
+              <h3 class="card-title" data-bn="টাকা পাঠান" data-en="Send Money">টাকা পাঠান</h3>
               <span class="badge badge-approved" id="kycApprovedBadge" style="display:none;">KYC Verified</span>
             </div>
             <div class="card-body">
               <form id="transferForm">
                 <div class="form-group">
-                  <label class="form-label required">প্রাপকের অ্যাকাউন্ট নম্বর (Receiver Account Number)</label>
-                  <input type="text" id="recipientAccount" class="form-control" placeholder="১০ ডিজিটের অ্যাকাউন্ট নম্বর (যেমন: 2026123456)" required>
-                  <small style="color:#64748b; font-size:0.75rem;">Smart Banking PLC-এর নিবন্ধিত সঠিক অ্যাকাউন্ট নম্বর দিন</small>
+                  <label class="form-label required" data-bn="প্রাপকের অ্যাকাউন্ট নম্বর" data-en="Recipient Account Number">প্রাপকের অ্যাকাউন্ট নম্বর</label>
+                  <input type="text" id="recipientAccount" class="form-control" placeholder="১০ ডিজিটের অ্যাকাউন্ট নম্বর" required data-bn="১০ ডিজিটের অ্যাকাউন্ট নম্বর" data-en="10-digit account number">
+                  <small style="color:#64748b; font-size:0.75rem;" data-bn="Smart Banking PLC-এর নিবন্ধিত সঠিক অ্যাকাউন্ট নম্বর দিন" data-en="Enter valid Smart Banking PLC registered account number">Smart Banking PLC-এর নিবন্ধিত সঠিক অ্যাকাউন্ট নম্বর দিন</small>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">ট্রান্সফারের পরিমাণ (Amount in BDT)</label>
-                  <input type="number" id="transferAmount" class="form-control" placeholder="যেমন: 1500" min="10" step="0.01" required>
+                  <label class="form-label required" data-bn="ট্রান্সফারের পরিমাণ" data-en="Transfer Amount">ট্রান্সফারের পরিমাণ</label>
+                  <input type="number" id="transferAmount" class="form-control" placeholder="যেমন: ১৫০০" min="10" step="0.01" required data-bn="যেমন: ১৫০০" data-en="e.g. 1500">
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">রেফারেন্স / বিবরণ (Reference / Purpose)</label>
-                  <input type="text" id="transferReference" class="form-control" placeholder="যেমন: Bill Payment / Family Support">
+                  <label class="form-label" data-bn="রেফারেন্স / নোট" data-en="Reference / Note">রেফারেন্স / নোট</label>
+                  <input type="text" id="transferReference" class="form-control" placeholder="যেমন: বিল পেমেন্ট / পারিবারিক সহায়তা" data-bn="যেমন: বিল পেমেন্ট / পারিবারিক সহায়তা" data-en="e.g. Bill payment / Family support">
                 </div>
 
-                <button type="submit" id="transferSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top:20px;">
+                <button type="submit" id="transferSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top:20px;" data-bn="📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন" data-en="📤 Complete Instant Transfer">
                   📤 তাৎক্ষণিক ফান্ড ট্রান্সফার সম্পন্ন করুন
                 </button>
               </form>
@@ -96,7 +96,7 @@
           <!-- Transfer History -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">আমার লেনদেন হিস্ট্রি (Transactions History)</h3>
+              <h3 class="card-title" data-bn="আমার লেনদেন হিস্ট্রি" data-en="My Transaction History">আমার লেনদেন হিস্ট্রি</h3>
             </div>
             <div class="card-body" style="padding:0;">
               <div id="transferHistoryContainer">
@@ -110,8 +110,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.9"></script>
-  <script src="/assets/js/common.js?v=2.9"></script>
+  <script src="/assets/js/auth.js?v=3.0"></script>
+  <script src="/assets/js/common.js?v=3.0"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('transfer');

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>নতুন অ্যাকাউন্ট আবেদন ও কেওয়াইসি ভেরিফিকেশন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.9">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.0">
   <style>
     .reg-container {
       max-width: 860px;
@@ -94,16 +94,31 @@
 <body class="bg-gray-50">
   <div class="reg-container">
     <div class="reg-card">
-      <div style="text-align: center; margin-bottom: 24px;">
-        <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:8px;">
+      <!-- Top Brand & Language Switcher Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; border-bottom:1px solid #f1f5f9; padding-bottom:16px;">
+        <div style="display:inline-flex; align-items:center; gap:8px;">
           <div style="background:#0284c7; color:#fff; font-weight:800; padding:6px 12px; border-radius:6px; font-size:1.1rem;">SB</div>
-          <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0;">Smart Banking PLC</h1>
+          <div>
+            <span style="font-size:1.35rem; font-weight:800; color:#0f172a; display:block; line-height:1.2;">Smart Banking</span>
+            <span style="font-size:0.75rem; color:#0284c7; font-weight:700; letter-spacing:0.5px;">PLC BANGLADESH</span>
+          </div>
         </div>
-        <h2 style="font-size: 1.25rem; font-weight: 700; color: #334155; margin: 4px 0;">অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন ও ই-কেওয়াইসি (e-KYC)</h2>
-        <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী সঠিক তথ্য ও প্রয়োজনীয় কাগজপত্র সংযুক্ত করে আবেদন সম্পন্ন করুন।</p>
+        <div class="reg-header-actions" style="display:flex; align-items:center; gap:10px;">
+          <!-- Language Switcher Pill Mounts Here -->
+          <a href="/login.html" class="btn btn-secondary btn-sm" style="font-weight:700;" data-bn="🔑 লগইন" data-en="🔑 Sign In">🔑 লগইন</a>
+        </div>
       </div>
 
-      <div class="status-badge-pending">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; color: #1e293b; margin: 4px 0;" data-bn="অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন ও ই-কেওয়াইসি" data-en="Online Bank Account Application & e-KYC">
+          অনলাইন ব্যাংক অ্যাকাউন্ট আবেদন ও ই-কেওয়াইসি
+        </h2>
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;" data-bn="বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী সঠিক তথ্য ও প্রয়োজনীয় কাগজপত্র সংযুক্ত করে আবেদন সম্পন্ন করুন।" data-en="Complete your account opening application with accurate details and required KYC documents.">
+          বাংলাদেশ ব্যাংকের নিয়ম অনুযায়ী সঠিক তথ্য ও প্রয়োজনীয় কাগজপত্র সংযুক্ত করে আবেদন সম্পন্ন করুন।
+        </p>
+      </div>
+
+      <div class="status-badge-pending" data-bn="ℹ️ <strong>জরুরি তথ্য:</strong> অ্যাকাউন্ট খোলার পর আপনার প্রোফাইলটি <em>Pending KYC</em> স্ট্যাটাসে থাকবে। অ্যাডমিন ভেরিফিকেশনের পর আউটগোয়িং ফান্ড ট্রান্সফার সক্রিয় হবে। আপনি সাথে সাথেই নিজের অ্যাকাউন্টে ডিপোজিট করতে পারবেন।" data-en="ℹ️ <strong>Notice:</strong> Your profile will be created in <em>Pending KYC</em> status. Outgoing transfers will unlock after verification. You can make deposits immediately.">
         ℹ️ <strong>জরুরি তথ্য:</strong> অ্যাকাউন্ট খোলার পর আপনার প্রোফাইলটি <em>Pending KYC</em> স্ট্যাটাসে থাকবে। অ্যাডমিন ভেরিফিকেশনের পর আউটগোয়িং ফান্ড ট্রান্সফার সক্রিয় হবে। আপনি সাথে সাথেই নিজের অ্যাকাউন্টে ডিপোজিট করতে পারবেন।
       </div>
 
@@ -168,11 +183,11 @@
             <label class="form-label" data-bn="পেশা ও মাসিক আয়" data-en="Occupation & Monthly Income">পেশা ও মাসিক আয়</label>
             <div style="display:flex; gap:8px;">
               <select id="occupation" name="occupation" class="form-control" style="flex:1;">
-                <option value="Salaried">চাকরিজীবী</option>
-                <option value="Business">ব্যবসায়ী</option>
-                <option value="Self-employed">পেশাজীবী</option>
-                <option value="Student">শিক্ষার্থী</option>
-                <option value="Homemaker">গৃহিণী</option>
+                <option value="Salaried" data-bn="চাকরিজীবী" data-en="Salaried">চাকরিজীবী</option>
+                <option value="Business" data-bn="ব্যবসায়ী" data-en="Business">ব্যবসায়ী</option>
+                <option value="Self-employed" data-bn="পেশাজীবী" data-en="Self-employed">পেশাজীবী</option>
+                <option value="Student" data-bn="শিক্ষার্থী" data-en="Student">শিক্ষার্থী</option>
+                <option value="Homemaker" data-bn="গৃহিণী" data-en="Homemaker">গৃহিণী</option>
               </select>
               <input type="number" id="monthly_income" name="monthly_income" class="form-control" placeholder="আয় (টাকায়)" style="flex:1;" data-bn="আয় (টাকায়)" data-en="Income (BDT)">
             </div>
@@ -203,14 +218,14 @@
           <div class="form-group">
             <label class="form-label required" data-bn="সম্পর্ক" data-en="Relationship">সম্পর্ক</label>
             <select id="nominee_relation" name="nominee_relation" class="form-control" required>
-              <option value="Spouse">স্বামী / স্ত্রী</option>
-              <option value="Father">পিতা</option>
-              <option value="Mother">মাতা</option>
-              <option value="Son">পুত্র</option>
-              <option value="Daughter">কন্যা</option>
-              <option value="Brother">ভাই</option>
-              <option value="Sister">বোন</option>
-              <option value="Other">অন্যান্য</option>
+              <option value="Spouse" data-bn="স্বামী / স্ত্রী" data-en="Spouse">স্বামী / স্ত্রী</option>
+              <option value="Father" data-bn="পিতা" data-en="Father">পিতা</option>
+              <option value="Mother" data-bn="মাতা" data-en="Mother">মাতা</option>
+              <option value="Son" data-bn="পুত্র" data-en="Son">পুত্র</option>
+              <option value="Daughter" data-bn="কন্যা" data-en="Daughter">কন্যা</option>
+              <option value="Brother" data-bn="ভাই" data-en="Brother">ভাই</option>
+              <option value="Sister" data-bn="বোন" data-en="Sister">বোন</option>
+              <option value="Other" data-bn="অন্যান্য" data-en="Other">অন্যান্য</option>
             </select>
           </div>
           <div class="form-group">
@@ -307,8 +322,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.9"></script>
-  <script src="/assets/js/common.js?v=2.9"></script>
+  <script src="/assets/js/auth.js?v=3.0"></script>
+  <script src="/assets/js/common.js?v=3.0"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 

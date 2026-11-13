@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>অ্যাকাউন্ট ক্লোজার - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.9">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.0">
   <style>
     .status-tracker {
       display: flex;
@@ -82,7 +82,7 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🗂️ অ্যাকাউন্ট ক্লোজার (Account Closure)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="🗂️ অ্যাকাউন্ট ক্লোজার আবেদন" data-en="🗂️ Account Closure Request">🗂️ অ্যাকাউন্ট ক্লোজার আবেদন</h2>
         </div>
         <div class="top-nav-right">
           <span id="accountStatusBadge" class="badge badge-submitted">অ্যাকাউন্ট স্ট্যাটাস লোড হচ্ছে...</span>
@@ -316,8 +316,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.9"></script>
-  <script src="/assets/js/common.js?v=2.9"></script>
+  <script src="/assets/js/auth.js?v=3.0"></script>
+  <script src="/assets/js/common.js?v=3.0"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('account-closure');

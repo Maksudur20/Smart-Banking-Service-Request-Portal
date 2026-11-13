@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>টাকা ডিপোজিট - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.9">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.0">
   <style>
     .deposit-grid {
       display: grid;
@@ -44,10 +44,10 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">📥 টাকা ডিপোজিট রিকোয়েস্ট (Deposit Money)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="📥 টাকা ডিপোজিট রিকোয়েস্ট" data-en="📥 Deposit Request">📥 টাকা ডিপোজিট রিকোয়েস্ট</h2>
         </div>
         <div class="top-nav-right">
-          <span style="font-size:0.85rem; color:#64748b;">বর্তমান ব্যালেন্স: <strong id="topBal">0.00 BDT</strong></span>
+          <span style="font-size:0.85rem; color:#64748b;"><span data-bn="বর্তমান ব্যালেন্স:" data-en="Current Balance:">বর্তমান ব্যালেন্স:</span> <strong id="topBal" style="color:#059669;">0.00 BDT</strong></span>
         </div>
       </header>
 
@@ -56,61 +56,61 @@
           <!-- Deposit Form -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">নতুন ডিপোজিট সাবমিট করুন</h3>
+              <h3 class="card-title" data-bn="নতুন ডিপোজিট সাবমিট করুন" data-en="Submit New Deposit">নতুন ডিপোজিট সাবমিট করুন</h3>
             </div>
             <div class="card-body">
               <div class="bank-account-box">
-                <div style="font-size:0.8rem; opacity:0.9;">আপনার রিসিভার অ্যাকাউন্ট নম্বর:</div>
+                <div style="font-size:0.8rem; opacity:0.9;" data-bn="আপনার রিসিভার অ্যাকাউন্ট নম্বর:" data-en="Your Receiving Account Number:">আপনার রিসিভার অ্যাকাউন্ট নম্বর:</div>
                 <div style="font-size:1.35rem; font-weight:800; letter-spacing:1px;" id="myAccountNumber">Loading...</div>
-                <div style="font-size:0.8rem; opacity:0.85; margin-top:4px;">অ্যাকাউন্ট হোল্ডার: <span id="myFullName">গ্রাহক</span></div>
+                <div style="font-size:0.8rem; opacity:0.85; margin-top:4px;"><span data-bn="অ্যাকাউন্ট হোল্ডার:" data-en="Account Holder:">অ্যাকাউন্ট হোল্ডার:</span> <span id="myFullName">গ্রাহক</span></div>
               </div>
 
               <form id="depositForm" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label class="form-label required">ডিপোজিটের পরিমাণ (Amount in BDT)</label>
-                  <input type="number" id="depositAmount" name="amount" class="form-control" placeholder="যেমন: 5000" min="100" step="0.01" required>
-                  <small style="color:#64748b; font-size:0.75rem;">সর্বনিম্ন জমার পরিমাণ ১০০ টাকা</small>
+                  <label class="form-label required" data-bn="ডিপোজিটের পরিমাণ" data-en="Deposit Amount">ডিপোজিটের পরিমাণ</label>
+                  <input type="number" id="depositAmount" name="amount" class="form-control" placeholder="যেমন: ৫০০০" min="100" step="0.01" required data-bn="যেমন: ৫০০০" data-en="e.g. 5000">
+                  <small style="color:#64748b; font-size:0.75rem;" data-bn="সর্বনিম্ন জমার পরিমাণ ১০০ টাকা" data-en="Minimum deposit amount is 100 BDT">সর্বনিম্ন জমার পরিমাণ ১০০ টাকা</small>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">ডিপোজিট মেথড (Deposit Method)</label>
+                  <label class="form-label required" data-bn="ডিপোজিট মেথড" data-en="Deposit Method">ডিপোজিট মেথড</label>
                   <select id="depositMethod" name="deposit_method" class="form-control" required>
-                    <option value="Bank Transfer">Bank Transfer / শাখা ডিপোজিট</option>
-                    <option value="bKash">bKash (বিকাশ)</option>
-                    <option value="Nagad">Nagad (নগদ)</option>
-                    <option value="Rocket">Rocket (রকেট)</option>
-                    <option value="Cash Deposit Machine">Cash Deposit Machine (CDM)</option>
+                    <option value="Bank Transfer" data-bn="Bank Transfer / শাখা ডিপোজিট" data-en="Bank Transfer / Branch Deposit">Bank Transfer / শাখা ডিপোজিট</option>
+                    <option value="bKash" data-bn="bKash (বিকাশ)" data-en="bKash">bKash (বিকাশ)</option>
+                    <option value="Nagad" data-bn="Nagad (নগদ)" data-en="Nagad">Nagad (নগদ)</option>
+                    <option value="Rocket" data-bn="Rocket (রকেট)" data-en="Rocket">Rocket (রকেট)</option>
+                    <option value="Cash Deposit Machine" data-bn="Cash Deposit Machine (CDM)" data-en="Cash Deposit Machine (CDM)">Cash Deposit Machine (CDM)</option>
                   </select>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">প্রেরকের নাম ও মোবাইল নম্বর (Sender Details)</label>
+                  <label class="form-label required" data-bn="প্রেরকের নাম ও মোবাইল নম্বর" data-en="Sender Name & Mobile">প্রেরকের নাম ও মোবাইল নম্বর</label>
                   <div style="display:flex; gap:8px;">
-                    <input type="text" id="senderName" name="sender_name" class="form-control" placeholder="প্রেরকের নাম" required style="flex:1;">
-                    <input type="tel" id="senderMobile" name="sender_mobile" class="form-control" placeholder="প্রেরকের মোবাইল" required style="flex:1;">
+                    <input type="text" id="senderName" name="sender_name" class="form-control" placeholder="প্রেরকের নাম" required style="flex:1;" data-bn="প্রেরকের নাম" data-en="Sender Name">
+                    <input type="tel" id="senderMobile" name="sender_mobile" class="form-control" placeholder="প্রেরকের মোবাইল" required style="flex:1;" data-bn="প্রেরকের মোবাইল" data-en="Sender Mobile">
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">ট্রানজেকশন আইডি (Transaction ID / TrxID)</label>
-                  <input type="text" id="transactionId" name="transaction_id" class="form-control" placeholder="যেমন: BL9X21K7M1" required>
+                  <label class="form-label required" data-bn="ট্রানজেকশন আইডি (TrxID)" data-en="Transaction ID (TrxID)">ট্রানজেকশন আইডি (TrxID)</label>
+                  <input type="text" id="transactionId" name="transaction_id" class="form-control" placeholder="যেমন: BL9X21K7M1" required data-bn="যেমন: BL9X21K7M1" data-en="e.g. BL9X21K7M1">
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">ডিপোজিটের তারিখ (Deposit Date)</label>
+                  <label class="form-label required" data-bn="ডিপোজিটের তারিখ" data-en="Deposit Date">ডিপোজিটের তারিখ</label>
                   <input type="date" id="depositDate" name="deposit_date" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label required">ডিপোজিট স্লিপ / মানি রিসিট / স্ক্রিনশট আপলোড</label>
+                  <label class="form-label required" data-bn="ডিপোজিট স্লিপ / মানি রিসিট আপলোড" data-en="Deposit Slip / Receipt Upload">ডিপোজিট স্লিপ / মানি রিসিট আপলোড</label>
                   <div class="deposit-slip-preview">
                     <span style="font-size:1.8rem; display:block; margin-bottom:4px;">🧾</span>
                     <input type="file" id="slipInput" name="slip" accept="image/jpeg,image/png,application/pdf" required style="font-size:0.85rem;">
-                    <div style="font-size:0.75rem; color:#64748b; margin-top:6px;">ব্যাংক ক্যাশ ডিপোজিট স্লিপ বা মোবাইল ব্যাংকিং TrxID স্ক্রিনশট (সর্বোচ্চ 5MB)</div>
+                    <div style="font-size:0.75rem; color:#64748b; margin-top:6px;" data-bn="ব্যাংক ক্যাশ ডিপোজিট স্লিপ বা মোবাইল ব্যাংকিং TrxID স্ক্রিনশট (সর্বোচ্চ 5MB)" data-en="Bank cash deposit slip or mobile banking TrxID screenshot (Max 5MB)">ব্যাংক ক্যাশ ডিপোজিট স্লিপ বা মোবাইল ব্যাংকিং TrxID স্ক্রিনশট (সর্বোচ্চ 5MB)</div>
                   </div>
                 </div>
 
-                <button type="submit" id="depositSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top:16px;">
+                <button type="submit" id="depositSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top:16px;" data-bn="📥 ডিপোজিট রিকোয়েস্ট জমা দিন" data-en="📥 Submit Deposit Request">
                   📥 ডিপোজিট রিকোয়েস্ট জমা দিন
                 </button>
               </form>
@@ -148,8 +148,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.9"></script>
-  <script src="/assets/js/common.js?v=2.9"></script>
+  <script src="/assets/js/auth.js?v=3.0"></script>
+  <script src="/assets/js/common.js?v=3.0"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('deposit');
