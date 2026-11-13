@@ -61,6 +61,11 @@ class ApiClient {
       const response = await fetch(url, config);
 
       if (response.status === 401) {
+        if (endpoint.includes('/auth/login')) {
+          let errData = {};
+          try { errData = await response.json(); } catch (e) {}
+          throw new Error(errData.message || 'ভুল ইমেইল বা পাসওয়ার্ড।');
+        }
         this.clearSession();
         // Redirect to login if on protected page
         if (!window.location.pathname.includes('login') && !window.location.pathname.includes('register')) {
