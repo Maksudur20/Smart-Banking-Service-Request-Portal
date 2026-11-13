@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request Details - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
   <style>
     .timeline {
       position: relative;
@@ -92,7 +92,7 @@
             </div>
 
             <div id="correctionAlert" style="display:none;" class="ai-warning-box">
-              <strong>⚠️ Action Required by Bank Officer:</strong>
+              <strong>?? Action Required by Bank Officer:</strong>
               <div id="correctionRemarks" style="margin-top:4px;"></div>
             </div>
           </div>
@@ -147,7 +147,7 @@
           </div>
 
           <div style="font-size:0.82rem; background:var(--info-bg); padding:10px; border-radius:var(--radius-sm); color:var(--navy);">
-            ℹ️ Your document will be securely stored in protected cloud storage and automatically analyzed by our AI verification assistant.
+            ?? Your document will be securely stored in protected cloud storage and automatically analyzed by our AI verification assistant.
           </div>
         </div>
         <div class="modal-footer">
@@ -159,8 +159,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('requests');
@@ -238,11 +238,11 @@
               </div>
               <div style="display:flex; gap:8px;">
                 <button onclick="previewDocument(${uploaded.id})" class="btn btn-secondary btn-sm">
-                  🔍 View Document
+                  ?? View Document
                 </button>
                 ${(isEditable && (uploaded.verification_status === 'Rejected' || requestStatus === 'Correction Required')) ? `
                   <button onclick="openReplaceModal(${uploaded.id}, '${r.document_name}')" class="btn btn-warning btn-sm">
-                    🔄 Replace File
+                    ?? Replace File
                   </button>
                 ` : ''}
               </div>
@@ -359,7 +359,7 @@
         window.showToast(err.message || 'Upload failed.', 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = 'Upload Document →';
+        btn.innerText = 'Upload Document ?';
       }
     });
 

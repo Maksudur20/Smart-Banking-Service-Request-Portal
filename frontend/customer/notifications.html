@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>নোটিফিকেশন ও অ্যালার্ট - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <title>?????????? ? ????????? - Smart Banking PLC</title>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
   <style>
     .notif-card {
       border: 1px solid #e2e8f0;
@@ -51,21 +51,21 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🔔 ইন-অ্যাপ নোটিফিকেশন ও অ্যালার্ট (Notifications)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">?? ??-????? ?????????? ? ????????? (Notifications)</h2>
         </div>
         <div class="top-nav-right">
-          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">সকল পঠিত হিসেবে চিহ্নিত করুন</button>
+          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">??? ???? ?????? ??????? ????</button>
         </div>
       </header>
 
       <main class="content-container" style="max-width: 880px;">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">ব্যাংকিং লেনদেন, কেওয়াইসি ও স্ট্যাটাস আপডেট</h3>
+            <h3 class="card-title">???????? ??????, ???????? ? ????????? ?????</h3>
           </div>
           <div class="card-body">
             <div id="notificationsList">
-              <p style="color:#94a3b8; text-align:center; padding:30px;">নোটিফিকেশন লোড হচ্ছে...</p>
+              <p style="color:#94a3b8; text-align:center; padding:30px;">?????????? ??? ?????...</p>
             </div>
           </div>
         </div>
@@ -74,8 +74,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('notifications');
@@ -87,7 +87,7 @@
         const container = document.getElementById('notificationsList');
 
         if (list.length === 0) {
-          container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:30px;">কোনো নতুন নোটিফিকেশন নেই।</p>';
+          container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:30px;">???? ???? ?????????? ????</p>';
           return;
         }
 
@@ -101,14 +101,14 @@
             <div>
               ${!n.is_read ? `
                 <button onclick="markSingleRead(${n.id})" class="table-action-btn primary" title="Mark as read" style="font-size:0.75rem;">
-                  ✓ পঠিত
+                  ? ????
                 </button>
               ` : ''}
             </div>
           </div>
         `).join('');
       } catch (err) {
-        window.showToast('নোটিফিকেশন লোড করা যায়নি।', 'error');
+        window.showToast('?????????? ??? ??? ??????', 'error');
       }
     }
 
@@ -125,11 +125,11 @@
     async function markAllRead() {
       try {
         await window.api.patch('/api/notifications/read-all', {});
-        window.showToast('✅ সকল নোটিফিকেশন পঠিত হিসেবে চিহ্নিত হয়েছে।', 'success');
+        window.showToast('? ??? ?????????? ???? ?????? ??????? ??????', 'success');
         loadNotifications();
         window.UI.updateNotificationBadge();
       } catch (e) {
-        window.showToast('ব্যর্থ হয়েছে।', 'error');
+        window.showToast('?????? ??????', 'error');
       }
     }
 

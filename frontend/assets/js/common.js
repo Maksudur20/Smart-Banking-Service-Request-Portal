@@ -317,6 +317,12 @@ const UI = {
       "দাখিলের সময়": "Submitted",
       "যাচাই": "Verify",
       "ওভারভিউ": "Overview",
+      "🏠 / ওভারভিউ": "🏠 / Overview",
+      "লোড হচ্ছে...": "Loading...",
+      "অনুগ্রহ করে অপেক্ষা করুন...": "Please wait...",
+      "কোনো তথ্য পাওয়া যায়নি।": "No data found.",
+      "কোনো আবেদন পাওয়া যায়নি।": "No requests found.",
+      "কোনো গ্রাহক পাওয়া যায়নি।": "No customers found.",
       "কিউতে কোনো অপেক্ষমাণ আবেদন নেই।": "No pending requests in queue.",
       "টাকা পাঠান": "Send Money",
       "প্রাপকের অ্যাকাউন্ট নম্বর": "Recipient Account Number",
@@ -406,7 +412,14 @@ const UI = {
       "ব্যবহারযোগ্য ব্যালেন্স": "Available Balance",
       "উপলব্ধ ব্যালেন্স": "Available Balance",
       "অ্যাকাউন্ট হোল্ডার": "Account Holder",
-      "আবেদন জমা হচ্ছে...": "Submitting Request..."
+      "আবেদন জমা হচ্ছে...": "Submitting Request...",
+      "এই জাতীয় পরিচয়পত্র (NID) নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। একই NID নম্বর দিয়ে একাধিক অ্যাকাউন্ট খোলা যাবে না।": "An account already exists with this National ID (NID) number. Multiple accounts cannot be created with the same NID.",
+      "এই ইমেইল ঠিকানাটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। অন্য একটি ইমেইল ঠিকানা ব্যবহার করুন।": "An account already exists with this email address. Please use a different email.",
+      "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। একই মোবাইল নম্বর দিয়ে অন্য কেউ অ্যাকাউন্ট খুলতে পারবে না।": "An account already exists with this mobile number. Multiple accounts cannot be opened with the same phone number.",
+      "ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর কোনোভাবেই পরস্পর এক হতে পারবে না। প্রতিটির জন্য আলাদা তথ্য প্রদান করুন।": "Email, Mobile Number, and National ID (NID) cannot be identical to each other. Please provide unique information for each.",
+      "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।": "Password must be at least 6 characters long.",
+      "ভুল ইমেইল বা পাসওয়ার্ড।": "Invalid email or password.",
+      "ভুল ইমেইল বা পাসওয়ার্ড।": "Invalid email or password."
     },
     enToBn: {}
   },

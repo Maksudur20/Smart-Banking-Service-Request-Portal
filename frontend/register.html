@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>নতুন অ্যাকাউন্ট আবেদন ও কেওয়াইসি ভেরিফিকেশন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
   <style>
     .reg-container {
       max-width: 860px;
@@ -322,8 +322,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
 
@@ -340,14 +340,15 @@
       const email = (emailInput ? emailInput.value : '').toLowerCase().trim();
       const phone = (phoneInput ? phoneInput.value : '').trim().replace(/[\s-]/g, '');
       const nid = (nidInput ? nidInput.value : '').trim().replace(/[\s-]/g, '');
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
 
       if (!email || !phone || !nid) {
-        window.showToast('ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর অবশ্যই প্রদান করতে হবে।', 'error');
+        window.showToast(isBn ? 'ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর অবশ্যই প্রদান করতে হবে।' : 'Email, Phone Number, and National ID (NID) are all mandatory.', 'error');
         return;
       }
 
       if (email === phone || email === nid || phone === nid) {
-        window.showToast('ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর কোনোভাবেই পরস্পর এক হতে পারবে না। প্রতিটির জন্য ভিন্ন তথ্য প্রদান করুন।', 'error');
+        window.showToast(isBn ? 'ইমেইল, মোবাইল নম্বর এবং জাতীয় পরিচয়পত্র (NID) নম্বর কোনোভাবেই পরস্পর এক হতে পারবে না। প্রতিটির জন্য ভিন্ন তথ্য প্রদান করুন।' : 'Email, Phone Number, and National ID (NID) cannot be identical to each other. Please provide unique information for each.', 'error');
         return;
       }
 
@@ -356,14 +357,14 @@
       for (const field of requiredFileInputs) {
         const input = form.querySelector(`input[name="${field}"]`);
         if (!input || !input.files || input.files.length === 0) {
-          window.showToast(`অনুগ্রহ করে "${field}" এর ডকুমেন্ট ফাইলটি আপলোড করুন।`, 'error');
+          window.showToast(isBn ? `অনুগ্রহ করে "${field}" এর ডকুমেন্ট ফাইলটি আপলোড করুন।` : `Please upload the document file for "${field}".`, 'error');
           input.focus();
           return;
         }
         // Size validation: max 5MB
         const file = input.files[0];
         if (file.size > 5 * 1024 * 1024) {
-          window.showToast(`"${file.name}" ফাইলের সাইজ ৫MB-এর বেশি হতে পারবে না।`, 'error');
+          window.showToast(isBn ? `"${file.name}" ফাইলের সাইজ ৫MB-এর বেশি হতে পারবে না।` : `"${file.name}" file size cannot exceed 5MB.`, 'error');
           return;
         }
       }
@@ -372,7 +373,7 @@
 
       try {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '⏳ ডকুমেন্ট ও তথ্য আপলোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন';
+        submitBtn.innerHTML = isBn ? '⏳ ডকুমেন্ট ও তথ্য আপলোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন' : '⏳ Uploading documents and details... Please wait';
 
         // Direct fetch to POST /api/auth/register with FormData
         const response = await fetch('/api/auth/register', {
@@ -383,22 +384,22 @@
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(data.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
+          throw new Error(data.message || (isBn ? 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।' : 'Registration failed. Please try again.'));
         }
 
         // Store token and user
         window.api.setToken(data.token);
         window.api.setUser(data.user);
 
-        window.showToast('✅ আবেদন সফল হয়েছে! স্বাগতম Smart Banking PLC-তে।', 'success');
+        window.showToast(isBn ? '✅ আবেদন সফল হয়েছে! স্বাগতম Smart Banking PLC-তে।' : '✅ Application successful! Welcome to Smart Banking PLC.', 'success');
 
         setTimeout(() => {
           window.location.href = '/customer/dashboard.html';
         }, 1200);
       } catch (err) {
-        window.showToast(err.message || 'আবেদন জমা দিতে সমস্যা হয়েছে।', 'error');
+        window.showToast(err.message || (isBn ? 'আবেদন জমা দিতে সমস্যা হয়েছে।' : 'Failed to submit application.'), 'error');
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '📝 আবেদন ও কেওয়াইসি সাবমিট করুন (Submit Account Application)';
+        submitBtn.innerHTML = submitBtn.getAttribute(`data-${isBn ? 'bn' : 'en'}`) || (isBn ? '📝 আবেদন ও কেওয়াইসি সাবমিট করুন' : '📝 Submit Account Application');
       }
     });
   </script>

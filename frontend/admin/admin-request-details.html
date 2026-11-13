@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Review & Decision - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.3">
   <style>
     .review-grid {
       display: grid;
@@ -45,13 +45,13 @@
         <div class="card" style="border-left: 4px solid var(--purple); background: #faf5ff;">
           <div class="card-body" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
             <div>
-              <div class="ai-badge">🤖 AI Assistant Executive Briefing</div>
+              <div class="ai-badge">?? AI Assistant Executive Briefing</div>
               <p id="aiBriefingText" style="font-size:0.9rem; color:var(--navy); margin-top:8px; line-height:1.5;">
                 Click below to request an instant AI synthesis of this customer application and document verification findings.
               </p>
             </div>
             <button onclick="generateAISummary()" id="aiSummaryBtn" class="btn btn-secondary btn-sm" style="border-color:var(--purple); color:var(--purple); font-weight:700;">
-              ✨ Generate AI Summary
+              ? Generate AI Summary
             </button>
           </div>
         </div>
@@ -121,13 +121,13 @@
 
                 <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
                   <button onclick="submitDecision('APPROVE')" id="btnApprove" class="btn btn-success btn-block">
-                    ✓ Approve Application
+                    ? Approve Application
                   </button>
                   <button onclick="submitDecision('CORRECTION_REQUIRED')" id="btnCorrection" class="btn btn-warning btn-block">
-                    ⚠️ Request Document Correction
+                    ?? Request Document Correction
                   </button>
                   <button onclick="submitDecision('REJECT')" id="btnReject" class="btn btn-danger btn-block">
-                    ✕ Reject Application
+                    ? Reject Application
                   </button>
                 </div>
               </div>
@@ -139,8 +139,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/assets/js/auth.js?v=3.3"></script>
+  <script src="/assets/js/common.js?v=3.3"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('requests');
@@ -192,14 +192,14 @@
               </div>
             </div>
             <button onclick="previewDoc(${d.id})" class="btn btn-secondary btn-sm">
-              🔍 Inspect File in New Tab
+              ?? Inspect File in New Tab
             </button>
           </div>
 
           <!-- AI Assistant Output Card -->
           <div class="ai-review-card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="ai-badge">🤖 AI Analysis Report</span>
+              <span class="ai-badge">?? AI Analysis Report</span>
               <span style="font-size:0.75rem; color:var(--text-muted);">Model: <code>${d.model_id || 'vision-agent'}</code></span>
             </div>
 
@@ -248,7 +248,7 @@
             ` : ''}
 
             <div style="font-size:0.75rem; color:var(--text-light); border-top:1px dashed var(--border); padding-top:6px; margin-top:8px;">
-              ⚠️ <em>Disclaimer: AI output is decision-support assistance only. The bank officer must independently review the evidence before approving or rejecting.</em>
+              ?? <em>Disclaimer: AI output is decision-support assistance only. The bank officer must independently review the evidence before approving or rejecting.</em>
             </div>
           </div>
         </div>
@@ -280,7 +280,7 @@
         window.showToast('Failed to generate summary.', 'error');
       } finally {
         btn.disabled = false;
-        btn.innerText = '✨ Re-generate AI Summary';
+        btn.innerText = '? Re-generate AI Summary';
       }
     }
 
