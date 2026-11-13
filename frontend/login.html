@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ইন্টারনেট ব্যাংকিং লগইন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body class="auth-page">
   <div class="auth-card" style="max-width: 440px;">
@@ -13,47 +13,37 @@
         <div class="brand-icon">SB</div>
         <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
       </div>
-      <h2 class="auth-title">গ্রাহক ইন্টারনেট ব্যাংকিং</h2>
-      <p class="auth-sub">আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন</p>
-    </div>
-
-    <!-- Banking Security Alert for Back/Forward Navigation -->
-    <div id="securityAlert" style="display:none; background:#fff1f2; border:1px solid #fecdd3; color:#be123c; padding:12px 16px; border-radius:8px; font-size:0.85rem; margin-bottom:18px; line-height:1.4;">
-      🔒 <strong>নিরাপত্তা সতর্কতা:</strong> ব্রাউজারের ব্যাক বা ফরোয়ার্ড নেভিগেশনের কারণে আপনার ব্যাংকিং সেশন সমাপ্ত করা হয়েছে। অনুগ্রহ করে আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে পুনরায় লগইন করুন।
+      <h2 class="auth-title" data-bn="গ্রাহক ইন্টারনেট ব্যাংকিং" data-en="Customer Internet Banking">গ্রাহক ইন্টারনেট ব্যাংকিং</h2>
+      <p class="auth-sub" data-bn="আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন" data-en="Sign in to your banking account and digital services">আপনার ব্যাংকিং অ্যাকাউন্ট ও ডিজিটাল সেবা ব্যবস্থাপনায় প্রবেশ করুন</p>
     </div>
 
     <form id="loginForm">
       <div class="form-group">
-        <label class="form-label required">নিবন্ধিত ইমেইল ঠিকানা (Email Address)</label>
+        <label class="form-label required" data-bn="ইমেইল ঠিকানা" data-en="Email Address">ইমেইল ঠিকানা</label>
         <input type="email" id="email" class="form-control" placeholder="user@example.com" required autofocus>
       </div>
 
       <div class="form-group">
-        <label class="form-label required">পাসওয়ার্ড (Password)</label>
-        <input type="password" id="password" class="form-control" placeholder="আপনার অ্যাকাউন্টের পাসওয়ার্ড" required>
+        <label class="form-label required" data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
       </div>
 
-      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700; margin-top:20px;">
-        🔑 লগইন করুন (Log In)
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="font-weight:700; margin-top:20px;" data-bn="🔑 লগইন করুন" data-en="🔑 Sign In">
+        🔑 লগইন করুন
       </button>
     </form>
 
     <div class="auth-footer" style="margin-top:24px;">
-      নতুন গ্রাহক? <a href="/register.html" style="color:#0284c7; font-weight:700;">এখানে নতুন অ্যাকাউন্ট খুলুন</a><br><br>
-      <a href="/admin-login.html" style="font-size: 0.85rem; color: #64748b;">ব্যাংক অফিসার পোর্টাল লগইন &rarr;</a>
+      <span data-bn="নতুন গ্রাহক?" data-en="New to Smart Banking?">নতুন গ্রাহক?</span> <a href="/register.html" style="color:#0284c7; font-weight:700;" data-bn="এখানে নতুন অ্যাকাউন্ট খুলুন" data-en="Open an Account here">এখানে নতুন অ্যাকাউন্ট খুলুন</a><br><br>
+      <a href="/admin-login.html" style="font-size: 0.85rem; color: #64748b;" data-bn="ব্যাংক অফিসার পোর্টাল লগইন &rarr;" data-en="Bank Officer Portal Login &rarr;">ব্যাংক অফিসার পোর্টাল লগইন &rarr;</a>
     </div>
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
-
-    if (window.location.search.includes('reason=back_nav') || window.location.search.includes('session=expired')) {
-      const alertEl = document.getElementById('securityAlert');
-      if (alertEl) alertEl.style.display = 'block';
-    }
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();

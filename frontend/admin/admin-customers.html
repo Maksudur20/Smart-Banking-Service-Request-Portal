@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ডিরেক্টরি - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body>
   <div class="app-layout">
@@ -13,7 +13,7 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">👥 নিবন্ধিত গ্রাহক তালিকা (Customer Directory)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="👥 নিবন্ধিত গ্রাহক তালিকা" data-en="👥 Registered Customer Directory">👥 নিবন্ধিত গ্রাহক তালিকা</h2>
         </div>
         <div class="top-nav-right">
           <span style="font-size:0.85rem; color:#64748b;">রিয়েল-টাইম গ্রাহক ও ব্যালেন্স তথ্য</span>
@@ -35,14 +35,14 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>গ্রাহক রেফারেন্স</th>
-                  <th>নাম ও যোগাযোগ</th>
-                  <th>অ্যাকাউন্ট নম্বর</th>
-                  <th>অ্যাকাউন্টের ধরন</th>
-                  <th>ব্যালেন্স</th>
-                  <th>কেওয়াইসি স্ট্যাটাস</th>
-                  <th>রেজিস্ট্রেশন তারিখ</th>
-                  <th>অ্যাকশন</th>
+                  <th data-bn="গ্রাহক রেফারেন্স" data-en="Reference">গ্রাহক রেফারেন্স</th>
+                  <th data-bn="নাম ও যোগাযোগ" data-en="Name & Contact">নাম ও যোগাযোগ</th>
+                  <th data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</th>
+                  <th data-bn="অ্যাকাউন্টের ধরন" data-en="Account Type">অ্যাকাউন্টের ধরন</th>
+                  <th data-bn="ব্যালেন্স" data-en="Balance">ব্যালেন্স</th>
+                  <th data-bn="কেওয়াইসি স্ট্যাটাস" data-en="KYC Status">কেওয়াইসি স্ট্যাটাস</th>
+                  <th data-bn="রেজিস্ট্রেশন তারিখ" data-en="Registered On">রেজিস্ট্রেশন তারিখ</th>
+                  <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody id="customersTableBody">
@@ -58,14 +58,16 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('customers');
 
     async function loadCustomers() {
       const search = document.getElementById('custSearch').value;
+      const lang = window.UI ? window.UI.getLanguage() : 'bn';
+      const isBn = lang === 'bn';
       const params = {};
       if (search) params.search = search;
 
@@ -75,7 +77,7 @@
         const tbody = document.getElementById('customersTableBody');
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">কোনো গ্রাহক পাওয়া যায়নি।</td></tr>';
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">${isBn ? 'কোনো গ্রাহক পাওয়া যায়নি।' : 'No customers found.'}</td></tr>`;
           return;
         }
 
@@ -98,7 +100,7 @@
               <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(c.created_at).toLocaleDateString()}</td>
               <td>
                 <a href="/admin/admin-kyc.html?customerId=${c.id}" class="table-action-btn primary">
-                  কেওয়াইসি রিভিউ &rarr;
+                  ${isBn ? 'কেওয়াইসি রিভিউ &rarr;' : 'Review KYC &rarr;'}
                 </a>
               </td>
             </tr>

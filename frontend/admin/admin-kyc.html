@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
   <style>
     .modal-overlay {
       position: fixed;
@@ -59,7 +59,7 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🪪 গ্রাহক কেওয়াইসি ভেরিফিকেশন ডেস্ক (KYC Desk)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="🪪 কেওয়াইসি ভেরিফিকেশন ডেস্ক" data-en="🪪 KYC Verification Desk">🪪 কেওয়াইসি ভেরিফিকেশন ডেস্ক</h2>
         </div>
         <div class="top-nav-right">
           <span style="font-size:0.85rem; color:#64748b;">অ্যাডমিন ওয়ার্কস্পেস</span>
@@ -71,15 +71,15 @@
         <div class="stats-grid" style="margin-bottom:24px;">
           <div class="stat-card">
             <span class="stat-value" id="countPending" style="color:#d97706;">0</span>
-            <span class="stat-label">Pending / অপেক্ষা করছে</span>
+            <span class="stat-label" data-bn="অপেক্ষমাণ আবেদন" data-en="Pending Applications">অপেক্ষমাণ আবেদন</span>
           </div>
           <div class="stat-card">
             <span class="stat-value" id="countApproved" style="color:#059669;">0</span>
-            <span class="stat-label">Approved / অনুমোদিত</span>
+            <span class="stat-label" data-bn="অনুমোদিত গ্রাহক" data-en="Approved Customers">অনুমোদিত গ্রাহক</span>
           </div>
           <div class="stat-card">
             <span class="stat-value" id="countRejected" style="color:#dc2626;">0</span>
-            <span class="stat-label">Rejected / বাতিল</span>
+            <span class="stat-label" data-bn="বাতিলকৃত আবেদন" data-en="Rejected Applications">বাতিলকৃত আবেদন</span>
           </div>
         </div>
 
@@ -87,22 +87,22 @@
         <div class="card" style="margin-bottom:20px;">
           <div class="card-body" style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
             <div style="display:flex; align-items:center; gap:10px;">
-              <label style="font-weight:600; font-size:0.85rem;">ফিল্টার:</label>
+              <label style="font-weight:600; font-size:0.85rem;" data-bn="ফিল্টার:" data-en="Filter:">ফিল্টার:</label>
               <select id="statusFilter" class="form-control" style="width:180px;">
-                <option value="">সকল আবেদন (All)</option>
-                <option value="Pending">Pending (অপেক্ষমাণ)</option>
-                <option value="Approved">Approved (অনুমোদিত)</option>
-                <option value="Rejected">Rejected (বাতিলকৃত)</option>
+                <option value="" data-bn="সকল আবেদন" data-en="All Applications">সকল আবেদন</option>
+                <option value="Pending" data-bn="অপেক্ষমাণ" data-en="Pending">অপেক্ষমাণ</option>
+                <option value="Approved" data-bn="অনুমোদিত" data-en="Approved">অনুমোদিত</option>
+                <option value="Rejected" data-bn="বাতিলকৃত" data-en="Rejected">বাতিলকৃত</option>
               </select>
             </div>
-            <button onclick="loadApplications()" class="btn btn-secondary btn-sm">🔄 রিফ্রেশ</button>
+            <button onclick="loadApplications()" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
           </div>
         </div>
 
         <!-- Applications Table -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">আবেদনকারী তালিকা (KYC Applications)</h3>
+            <h3 class="card-title" data-bn="আবেদনকারী তালিকা" data-en="Applicant List">আবেদনকারী তালিকা</h3>
           </div>
           <div class="card-body" style="padding:0;">
             <div id="applicationsContainer">
@@ -126,29 +126,29 @@
         <!-- Filled by JS -->
       </div>
 
-      <h4 style="margin:16px 0 8px 0; font-size:1rem; color:#0f172a;">সংযুক্ত ডকুমেন্টস (Uploaded KYC Documents):</h4>
+      <h4 style="margin:16px 0 8px 0; font-size:1rem; color:#0f172a;" data-bn="সংযুক্ত ডকুমেন্টস:" data-en="Attached KYC Documents:">সংযুক্ত ডকুমেন্টস:</h4>
       <div id="modalDocsContainer" class="docs-viewer-grid">
         <!-- Docs injected by JS -->
       </div>
 
       <!-- Decision Form -->
       <div style="border-top:1px solid #e2e8f0; padding-top:16px; margin-top:20px;">
-        <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;">অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:</h4>
+        <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;" data-bn="অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:" data-en="Admin Decision & Verification:">অ্যাডমিন সিদ্ধান্ত ও ভেরিফিকেশন:</h4>
         
         <div class="form-group">
-          <label class="form-label">মন্তব্য / বাতিলের কারণ (Rejection Reason or Remarks):</label>
-          <textarea id="adminRemarks" class="form-control" rows="2" placeholder="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ বাধ্যতামূলক"></textarea>
+          <label class="form-label" data-bn="মন্তব্য বা বাতিলের কারণ:" data-en="Remarks or Reason:">মন্তব্য বা বাতিলের কারণ:</label>
+          <textarea id="adminRemarks" class="form-control" rows="2" placeholder="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-bn="বাতিল বা অতিরিক্ত ডকুমেন্ট চাওয়ার ক্ষেত্রে কারণ উল্লেখ আবশ্যক" data-en="Reason is mandatory when rejecting or requesting additional documents"></textarea>
         </div>
 
-        <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="makeDecision('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;">
-            ❌ Reject Application
+        <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
+          <button onclick="makeDecision('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ আবেদন বাতিল করুন" data-en="❌ Reject Application">
+            ❌ আবেদন বাতিল করুন
           </button>
-          <button onclick="makeDecision('REQUEST_DOCS')" class="btn btn-secondary" style="background:#fffbeb; color:#d97706; border-color:#fde68a;">
-            ⚠️ Request Additional Docs
+          <button onclick="makeDecision('REQUEST_DOCS')" class="btn btn-secondary" style="background:#fffbeb; color:#d97706; border-color:#fde68a;" data-bn="⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন" data-en="⚠️ Request Additional Docs">
+            ⚠️ অতিরিক্ত ডকুমেন্ট তলব করুন
           </button>
-          <button onclick="makeDecision('APPROVE')" class="btn btn-primary" style="background:#059669; border-color:#059669;">
-            ✅ Approve KYC & Activate Full Banking
+          <button onclick="makeDecision('APPROVE')" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন" data-en="✅ Approve KYC & Activate">
+            ✅ কেওয়াইসি অনুমোদন ও অ্যাকাউন্ট সক্রিয় করুন
           </button>
         </div>
       </div>
@@ -156,8 +156,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');
@@ -192,19 +192,22 @@
           return;
         }
 
+        const lang = window.UI ? window.UI.getLanguage() : 'bn';
+        const isBn = lang === 'bn';
+
         container.innerHTML = `
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>গ্রাহক রেফারেন্স</th>
-                  <th>নাম ও ইমেইল</th>
-                  <th>অ্যাকাউন্ট নম্বর</th>
-                  <th>অ্যাকাউন্টের ধরন</th>
-                  <th>ডকুমেন্ট সংখ্যা</th>
-                  <th>কেওয়াইসি স্ট্যাটাস</th>
-                  <th>আবেদনের তারিখ</th>
-                  <th>অ্যাকশন</th>
+                  <th data-bn="গ্রাহক রেফারেন্স" data-en="Reference">গ্রাহক রেফারেন্স</th>
+                  <th data-bn="নাম ও ইমেইল" data-en="Name & Email">নাম ও ইমেইল</th>
+                  <th data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</th>
+                  <th data-bn="অ্যাকাউন্টের ধরন" data-en="Account Type">অ্যাকাউন্টের ধরন</th>
+                  <th data-bn="ডকুমেন্ট সংখ্যা" data-en="Documents">ডকুমেন্ট সংখ্যা</th>
+                  <th data-bn="কেওয়াইসি স্ট্যাটাস" data-en="KYC Status">কেওয়াইসি স্ট্যাটাস</th>
+                  <th data-bn="আবেদনের তারিখ" data-en="Application Date">আবেদনের তারিখ</th>
+                  <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody>
@@ -222,17 +225,21 @@
                       </td>
                       <td><span style="font-family:ui-monospace, monospace; font-weight:700; color:#0369a1; font-size:0.9rem;">${app.account_number}</span></td>
                       <td><span style="color:#475569; font-weight:500;">${app.account_type || 'Prime Savings'}</span></td>
-                      <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${app.document_count || app.doc_count || 0} টি ফাইল</span></td>
+                      <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${app.document_count || app.doc_count || 0} ${isBn ? 'টি ফাইল' : 'Files'}</span></td>
                       <td><span class="badge ${badgeClass}">${app.kyc_status}</span></td>
                       <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(app.created_at).toLocaleDateString()}</td>
                       <td>
                         <button onclick="openReviewModal(${app.customer_id || app.id})" class="table-action-btn primary">
-                          যাচাই করুন &rarr;
+                          ${isBn ? 'যাচাই করুন &rarr;' : 'Review &rarr;'}
                         </button>
                       </td>
                     </tr>
                   `;
                 }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
               </tbody>
             </table>
           </div>

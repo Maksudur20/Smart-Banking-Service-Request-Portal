@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>লাইভ লেনদেন খতিয়ান - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body>
   <div class="app-layout">
@@ -13,10 +13,10 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">💳 লাইভ ব্যাংকিং ট্রানজেকশন লেজার (Live Transaction Ledger)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="💳 লাইভ ব্যাংকিং ট্রানজেকশন লেজার" data-en="💳 Live Banking Transaction Ledger">💳 লাইভ ব্যাংকিং ট্রানজেকশন লেজার</h2>
         </div>
         <div class="top-nav-right">
-          <span style="font-size:0.85rem; color:#64748b;">বাস্তব জমার ও ট্রান্সফারের খতিয়ান</span>
+          <span style="font-size:0.85rem; color:#64748b;" data-bn="বাস্তব জমা ও ট্রান্সফারের খতিয়ান" data-en="Real deposits and transfers ledger">বাস্তব জমা ও ট্রান্সফারের খতিয়ান</span>
         </div>
       </header>
 
@@ -24,15 +24,15 @@
         <div class="card">
           <div class="card-header" style="flex-wrap:wrap; gap:12px;">
             <div>
-              <h3 class="card-title">সকল বাস্তব ব্যাংকিং লেনদেন</h3>
-              <p class="card-subtitle">আউটগোয়িং ট্রান্সফার ও ভেরিফাইড ডিপোজিটের কেন্দ্রীয় রেজিস্টার</p>
+              <h3 class="card-title" data-bn="সকল বাস্তব ব্যাংকিং লেনদেন" data-en="All Real Banking Transactions">সকল বাস্তব ব্যাংকিং লেনদেন</h3>
+              <p class="card-subtitle" data-bn="আউটগোয়িং ট্রান্সফার ও ভেরিফাইড ডিপোজিটের কেন্দ্রীয় রেজিস্টার" data-en="Central register of outgoing transfers and verified deposits">আউটগোয়িং ট্রান্সফার ও ভেরিফাইড ডিপোজিটের কেন্দ্রীয় রেজিস্টার</p>
             </div>
             <div style="display:flex; gap:10px;">
-              <input type="text" id="txSearch" class="form-control" placeholder="Trx ID বা অ্যাকাউন্ট নম্বর..." style="width:220px; font-size:0.85rem;">
+              <input type="text" id="txSearch" class="form-control" placeholder="Trx ID বা অ্যাকাউন্ট নম্বর..." style="width:220px; font-size:0.85rem;" data-bn="Trx ID বা অ্যাকাউন্ট নম্বর..." data-en="Trx ID or Account Number...">
               <select id="typeFilter" class="form-control" style="width:auto; font-size:0.85rem;">
-                <option value="">সকল ধরন</option>
-                <option value="CREDIT">ডিপোজিট / ক্রেডিট (Credit)</option>
-                <option value="DEBIT">ফান্ড ট্রান্সফার / ডেবিট (Debit)</option>
+                <option value="" data-bn="সকল ধরন" data-en="All Types">সকল ধরন</option>
+                <option value="CREDIT" data-bn="ডিপোজিট / ক্রেডিট" data-en="Deposit / Credit">ডিপোজিট / ক্রেডিট</option>
+                <option value="DEBIT" data-bn="ফান্ড ট্রান্সফার / ডেবিট" data-en="Fund Transfer / Debit">ফান্ড ট্রান্সফার / ডেবিট</option>
               </select>
             </div>
           </div>
@@ -63,8 +63,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('transactions');

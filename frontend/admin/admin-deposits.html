@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ডিপোজিট ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
   <style>
     .modal-overlay {
       position: fixed;
@@ -46,7 +46,7 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">💵 ডিপোজিট ভেরিফিকেশন কিউ (Deposit Verifications)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="💵 ডিপোজিট ভেরিফিকেশন কিউ" data-en="💵 Deposit Verifications Queue">💵 ডিপোজিট ভেরিফিকেশন কিউ</h2>
         </div>
         <div class="top-nav-right">
           <span style="font-size:0.85rem; color:#64748b;">ক্যাশ ও মোবাইল ব্যাংকিং স্লিপ ভেরিফিকেশন</span>
@@ -83,31 +83,31 @@
       </div>
 
       <div>
-        <h4 style="margin:12px 0 4px 0; font-size:0.9rem;">সংযুক্ত ডিপোজিট স্লিপ / রিসিট:</h4>
+        <h4 style="margin:12px 0 4px 0; font-size:0.9rem;" data-bn="সংযুক্ত ডিপোজিট স্লিপ:" data-en="Attached Deposit Slip:">সংযুক্ত ডিপোজিট স্লিপ:</h4>
         <div id="modalSlipContainer">
           <!-- Injected by JS -->
         </div>
       </div>
 
       <div class="form-group" style="margin-top:14px;">
-        <label class="form-label">অ্যাডমিন রিমার্কস (Remarks):</label>
-        <textarea id="depositRemarks" class="form-control" rows="2" placeholder="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন"></textarea>
+        <label class="form-label" data-bn="অ্যাডমিন মন্তব্য:" data-en="Admin Remarks:">অ্যাডমিন মন্তব্য:</label>
+        <textarea id="depositRemarks" class="form-control" rows="2" placeholder="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন" data-bn="বাতিলের ক্ষেত্রে কারণ উল্লেখ করুন" data-en="Reason is mandatory when rejecting"></textarea>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px;">
-        <button onclick="verifyDeposit('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;">
-          ❌ Reject Deposit
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px; flex-wrap:wrap;">
+        <button onclick="verifyDeposit('REJECT')" class="btn btn-secondary" style="background:#fef2f2; color:#dc2626; border-color:#fca5a5;" data-bn="❌ ডিপোজিট বাতিল করুন" data-en="❌ Reject Deposit">
+          ❌ ডিপোজিট বাতিল করুন
         </button>
-        <button onclick="verifyDeposit('ACCEPT')" class="btn btn-primary" style="background:#059669; border-color:#059669;">
-          ✅ Accept & Credit Balance Atomically
+        <button onclick="verifyDeposit('ACCEPT')" class="btn btn-primary" style="background:#059669; border-color:#059669;" data-bn="✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন" data-en="✅ Accept & Credit Balance">
+          ✅ অনুমোদন ও অ্যাকাউন্টে জমা করুন
         </button>
       </div>
     </div>
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('deposits');
@@ -117,12 +117,15 @@
 
     async function loadDeposits() {
       const container = document.getElementById('depositsTableContainer');
+      const lang = window.UI ? window.UI.getLanguage() : 'bn';
+      const isBn = lang === 'bn';
+
       try {
         const res = await window.api.get('/api/deposits/admin');
         depositList = res.deposits || [];
 
         if (depositList.length === 0) {
-          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">কোনো ডিপোজিট রিকোয়েস্ট পাওয়া যায়নি।</p>`;
+          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">${isBn ? 'কোনো ডিপোজিট রেকর্ড পাওয়া যায়নি।' : 'No deposit records found.'}</p>`;
           return;
         }
 
@@ -131,15 +134,15 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>আইডি</th>
-                  <th>গ্রাহক ও অ্যাকাউন্ট</th>
-                  <th>পরিমাণ</th>
-                  <th>পদ্ধতি</th>
-                  <th>TrxID</th>
-                  <th>প্রেরক</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>তারিখ</th>
-                  <th>অ্যাকশন</th>
+                  <th data-bn="আইডি" data-en="Deposit ID">আইডি</th>
+                  <th data-bn="গ্রাহক ও অ্যাকাউন্ট" data-en="Customer & A/C">গ্রাহক ও অ্যাকাউন্ট</th>
+                  <th data-bn="পরিমাণ" data-en="Amount">পরিমাণ</th>
+                  <th data-bn="পদ্ধতি" data-en="Method">পদ্ধতি</th>
+                  <th data-bn="TrxID" data-en="TrxID">TrxID</th>
+                  <th data-bn="প্রেরক" data-en="Sender">প্রেরক</th>
+                  <th data-bn="স্ট্যাটাস" data-en="Status">স্ট্যাটাস</th>
+                  <th data-bn="তারিখ" data-en="Date">তারিখ</th>
+                  <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,17 +167,21 @@
                       <td>
                         ${d.status === 'Pending Verification' ? `
                           <button onclick="openDepositModal(${d.id})" class="table-action-btn primary">
-                            যাচাই ও ক্রেডিট &rarr;
+                            ${isBn ? 'যাচাই ও ক্রেডিট &rarr;' : 'Verify & Credit &rarr;'}
                           </button>
                         ` : `
                           <button onclick="openDepositModal(${d.id})" class="table-action-btn secondary">
-                            স্লিপ দেখুন 📄
+                            ${isBn ? 'স্লিপ দেখুন 📄' : 'View Slip 📄'}
                           </button>
                         `}
                       </td>
                     </tr>
                   `;
                 }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
               </tbody>
             </table>
           </div>

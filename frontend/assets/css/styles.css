@@ -686,6 +686,55 @@ a:hover {
   white-space: nowrap;
 }
 
+.table td.desc-cell,
+.data-table td.desc-cell,
+.table td.text-wrap,
+.data-table td.text-wrap,
+.table td.wrap-cell,
+.data-table td.wrap-cell {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  min-width: 280px;
+  max-width: 460px;
+  line-height: 1.5;
+}
+
+/* Language Toggle Switch Pill */
+.lang-switch-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 2px;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.lang-switch-pill .lang-btn {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.lang-switch-pill .lang-btn.active {
+  background: #0284c7;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
+}
+
+.lang-switch-pill .lang-btn:hover:not(.active) {
+  color: #0f172a;
+}
+
 .table tbody tr:nth-child(even),
 .data-table tbody tr:nth-child(even) {
   background-color: #fbfcfe;

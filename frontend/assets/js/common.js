@@ -99,13 +99,87 @@ const UI = {
     return `${currency} ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   },
 
+  getLanguage() {
+    return localStorage.getItem('smartbank_portal_lang') || 'bn';
+  },
+
+  setPortalLanguage(lang) {
+    localStorage.setItem('smartbank_portal_lang', lang);
+    localStorage.setItem('smartbank_ai_lang', lang);
+    this.aiLang = lang;
+    if (this.currentSidebarType === 'customer') {
+      this.renderCustomerSidebar(this.activeSidebarPage);
+    } else if (this.currentSidebarType === 'admin') {
+      this.renderAdminSidebar(this.activeSidebarPage);
+    }
+    this.mountLanguageSwitcher();
+    this.applyPortalTranslations();
+    if (typeof window.onPortalLanguageChange === 'function') {
+      try { window.onPortalLanguageChange(lang); } catch (e) {}
+    }
+  },
+
+  mountLanguageSwitcher() {
+    const lang = this.getLanguage();
+    document.querySelectorAll('.lang-switch-pill').forEach(el => el.remove());
+
+    const pill = document.createElement('div');
+    pill.className = 'lang-switch-pill';
+    pill.title = lang === 'bn' ? 'ভাষা পরিবর্তন (বাংলা / English)' : 'Switch Language (Bangla / English)';
+    pill.innerHTML = `
+      <button type="button" class="lang-btn ${lang === 'bn' ? 'active' : ''}" onclick="window.UI.setPortalLanguage('bn')">বাংলা</button>
+      <button type="button" class="lang-btn ${lang === 'en' ? 'active' : ''}" onclick="window.UI.setPortalLanguage('en')">English</button>
+    `;
+
+    // Try finding top navbar right section
+    let rightNav = document.querySelector('.top-navbar .top-nav-right');
+    const topNavbar = document.querySelector('.top-navbar');
+    const authHeader = document.querySelector('.auth-header');
+    const landingNav = document.querySelector('.landing-nav-actions');
+
+    if (!rightNav && topNavbar) {
+      rightNav = document.createElement('div');
+      rightNav.className = 'top-nav-right';
+      topNavbar.appendChild(rightNav);
+    }
+
+    if (rightNav) {
+      rightNav.insertBefore(pill, rightNav.firstChild);
+    } else if (authHeader) {
+      authHeader.appendChild(pill);
+    } else if (landingNav) {
+      landingNav.insertBefore(pill, landingNav.firstChild);
+    }
+  },
+
+  applyPortalTranslations() {
+    const lang = this.getLanguage();
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-bn][data-en]').forEach(el => {
+      const txt = el.getAttribute(`data-${lang}`);
+      if (txt) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = txt;
+        } else {
+          el.innerHTML = txt;
+        }
+      }
+    });
+  },
+
   /**
    * Renders Customer Sidebar into container with id="app-sidebar"
    */
   renderCustomerSidebar(activePage = '') {
+    this.currentSidebarType = 'customer';
+    this.activeSidebarPage = activePage;
+    const lang = this.getLanguage();
     const user = window.Auth.getUser() || {};
     const sidebar = document.getElementById('app-sidebar');
     if (!sidebar) return;
+
+    const isBn = lang === 'bn';
 
     sidebar.className = 'sidebar';
     sidebar.innerHTML = `
@@ -113,59 +187,59 @@ const UI = {
         <div class="brand-icon">SB</div>
         <div>
           <span class="brand-text">Smart Banking</span>
-          <span class="brand-sub">Customer Portal</span>
+          <span class="brand-sub">${isBn ? 'গ্রাহক পোর্টাল' : 'Customer Portal'}</span>
         </div>
       </div>
       <div class="sidebar-nav">
-        <span class="nav-section-title">Banking & Transfers</span>
+        <span class="nav-section-title">${isBn ? 'ব্যাংকিং ও লেনদেন' : 'Banking & Transfers'}</span>
         <a href="/customer/dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
-          <span>📊</span> Dashboard
+          <span>📊</span> ${isBn ? 'ড্যাশবোর্ড' : 'Dashboard'}
         </a>
         <a href="/customer/deposit.html" class="nav-item ${activePage === 'deposit' ? 'active' : ''}">
-          <span>📥</span> Deposit Money
+          <span>📥</span> ${isBn ? 'টাকা ডিপোজিট' : 'Deposit Money'}
         </a>
         <a href="/customer/transfer.html" class="nav-item ${activePage === 'transfer' ? 'active' : ''}">
-          <span>📤</span> Fund Transfer
+          <span>📤</span> ${isBn ? 'ফান্ড ট্রান্সফার' : 'Fund Transfer'}
         </a>
         <a href="/customer/kyc.html" class="nav-item ${activePage === 'kyc' ? 'active' : ''}">
-          <span>🪪</span> My KYC & Docs
+          <span>🪪</span> ${isBn ? 'আমার কেওয়াইসি' : 'My KYC & Docs'}
         </a>
 
-        <span class="nav-section-title">Services & Requests</span>
+        <span class="nav-section-title">${isBn ? 'সেবা ও আবেদনসমূহ' : 'Services & Requests'}</span>
         <a href="/customer/services.html" class="nav-item ${activePage === 'services' ? 'active' : ''}">
-          <span>🏦</span> Banking Services
+          <span>🏦</span> ${isBn ? 'ব্যাংকিং সেবাসমূহ' : 'Banking Services'}
         </a>
         <a href="/customer/service-request.html" class="nav-item ${activePage === 'new-request' ? 'active' : ''}">
-          <span>📝</span> New Service Request
+          <span>📝</span> ${isBn ? 'নতুন সেবার আবেদন' : 'New Service Request'}
         </a>
         <a href="/customer/requests.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
-          <span>📋</span> My Requests
+          <span>📋</span> ${isBn ? 'আমার আবেদনসমূহ' : 'My Requests'}
         </a>
         <a href="/customer/account-closure.html" class="nav-item ${activePage === 'account-closure' ? 'active' : ''}">
-          <span>🗂️</span> Account Closure
+          <span>🗂️</span> ${isBn ? 'অ্যাকাউন্ট ক্লোজার' : 'Account Closure'}
         </a>
         
-        <span class="nav-section-title">Support & Profile</span>
+        <span class="nav-section-title">${isBn ? 'সহায়তা ও প্রোফাইল' : 'Support & Profile'}</span>
         <a href="/customer/notifications.html" class="nav-item ${activePage === 'notifications' ? 'active' : ''}">
-          <span>🔔</span> Notifications
+          <span>🔔</span> ${isBn ? 'নোটিফিকেশন' : 'Notifications'}
           <span class="nav-badge" id="sidebar-unread-badge" style="display:none;">0</span>
         </a>
         <a href="/customer/complaints.html" class="nav-item ${activePage === 'complaints' ? 'active' : ''}">
-          <span>💬</span> Complaints / Support
+          <span>💬</span> ${isBn ? 'অভিযোগ ও সহায়তা' : 'Complaints / Support'}
         </a>
         <a href="/customer/profile.html" class="nav-item ${activePage === 'profile' ? 'active' : ''}">
-          <span>👤</span> My Profile
+          <span>👤</span> ${isBn ? 'আমার প্রোফাইল' : 'My Profile'}
         </a>
       </div>
       <div class="sidebar-footer">
         <div class="user-mini-profile">
           <div class="user-avatar">${(user.full_name || 'C')[0].toUpperCase()}</div>
           <div class="user-info-text">
-            <div class="user-name">${user.full_name || 'Customer'}</div>
-            <div class="user-role-badge">${user.customer_reference || 'Customer'}</div>
+            <div class="user-name">${user.full_name || (isBn ? 'গ্রাহক' : 'Customer')}</div>
+            <div class="user-role-badge">${user.customer_reference || (isBn ? 'গ্রাহক' : 'Customer')}</div>
           </div>
         </div>
-        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="Log Out" style="padding: 6px 10px;">
+        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="${isBn ? 'লগআউট' : 'Log Out'}" style="padding: 6px 10px;">
           🚪
         </button>
       </div>
@@ -173,15 +247,22 @@ const UI = {
 
     this.updateNotificationBadge();
     this.initFloatingAIAssistant();
+    this.mountLanguageSwitcher();
+    this.applyPortalTranslations();
   },
 
   /**
    * Renders Admin Sidebar into container with id="app-sidebar"
    */
   renderAdminSidebar(activePage = '') {
+    this.currentSidebarType = 'admin';
+    this.activeSidebarPage = activePage;
+    const lang = this.getLanguage();
     const user = window.Auth.getUser() || {};
     const sidebar = document.getElementById('app-sidebar');
     if (!sidebar) return;
+
+    const isBn = lang === 'bn';
 
     sidebar.className = 'sidebar';
     sidebar.innerHTML = `
@@ -189,45 +270,45 @@ const UI = {
         <div class="brand-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">SB</div>
         <div>
           <span class="brand-text">Smart Banking</span>
-          <span class="brand-sub">Admin Operations</span>
+          <span class="brand-sub">${isBn ? 'অ্যাডমিন অপারেশনস' : 'Admin Operations'}</span>
         </div>
       </div>
       <div class="sidebar-nav">
-        <span class="nav-section-title">Verification & Operations</span>
+        <span class="nav-section-title">${isBn ? 'ভেরিফিকেশন ও অপারেশনস' : 'Verification & Operations'}</span>
         <a href="/admin/admin-dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
-          <span>📈</span> Admin Dashboard
+          <span>📈</span> ${isBn ? 'অ্যাডমিন ড্যাশবোর্ড' : 'Admin Dashboard'}
         </a>
         <a href="/admin/admin-kyc.html" class="nav-item ${activePage === 'kyc' ? 'active' : ''}">
-          <span>🪪</span> KYC Verifications
+          <span>🪪</span> ${isBn ? 'কেওয়াইসি ভেরিফিকেশন' : 'KYC Verifications'}
         </a>
         <a href="/admin/admin-deposits.html" class="nav-item ${activePage === 'deposits' ? 'active' : ''}">
-          <span>💵</span> Deposit Verifications
+          <span>💵</span> ${isBn ? 'ডিপোজিট ভেরিফিকেশন' : 'Deposit Verifications'}
         </a>
         <a href="/admin/admin-account-closure.html" class="nav-item ${activePage === 'account-closure' ? 'active' : ''}">
-          <span>🗂️</span> Account Closure Queue
+          <span>🗂️</span> ${isBn ? 'অ্যাকাউন্ট ক্লোজার রিভিউ' : 'Account Closure Queue'}
         </a>
         <a href="/admin/admin-requests.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
-          <span>📑</span> Request Review Queue
+          <span>📑</span> ${isBn ? 'সার্ভিস আবেদন রিভিউ' : 'Request Review Queue'}
         </a>
         <a href="/admin/admin-customers.html" class="nav-item ${activePage === 'customers' ? 'active' : ''}">
-          <span>👥</span> Customer Directory
+          <span>👥</span> ${isBn ? 'গ্রাহক ডিরেক্টরি' : 'Customer Directory'}
         </a>
         <a href="/admin/admin-services.html" class="nav-item ${activePage === 'services' ? 'active' : ''}">
-          <span>⚙️</span> Service Catalog
+          <span>⚙️</span> ${isBn ? 'সেবা ক্যাটালগ' : 'Service Catalog'}
         </a>
 
-        <span class="nav-section-title">Oversight & Monitoring</span>
+        <span class="nav-section-title">${isBn ? 'পর্যবেক্ষণ ও নিরাপত্তা' : 'Oversight & Monitoring'}</span>
         <a href="/admin/admin-complaints.html" class="nav-item ${activePage === 'complaints' ? 'active' : ''}">
-          <span>⚠️</span> Complaints Desk
+          <span>⚠️</span> ${isBn ? 'অভিযোগ ডেস্ক' : 'Complaints Desk'}
         </a>
         <a href="/admin/admin-transactions.html" class="nav-item ${activePage === 'transactions' ? 'active' : ''}">
-          <span>💳</span> Live Transactions
+          <span>💳</span> ${isBn ? 'লাইভ লেনদেন' : 'Live Transactions'}
         </a>
         <a href="/admin/admin-reports.html" class="nav-item ${activePage === 'reports' ? 'active' : ''}">
-          <span>📊</span> Analytics & Reports
+          <span>📊</span> ${isBn ? 'রিপোর্টস ও অ্যানালিটিক্স' : 'Analytics & Reports'}
         </a>
         <a href="/admin/admin-audit-logs.html" class="nav-item ${activePage === 'audit' ? 'active' : ''}">
-          <span>🛡️</span> Security & Audit Logs
+          <span>🛡️</span> ${isBn ? 'নিরাপত্তা ও অডিট লগ' : 'Security & Audit Logs'}
         </a>
       </div>
       <div class="sidebar-footer">
@@ -235,16 +316,18 @@ const UI = {
           <div class="user-avatar" style="background:#0284c7;">A</div>
           <div class="user-info-text">
             <div class="user-name">${user.full_name || 'Admin'}</div>
-            <div class="user-role-badge">Admin Workspace</div>
+            <div class="user-role-badge">${isBn ? 'অ্যাডমিন ওয়ার্কস্পেস' : 'Admin Workspace'}</div>
           </div>
         </div>
-        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="Log Out" style="padding: 6px 10px;">
+        <button onclick="window.Auth.logout()" class="btn btn-secondary btn-sm" title="${isBn ? 'লগআউট' : 'Log Out'}" style="padding: 6px 10px;">
           🚪
         </button>
       </div>
     `;
 
     this.initFloatingAIAssistant();
+    this.mountLanguageSwitcher();
+    this.applyPortalTranslations();
   },
 
   async updateNotificationBadge() {
@@ -604,13 +687,19 @@ Smart Banking Account Number, কার্ডধারীর নাম, নি�
 
 window.UI = UI;
 
-// Automatically initialize Floating AI Assistant on every page
+// Automatically initialize Floating AI Assistant & Language Switcher on every page
 if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+  const initCommon = () => {
+    if (window.UI) {
+      window.UI.mountLanguageSwitcher();
+      window.UI.applyPortalTranslations();
       window.UI.initFloatingAIAssistant();
-    });
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCommon);
   } else {
-    window.UI.initFloatingAIAssistant();
+    initCommon();
   }
 }

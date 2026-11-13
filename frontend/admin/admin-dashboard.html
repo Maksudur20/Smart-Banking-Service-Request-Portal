@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
   <style>
     .dashboard-two-col {
       display: grid;
@@ -99,36 +99,36 @@
         <div class="metrics-grid">
           <div class="metric-card" onclick="window.location.href='/admin/admin-customers.html'" style="cursor:pointer;">
             <div class="metric-left">
-              <span class="metric-title">নিবন্ধিত গ্রাহক (Total Customers)</span>
+              <span class="metric-title" data-bn="নিবন্ধিত গ্রাহক" data-en="Total Customers">নিবন্ধিত গ্রাহক</span>
               <div class="metric-value" id="mCustCount">0</div>
-              <div class="metric-trend up" style="color:#0284c7;">বাস্তব নিবন্ধিত গ্রাহক সংখ্যা &rarr;</div>
+              <div class="metric-trend up" style="color:#0284c7;" data-bn="বাস্তব নিবন্ধিত গ্রাহক সংখ্যা &rarr;" data-en="Active registered customers &rarr;">বাস্তব নিবন্ধিত গ্রাহক সংখ্যা &rarr;</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">👥</div>
           </div>
 
           <div class="metric-card" onclick="window.location.href='/admin/admin-kyc.html'" style="cursor:pointer; border-left:4px solid #f59e0b;">
             <div class="metric-left">
-              <span class="metric-title">কেওয়াইসি ভেরিফিকেশন (KYC Pending)</span>
+              <span class="metric-title" data-bn="কেওয়াইসি ভেরিফিকেশন" data-en="Pending KYC">কেওয়াইসি ভেরিফিকেশন</span>
               <div class="metric-value" id="mKycPendingCount" style="color:#d97706;">0</div>
-              <div class="metric-trend up" style="color:#d97706;">যাচাইয়ের অপেক্ষায় &rarr;</div>
+              <div class="metric-trend up" style="color:#d97706;" data-bn="যাচাইয়ের অপেক্ষায় &rarr;" data-en="Awaiting review &rarr;">যাচাইয়ের অপেক্ষায় &rarr;</div>
             </div>
             <div class="metric-icon-box" style="background:#fef3c7; color:#d97706;">🪪</div>
           </div>
 
           <div class="metric-card" onclick="window.location.href='/admin/admin-deposits.html'" style="cursor:pointer; border-left:4px solid #10b981;">
             <div class="metric-left">
-              <span class="metric-title">ডিপোজিট ভেরিফিকেশন (Deposits)</span>
+              <span class="metric-title" data-bn="ডিপোজিট ভেরিফিকেশন" data-en="Deposit Verifications">ডিপোজিট ভেরিফিকেশন</span>
               <div class="metric-value" id="mPendingDepositCount" style="color:#059669;">0</div>
-              <div class="metric-trend up" style="color:#059669;">স্লিপ ও TrxID যাচাই &rarr;</div>
+              <div class="metric-trend up" style="color:#059669;" data-bn="স্লিপ ও TrxID যাচাই &rarr;" data-en="Slip & TrxID review &rarr;">স্লিপ ও TrxID যাচাই &rarr;</div>
             </div>
             <div class="metric-icon-box" style="background:#dcfce7; color:#059669;">💵</div>
           </div>
 
           <div class="metric-card" onclick="window.location.href='/admin/admin-requests.html'" style="cursor:pointer;">
             <div class="metric-left">
-              <span class="metric-title">সার্ভিস রিকোয়েস্ট (Service Requests)</span>
+              <span class="metric-title" data-bn="সার্ভিস রিকোয়েস্ট" data-en="Service Requests">সার্ভিস রিকোয়েস্ট</span>
               <div class="metric-value" id="mPendingCount">0</div>
-              <div class="metric-trend up" style="color:#0284c7;">কার্ড ও চেকবই আবেদন &rarr;</div>
+              <div class="metric-trend up" style="color:#0284c7;" data-bn="কার্ড ও চেকবই আবেদন &rarr;" data-en="Card & Cheque requests &rarr;">কার্ড ও চেকবই আবেদন &rarr;</div>
             </div>
             <div class="metric-icon-box metric-icon-blue">📋</div>
           </div>
@@ -310,8 +310,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('dashboard');

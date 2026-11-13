@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Catalogue Management - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body>
   <div class="app-layout">
@@ -13,29 +13,30 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h1 class="page-heading">Banking Services & Document Requirements</h1>
+          <h1 class="page-heading" data-bn="🏛️ ব্যাংকিং সেবাসমূহ ও ডকুমেন্ট নির্দেশিকা" data-en="🏛️ Banking Services & Document Requirements">🏛️ ব্যাংকিং সেবাসমূহ ও ডকুমেন্ট নির্দেশিকা</h1>
         </div>
+        <div class="top-nav-right"></div>
       </header>
 
       <main class="content-container">
         <div class="card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">Configured Banking Services Catalogue</h3>
-              <p class="card-subtitle">10 standard banking service categories and attached document verification rules</p>
+              <h3 class="card-title" data-bn="কনফিগারকৃত ব্যাংকিং সেবা তালিকা" data-en="Configured Banking Services Catalogue">কনফিগারকৃত ব্যাংকিং সেবা তালিকা</h3>
+              <p class="card-subtitle" data-bn="১০টি প্রমিত ব্যাংকিং সেবা ক্যাটাগরি এবং সংযুক্ত ডকুমেন্ট ভেরিফিকেশন নিয়মাবলী" data-en="10 standard banking service categories and attached document verification rules">১০টি প্রমিত ব্যাংকিং সেবা ক্যাটাগরি এবং সংযুক্ত ডকুমেন্ট ভেরিফিকেশন নিয়মাবলী</p>
             </div>
           </div>
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th>Code</th>
-                  <th>Service Name</th>
-                  <th>Category</th>
-                  <th>Description</th>
-                  <th>SLA Days</th>
-                  <th>Required Docs</th>
-                  <th>Status</th>
+                  <th style="min-width:110px;" data-bn="সার্ভিস কোড" data-en="Code">সার্ভিস কোড</th>
+                  <th style="min-width:180px;" data-bn="সেবার নাম" data-en="Service Name">সেবার নাম</th>
+                  <th style="min-width:120px;" data-bn="ক্যাটাগরি" data-en="Category">ক্যাটাগরি</th>
+                  <th style="min-width:320px;" data-bn="বিবরণ" data-en="Description">বিবরণ</th>
+                  <th style="min-width:100px; text-align:center;" data-bn="প্রসেসিং সময়" data-en="SLA Days">প্রসেসিং সময়</th>
+                  <th style="min-width:140px;" data-bn="প্রয়োজনীয় ডকুমেন্ট" data-en="Required Docs">প্রয়োজনীয় ডকুমেন্ট</th>
+                  <th style="min-width:100px; text-align:center;" data-bn="স্ট্যাটাস" data-en="Status">স্ট্যাটাস</th>
                 </tr>
               </thead>
               <tbody id="servicesTableBody">
@@ -51,27 +52,29 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('services');
 
     async function loadServices() {
       try {
+        const lang = window.UI ? window.UI.getLanguage() : 'bn';
+        const isBn = lang === 'bn';
         const res = await window.api.get('/api/services');
         const list = res.services || [];
         const tbody = document.getElementById('servicesTableBody');
 
         tbody.innerHTML = list.map(s => `
           <tr>
-            <td><code>${s.service_code}</code></td>
-            <td><strong>${s.name}</strong></td>
-            <td><span class="badge badge-submitted">${s.category || 'General'}</span></td>
-            <td style="max-width:300px; font-size:0.85rem; color:var(--text-muted);">${s.description}</td>
-            <td>${s.processing_time_days} days</td>
-            <td><span class="badge badge-ai-validation">${s.required_document_count} requirements</span></td>
-            <td><span class="badge badge-approved">Active</span></td>
+            <td style="white-space:nowrap;"><code>${s.service_code}</code></td>
+            <td style="font-weight:700; color:#0f172a; white-space:nowrap;">${s.name}</td>
+            <td style="white-space:nowrap;"><span class="badge badge-submitted">${s.category || 'General'}</span></td>
+            <td class="desc-cell" style="white-space:normal !important; word-break:break-word !important; min-width:300px; max-width:460px; font-size:0.85rem; color:#475569; line-height:1.5;">${s.description}</td>
+            <td style="white-space:nowrap; text-align:center; font-weight:600; color:#334155;">${s.processing_time_days} ${isBn ? 'দিন' : 'days'}</td>
+            <td style="white-space:nowrap;"><span class="badge badge-ai-validation">${s.required_document_count} ${isBn ? 'টি আবশ্যক' : 'requirements'}</span></td>
+            <td style="white-space:nowrap; text-align:center;"><span class="badge badge-approved">${isBn ? 'সক্রিয়' : 'Active'}</span></td>
           </tr>
         `).join('');
       } catch (err) {

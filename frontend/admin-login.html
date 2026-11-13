@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ব্যাংক অফিসার পোর্টাল লগইন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body class="auth-page">
   <div class="auth-card" style="max-width: 440px;">
@@ -13,46 +13,36 @@
         <div class="brand-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">SB</div>
         <span class="brand-text" style="font-size: 1.25rem;">Smart Banking</span>
       </div>
-      <h2 class="auth-title">ব্যাংক অফিসার পোর্টাল</h2>
-      <p class="auth-sub">কেওয়াইসি ভেরিফিকেশন, ডিপোজিট অনুমোদন ও প্রশাসনিক নিয়ন্ত্রণ</p>
-    </div>
-
-    <!-- Banking Security Alert for Back/Forward Navigation -->
-    <div id="securityAlert" style="display:none; background:#fff1f2; border:1px solid #fecdd3; color:#be123c; padding:12px 16px; border-radius:8px; font-size:0.85rem; margin-bottom:18px; line-height:1.4;">
-      🔒 <strong>নিরাপত্তা সতর্কতা:</strong> ব্রাউজারের ব্যাক বা ফরোয়ার্ড নেভিগেশনের কারণে আপনার অ্যাডমিন সেশন সমাপ্ত করা হয়েছে। অনুগ্রহ করে আপনার অফিসার ইমেইল এবং পাসওয়ার্ড দিয়ে পুনরায় প্রবেশ করুন।
+      <h2 class="auth-title" data-bn="ব্যাংক অফিসার পোর্টাল" data-en="Bank Officer Portal">ব্যাংক অফিসার পোর্টাল</h2>
+      <p class="auth-sub" data-bn="কেওয়াইসি ভেরিফিকেশন, ডিপোজিট অনুমোদন ও প্রশাসনিক নিয়ন্ত্রণ" data-en="KYC verification, deposit approval and administration">কেওয়াইসি ভেরিফিকেশন, ডিপোজিট অনুমোদন ও প্রশাসনিক নিয়ন্ত্রণ</p>
     </div>
 
     <form id="adminLoginForm">
       <div class="form-group">
-        <label class="form-label required">অফিসার ইমেইল (Staff Email)</label>
+        <label class="form-label required" data-bn="অফিসার ইমেইল" data-en="Officer Email">অফিসার ইমেইল</label>
         <input type="email" id="email" class="form-control" placeholder="admin@smartbank.com" required autofocus>
       </div>
 
       <div class="form-group">
-        <label class="form-label required">পাসওয়ার্ড (Password)</label>
+        <label class="form-label required" data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড</label>
         <input type="password" id="password" class="form-control" placeholder="••••••••" required>
       </div>
 
-      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="background:#0284c7; font-weight:700; margin-top:20px;">
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg" style="background:#0284c7; font-weight:700; margin-top:20px;" data-bn="🛡️ অফিসার পোর্টালে প্রবেশ করুন" data-en="🛡️ Access Officer Portal">
         🛡️ অফিসার পোর্টালে প্রবেশ করুন
       </button>
     </form>
 
     <div class="auth-footer" style="margin-top:24px;">
-      <a href="/login.html" style="color:#64748b; font-size:0.85rem;">&larr; গ্রাহক ইন্টারনেট ব্যাংকিং লগইন পেজে ফিরে যান</a>
+      <a href="/login.html" style="color:#64748b; font-size:0.85rem;" data-bn="&larr; গ্রাহক ইন্টারনেট ব্যাংকিং লগইন পেজে ফিরে যান" data-en="&larr; Return to Customer Banking Login">&larr; গ্রাহক ইন্টারনেট ব্যাংকিং লগইন পেজে ফিরে যান</a>
     </div>
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.redirectIfAuthenticated();
-
-    if (window.location.search.includes('reason=back_nav') || window.location.search.includes('session=expired')) {
-      const alertEl = document.getElementById('securityAlert');
-      if (alertEl) alertEl.style.display = 'block';
-    }
 
     document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();

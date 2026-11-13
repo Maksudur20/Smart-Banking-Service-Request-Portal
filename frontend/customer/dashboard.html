@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>গ্রাহক ড্যাশবোর্ড - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
   <style>
     .customer-header-balances {
       display: flex;
@@ -109,19 +109,19 @@
         <div class="top-nav-left customer-header-balances">
           <div class="balance-stat">
             <span class="balance-amount" id="topNavBalance">0.00 BDT</span>
-            <span class="balance-label">মোট অ্যাকাউন্ট ব্যালেন্স (Account Balance)</span>
+            <span class="balance-label" data-bn="মোট অ্যাকাউন্ট ব্যালেন্স" data-en="Total Account Balance">মোট অ্যাকাউন্ট ব্যালেন্স</span>
           </div>
           <div class="balance-stat">
             <span class="balance-amount" style="font-size:1.15rem; color:#0284c7;" id="topNavAccount">Loading...</span>
-            <span class="balance-label">অ্যাকাউন্ট নম্বর (Account Number)</span>
+            <span class="balance-label" data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</span>
           </div>
         </div>
 
         <div class="top-nav-right">
-          <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#10b981; border:none;">
+          <a href="/customer/deposit.html" class="btn btn-primary btn-sm" style="background:#10b981; border:none;" data-bn="📥 ডিপোজিট করুন" data-en="📥 Deposit Money">
             📥 ডিপোজিট করুন
           </a>
-          <a href="/customer/transfer.html" class="btn btn-primary btn-sm">
+          <a href="/customer/transfer.html" class="btn btn-primary btn-sm" data-bn="📤 ফান্ড ট্রান্সফার" data-en="📤 Fund Transfer">
             📤 ফান্ড ট্রান্সফার
           </a>
           <a href="/customer/profile.html" class="user-mini-profile" style="cursor:pointer;" title="View Profile">
@@ -205,8 +205,8 @@
           <!-- Recent Transactions -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">সাম্প্রতিক লেনদেন (Recent Transactions)</h3>
-              <a href="/customer/transfer.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;">সব দেখুন &rarr;</a>
+              <h3 class="card-title" data-bn="সাম্প্রতিক লেনদেন" data-en="Recent Transactions">সাম্প্রতিক লেনদেন</h3>
+              <a href="/customer/transfer.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;" data-bn="সব দেখুন &rarr;" data-en="View All &rarr;">সব দেখুন &rarr;</a>
             </div>
             <div class="card-body" style="padding:0; max-height:340px; overflow-y:auto;" id="recentTxContainer">
               <p style="text-align:center; padding:30px; color:#94a3b8;">লেনদেন লোড হচ্ছে...</p>
@@ -217,8 +217,8 @@
         <!-- Recent Service Requests -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">আমার সার্ভিস আবেদনসমূহ (Service Requests)</h3>
-            <a href="/customer/requests.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;">সকল আবেদন &rarr;</a>
+            <h3 class="card-title" data-bn="আমার সার্ভিস আবেদনসমূহ" data-en="My Service Requests">আমার সার্ভিস আবেদনসমূহ</h3>
+            <a href="/customer/requests.html" class="table-action-btn secondary" style="padding:4px 12px; font-size:0.8rem;" data-bn="সকল আবেদন &rarr;" data-en="View All &rarr;">সকল আবেদন &rarr;</a>
           </div>
           <div class="card-body" style="padding:0;" id="recentRequestsContainer">
             <p style="text-align:center; padding:24px; color:#94a3b8;">আবেদন লোড হচ্ছে...</p>
@@ -229,8 +229,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('dashboard');

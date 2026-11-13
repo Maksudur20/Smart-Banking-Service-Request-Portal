@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Complaints & Disputes Desk - Smart Banking Portal</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.8">
 </head>
 <body>
   <div class="app-layout">
@@ -91,8 +91,8 @@
   </div>
 
   <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=2.7"></script>
-  <script src="/assets/js/common.js?v=2.7"></script>
+  <script src="/assets/js/auth.js?v=2.8"></script>
+  <script src="/assets/js/common.js?v=2.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('complaints');
@@ -119,8 +119,8 @@
               <strong>${c.customer_name}</strong><br>
               <small style="color:var(--text-light);">${c.customer_reference}</small>
             </td>
-            <td><span class="badge badge-submitted">${c.category}</span></td>
-            <td>
+            <td class="nowrap"><span class="badge badge-submitted">${c.category}</span></td>
+            <td class="desc-cell" style="white-space:normal; word-break:break-word; min-width:260px; max-width:420px; line-height:1.4;">
               <strong>${c.subject}</strong><br>
               <small style="color:var(--text-muted);">${c.details}</small>
               ${c.resolution ? `<div style="margin-top:4px; font-size:0.8rem; color:#065f46;"><strong>Resolution:</strong> ${c.resolution}</div>` : ''}
