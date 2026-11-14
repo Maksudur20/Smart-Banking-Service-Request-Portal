@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.6">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.7">
   <style>
     .modal-overlay {
       position: fixed;
@@ -177,9 +177,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.6"></script>
-  <script src="/assets/js/auth.js?v=3.6"></script>
-  <script src="/assets/js/common.js?v=3.6"></script>
+  <script src="/assets/js/api.js?v=3.7"></script>
+  <script src="/assets/js/auth.js?v=3.7"></script>
+  <script src="/assets/js/common.js?v=3.7"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');
@@ -187,9 +187,11 @@
     let currentApplications = [];
     let selectedCustomerId = null;
 
-    async function loadApplications() {
+async function loadApplications() {
       const container = document.getElementById('applicationsContainer');
       const statusFilter = document.getElementById('statusFilter').value;
+      const lang = window.UI ? window.UI.getLanguage() : 'bn';
+      const isBn = lang === 'bn';
 
       try {
         let url = '/api/kyc/admin/applications';
@@ -214,22 +216,19 @@
           return;
         }
 
-        const lang = window.UI ? window.UI.getLanguage() : 'bn';
-        const isBn = lang === 'bn';
-
         container.innerHTML = `
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th data-bn="গ্রাহক রেফারেন্স" data-en="Reference">গ্রাহক রেফারেন্স</th>
-                  <th data-bn="নাম ও ইমেইল" data-en="Name & Email">নাম ও ইমেইল</th>
-                  <th data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</th>
-                  <th data-bn="অ্যাকাউন্টের ধরন" data-en="Account Type">অ্যাকাউন্টের ধরন</th>
-                  <th data-bn="ডকুমেন্ট সংখ্যা" data-en="Documents">ডকুমেন্ট সংখ্যা</th>
-                  <th data-bn="কেওয়াইসি স্ট্যাটাস" data-en="KYC Status">কেওয়াইসি স্ট্যাটাস</th>
-                  <th data-bn="আবেদনের তারিখ" data-en="Application Date">আবেদনের তারিখ</th>
-                  <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
+                  <th>${isBn ? 'গ্রাহক রেফারেন্স' : 'Customer Reference'}</th>
+                  <th>${isBn ? 'নাম ও ইমেইল' : 'Name & Email'}</th>
+                  <th>${isBn ? 'অ্যাকাউন্ট নম্বর' : 'Account Number'}</th>
+                  <th>${isBn ? 'অ্যাকাউন্টের ধরন' : 'Account Type'}</th>
+                  <th>${isBn ? 'ডকুমেন্ট সংখ্যা' : 'Documents'}</th>
+                  <th>${isBn ? 'কেওয়াইসি স্ট্যাটাস' : 'KYC Status'}</th>
+                  <th>${isBn ? 'আবেদনের তারিখ' : 'Date'}</th>
+                  <th>${isBn ? 'অ্যাকশন' : 'Action'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -262,11 +261,12 @@
             </table>
           </div>
         `;
+        if (window.UI) window.UI.applyPortalTranslations();
       } catch (err) {
+        console.error('Error in loadApplications:', err);
         container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${window.UI && window.UI.getLanguage() === 'en' ? 'Failed to load applications list.' : 'আবেদন তালিকা লোড করা যায়নি।'}</p>`;
       }
     }
-
     window.loadApplications = loadApplications;
 
     async function openReviewModal(customerId) {
