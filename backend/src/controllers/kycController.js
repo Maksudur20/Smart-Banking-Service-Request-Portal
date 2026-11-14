@@ -173,7 +173,23 @@ async function getAdminKYCApplications(req, res, next) {
     query += ` ORDER BY c.created_at DESC`;
 
     const result = await db.query(query, params);
-    res.json({ success: true, count: result.rows.length, applications: result.rows });
+
+    // Global KYC stats across the entire bank (independent of status filter)
+    const statsRes = await db.query(`
+      SELECT 
+        COUNT(*) FILTER (WHERE kyc_status IN ('Pending', 'Submitted', 'Under Review')) AS pending_count,
+        COUNT(*) FILTER (WHERE kyc_status = 'Approved') AS approved_count,
+        COUNT(*) FILTER (WHERE kyc_status = 'Rejected') AS rejected_count
+      FROM customers
+    `);
+    const statsRow = statsRes.rows[0] || {};
+    const stats = {
+      pending: parseInt(statsRow.pending_count || 0, 10),
+      approved: parseInt(statsRow.approved_count || 0, 10),
+      rejected: parseInt(statsRow.rejected_count || 0, 10),
+    };
+
+    res.json({ success: true, count: result.rows.length, applications: result.rows, stats });
   } catch (err) {
     next(err);
   }

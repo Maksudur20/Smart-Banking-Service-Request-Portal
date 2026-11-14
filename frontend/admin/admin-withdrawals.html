@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ক্যাশ উত্তোলন ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.7">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=3.8">
   <style>
     .modal-overlay {
       position: fixed;
@@ -244,9 +244,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.7"></script>
-  <script src="/assets/js/auth.js?v=3.7"></script>
-  <script src="/assets/js/common.js?v=3.7"></script>
+  <script src="/assets/js/api.js?v=3.8"></script>
+  <script src="/assets/js/auth.js?v=3.8"></script>
+  <script src="/assets/js/common.js?v=3.8"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('withdrawals');
@@ -268,18 +268,25 @@
         const res = await window.api.get('/api/withdrawals/admin', params);
         currentWithdrawals = res.withdrawals || [];
 
-        // Count stats
-        let p = 0, u = 0, c = 0, r = 0;
-        currentWithdrawals.forEach(w => {
-          if (w.status === 'Completed') c++;
-          else if (w.status === 'Under Review' || w.status === 'Approved' || w.status === 'Processing') u++;
-          else if (w.status === 'Rejected') r++;
-          else p++;
-        });
-        document.getElementById('countPending').innerText = p;
-        document.getElementById('countUnderReview').innerText = u;
-        document.getElementById('countCompleted').innerText = c;
-        document.getElementById('countRejected').innerText = r;
+        // Display global bank stats if provided by backend, else count fallback
+        if (res.stats) {
+          document.getElementById('countPending').innerText = res.stats.pending;
+          document.getElementById('countUnderReview').innerText = res.stats.under_review;
+          document.getElementById('countCompleted').innerText = res.stats.completed;
+          document.getElementById('countRejected').innerText = res.stats.rejected;
+        } else {
+          let p = 0, u = 0, c = 0, r = 0;
+          currentWithdrawals.forEach(w => {
+            if (w.status === 'Completed') c++;
+            else if (w.status === 'Under Review' || w.status === 'Approved' || w.status === 'Processing') u++;
+            else if (w.status === 'Rejected') r++;
+            else p++;
+          });
+          document.getElementById('countPending').innerText = p;
+          document.getElementById('countUnderReview').innerText = u;
+          document.getElementById('countCompleted').innerText = c;
+          document.getElementById('countRejected').innerText = r;
+        }
 
         if (currentWithdrawals.length === 0) {
           tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:#94a3b8;">${isBn ? 'কোনো উত্তোলনের আবেদন পাওয়া যায়নি।' : 'No withdrawal requests found.'}</td></tr>`;

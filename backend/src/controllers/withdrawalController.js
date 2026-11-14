@@ -312,9 +312,27 @@ async function getAdminWithdrawals(req, res, next) {
     params.push(parseInt(limit, 10), offset);
     const result = await db.query(query, params);
 
+    // Global withdrawal stats across the entire bank
+    const statsRes = await db.query(`
+      SELECT 
+        COUNT(*) FILTER (WHERE status = 'Pending') AS pending_count,
+        COUNT(*) FILTER (WHERE status IN ('Under Review', 'Approved', 'Processing')) AS review_count,
+        COUNT(*) FILTER (WHERE status = 'Completed') AS completed_count,
+        COUNT(*) FILTER (WHERE status = 'Rejected') AS rejected_count
+      FROM cash_withdrawals
+    `);
+    const statsRow = statsRes.rows[0] || {};
+    const stats = {
+      pending: parseInt(statsRow.pending_count || 0, 10),
+      under_review: parseInt(statsRow.review_count || 0, 10),
+      completed: parseInt(statsRow.completed_count || 0, 10),
+      rejected: parseInt(statsRow.rejected_count || 0, 10),
+    };
+
     res.json({
       success: true,
       withdrawals: result.rows,
+      stats,
       pagination: {
         total,
         page: parseInt(page, 10),
