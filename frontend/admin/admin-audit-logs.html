@@ -20,6 +20,7 @@
       <main class="content-container">
         <div class="card">
           <div class="card-header">
+            <button onclick="window.UI.handleRefresh(this, loadAuditLogs)" class="btn btn-secondary btn-sm" style="float:right;" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 Refresh</button>
             <div>
               <h3 class="card-title">Immutable Administrative Audit Log</h3>
               <p class="card-subtitle">Chronological record of logins, status transitions, and administrative decisions</p>
@@ -86,6 +87,7 @@
       }
     }
 
+    window.loadAuditLogs = loadAuditLogs;
     loadAuditLogs();
   </script>
 </body>

@@ -127,6 +127,7 @@
                 <option value="Closed">Closed</option>
                 <option value="Rejected">Rejected</option>
               </select>
+              <button onclick="window.UI.handleRefresh(this, loadClosureQueue)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -433,17 +434,6 @@
         window.showToast(err.message || (isBn ? 'আবেদন বিবরণ লোড ব্যর্থ হয়েছে।' : 'Failed to load request details.'), 'error');
       }
     }
-                </a>
-              </div>
-            `;
-          }).join('');
-        }
-
-        document.getElementById('reviewModal').classList.add('open');
-      } catch (err) {
-        window.showToast(err.message || 'আবেদন বিবরণ লোড ব্যর্থ হয়েছে।', 'error');
-      }
-    }
 
     function closeReviewModal() {
       document.getElementById('reviewModal').classList.remove('open');
@@ -508,7 +498,8 @@
 
         window.showToast(`✅ সিদ্ধান্ত কার্যকর হয়েছে: ${res.new_status}`, 'success');
         closeReviewModal();
-        loadClosureQueue();
+        window.loadClosureQueue = loadClosureQueue;
+    loadClosureQueue();
       } catch (err) {
         window.showToast(err.message || 'সিদ্ধান্ত সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
       }

@@ -421,7 +421,8 @@
     function renderHistory(list) {
       const tbody = document.getElementById('closureHistoryBody');
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">কোনো পূর্ববর্তী ক্লোজার আবেদন নেই।</td></tr>';
+        const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">' + (isBn ? 'কোনো পূর্ববর্তী ক্লোজার আবেদন নেই।' : 'No previous closure requests found.') + '</td></tr>';
         return;
       }
 

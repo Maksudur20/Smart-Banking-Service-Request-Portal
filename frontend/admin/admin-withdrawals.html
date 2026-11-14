@@ -134,7 +134,7 @@
               </div>
               <input type="text" id="searchInput" class="form-control" placeholder="আইডি, অ্যাকাউন্ট বা চেক নম্বর খুঁজুন..." data-bn="আইডি, অ্যাকাউন্ট বা চেক নম্বর খুঁজুন..." data-en="Search ID, account or cheque..." style="width:260px; padding:6px 12px; font-size:0.85rem;">
             </div>
-            <button onclick="loadWithdrawals()" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
+            <button onclick="window.UI.handleRefresh(this, loadWithdrawals)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
           </div>
         </div>
 
@@ -402,7 +402,8 @@
 
         window.showToast(isBn ? `✅ স্ট্যাটাস সফলভাবে '${newStatus}' করা হয়েছে!` : `✅ Status updated to '${newStatus}'!`, 'success');
         closeVerifyModal();
-        loadWithdrawals();
+        window.loadWithdrawals = loadWithdrawals;
+    loadWithdrawals();
       } catch (err) {
         window.showToast(err.message || 'স্ট্যাটাস আপডেট ব্যর্থ হয়েছে।', 'error');
       }

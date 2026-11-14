@@ -36,6 +36,7 @@
           <h1 class="page-heading" id="adminHeading">Application Review</h1>
         </div>
         <div class="top-nav-right">
+          <button onclick="window.UI.handleRefresh(this, loadRequest)" class="btn btn-secondary btn-sm" style="margin-right:8px;" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 Refresh</button>
           <span id="headerStatusBadge"></span>
         </div>
       </header>
@@ -45,7 +46,7 @@
         <div class="card" style="border-left: 4px solid var(--purple); background: #faf5ff;">
           <div class="card-body" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
             <div>
-              <div class="ai-badge">?? AI Assistant Executive Briefing</div>
+              <div class="ai-badge">🤖 AI Assistant Executive Briefing</div>
               <p id="aiBriefingText" style="font-size:0.9rem; color:var(--navy); margin-top:8px; line-height:1.5;">
                 Click below to request an instant AI synthesis of this customer application and document verification findings.
               </p>
@@ -312,6 +313,7 @@
       }
     }
 
+    window.loadRequest = loadRequest;
     loadRequest();
   </script>
 </body>

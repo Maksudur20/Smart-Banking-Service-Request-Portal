@@ -216,8 +216,9 @@
 
     function renderDocuments(docs) {
       const container = document.getElementById('documentsContainer');
-      if (docs.length === 0) {
-        container.innerHTML = `<p style="padding:20px; color:#94a3b8; text-align:center;">কোনো ডকুমেন্ট পাওয়া যায়নি।</p>`;
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
+      if (!docs || docs.length === 0) {
+        container.innerHTML = `<p style="padding:20px; color:#94a3b8; text-align:center;">${isBn ? 'কোনো ডকুমেন্ট পাওয়া যায়নি।' : 'No documents found.'}</p>`;
         return;
       }
 
@@ -227,7 +228,7 @@
           <div class="doc-card">
             <div>
               <div style="font-weight:700; font-size:0.95rem; color:#0f172a;">${d.title || d.doc_type}</div>
-              <span class="doc-purpose-badge">টাইপ: ${d.doc_type}</span>
+              <span class="doc-purpose-badge">${isBn ? 'টাইপ:' : 'Type:'} ${d.doc_type}</span>
               
               ${isPdf ? `
                 <div style="height:140px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin:10px 0;">
@@ -239,8 +240,8 @@
               `}
               
               <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">
-                ফাইল: ${d.file_name || 'ডকুমেন্ট'}<br>
-                আপলোড তারিখ: ${new Date(d.created_at).toLocaleDateString()}
+                ${isBn ? 'ফাইল:' : 'File:'} ${d.file_name || (isBn ? 'ডকুমেন্ট' : 'Document')}<br>
+                ${isBn ? 'আপলোড তারিখ:' : 'Upload Date:'} ${new Date(d.created_at).toLocaleDateString()}
               </div>
             </div>
 
@@ -248,11 +249,12 @@
               <span class="badge ${['Approved', 'Verified'].includes(d.verification_status) ? 'badge-approved' : (d.verification_status === 'Rejected' ? 'badge-rejected' : 'badge-submitted')}">
                 ${d.verification_status || 'Pending'}
               </span>
-              <a href="${d.file_url}" target="_blank" class="table-action-btn secondary">বড় করে দেখুন ↗</a>
+              <a href="${d.file_url}" target="_blank" class="table-action-btn secondary">${isBn ? 'বড় করে দেখুন ↗' : 'View Full ↗'}</a>
             </div>
           </div>
         `;
       }).join('');
+      if (window.UI) window.UI.applyPortalTranslations();
     }
 
     document.getElementById('reuploadForm').addEventListener('submit', async (e) => {

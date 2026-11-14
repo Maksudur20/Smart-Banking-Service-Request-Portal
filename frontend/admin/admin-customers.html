@@ -29,6 +29,7 @@
             </div>
             <div>
               <input type="text" id="custSearch" class="form-control" placeholder="গ্রাহক অনুসন্ধান করুন..." data-bn="গ্রাহক অনুসন্ধান করুন..." data-en="Search customers..." style="width:260px; padding:6px 12px; font-size:0.85rem;">
+              <button onclick="window.UI.handleRefresh(this, loadCustomers)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -117,6 +118,7 @@
       window._searchTimer = setTimeout(loadCustomers, 350);
     });
 
+    window.loadCustomers = loadCustomers;
     loadCustomers();
   </script>
 </body>

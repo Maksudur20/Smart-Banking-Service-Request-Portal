@@ -132,19 +132,23 @@
         const transferBtn = document.getElementById('transferSubmitBtn');
         const kycBadge = document.getElementById('kycApprovedBadge');
 
+        const isBn = window.UI ? window.UI.getLanguage() === 'bn' : false;
         if (kycStatus !== 'approved') {
           kycLock.style.display = 'block';
           transferBtn.disabled = true;
           transferBtn.style.opacity = '0.6';
-          transferBtn.innerText = '⚠️ KYC ভেরিফিকেশন ছাড়া ট্রান্সফার বন্ধ';
+          transferBtn.setAttribute('data-bn', '⚠️ KYC ভেরিফিকেশন ছাড়া ট্রান্সফার বন্ধ');
+          transferBtn.setAttribute('data-en', '⚠️ Transfer Restricted Without KYC');
+          transferBtn.innerText = isBn ? '⚠️ KYC ভেরিফিকেশন ছাড়া ট্রান্সফার বন্ধ' : '⚠️ Transfer Restricted Without KYC';
         } else {
           kycLock.style.display = 'none';
           kycBadge.style.display = 'inline-block';
           transferBtn.disabled = false;
           transferBtn.style.opacity = '1';
-          transferBtn.innerText = '📤 তাৎক্ষণিক ট্রান্সফার নিশ্চিত করুন';
+          transferBtn.setAttribute('data-bn', '📤 তাৎক্ষণিক ট্রান্সফার নিশ্চিত করুন');
+          transferBtn.setAttribute('data-en', '📤 Confirm Instant Transfer');
+          transferBtn.innerText = isBn ? '📤 তাৎক্ষণিক ট্রান্সফার নিশ্চিত করুন' : '📤 Confirm Instant Transfer';
         }
-
         loadHistory();
       } catch (err) {
         console.error('Error:', err);

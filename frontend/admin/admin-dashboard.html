@@ -81,6 +81,7 @@
         </div>
 
         <div class="top-nav-right">
+          <button onclick="window.UI.handleRefresh(this, loadDashboard)" class="btn btn-secondary btn-sm" style="margin-right:10px;" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
           <div class="notification-pill" title="Notifications">
             🔔
             <span class="badge-dot"></span>
@@ -382,6 +383,7 @@
       }
     }
 
+    window.loadDashboard = loadDashboard;
     loadDashboard();
   </script>
 </body>

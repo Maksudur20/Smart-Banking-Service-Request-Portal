@@ -115,7 +115,7 @@
                 <option value="Rejected" data-bn="বাতিলকৃত" data-en="Rejected">বাতিলকৃত</option>
               </select>
             </div>
-            <button onclick="loadApplications()" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
+            <button onclick="window.UI.handleRefresh(this, loadApplications)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
           </div>
         </div>
 
@@ -210,7 +210,7 @@
         document.getElementById('countRejected').innerText = r;
 
         if (currentApplications.length === 0) {
-          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">কোনো আবেদন পাওয়া যায়নি।</p>`;
+          container.innerHTML = `<p style="padding:30px; text-align:center; color:#94a3b8;">${isBn ? 'কোনো আবেদন পাওয়া যায়নি।' : 'No applications found.'}</p>`;
           return;
         }
 
@@ -266,6 +266,8 @@
         container.innerHTML = `<p style="padding:20px; color:#ef4444; text-align:center;">${window.UI && window.UI.getLanguage() === 'en' ? 'Failed to load applications list.' : 'আবেদন তালিকা লোড করা যায়নি।'}</p>`;
       }
     }
+
+    window.loadApplications = loadApplications;
 
     async function openReviewModal(customerId) {
       if (!customerId || customerId === 'undefined' || customerId === 'null') return;

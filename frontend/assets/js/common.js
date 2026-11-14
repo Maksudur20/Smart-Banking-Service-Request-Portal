@@ -454,7 +454,34 @@ const UI = {
     });
 
     if (this.currentSidebarType === 'customer') {
-      this.renderCustomerSidebar(this.activeSidebarPage);
+      this.  async handleRefresh(btn, loaderFn) {
+    const isBn = this.getLanguage() === 'bn';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">🔄</span> ' + (isBn ? 'রিফ্রেশ হচ্ছে...' : 'Refreshing...');
+    }
+    try {
+      if (typeof loaderFn === 'function') {
+        await loaderFn();
+      }
+      this.applyPortalTranslations();
+      if (typeof window.showToast === 'function') {
+        window.showToast(isBn ? '✅ তথ্য সফলভাবে রিফ্রেশ হয়েছে' : '✅ Data refreshed successfully', 'info');
+      }
+    } catch (err) {
+      console.error('Refresh error:', err);
+      if (typeof window.showToast === 'function') {
+        window.showToast(isBn ? 'রিফ্রেশ ব্যর্থ হয়েছে' : 'Refresh failed', 'error');
+      }
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = btn.getAttribute('data-' + (isBn ? 'bn' : 'en')) || (isBn ? '🔄 রিফ্রেশ' : '🔄 Refresh');
+      }
+    }
+  },
+
+  renderCustomerSidebar(this.activeSidebarPage);
     } else if (this.currentSidebarType === 'admin') {
       this.renderAdminSidebar(this.activeSidebarPage);
     }
@@ -464,6 +491,8 @@ const UI = {
     // Call dynamic loaders if available on the current page
     const loaders = [
       'loadApplications',
+      'loadClosureQueue',
+      'loadReport',
       'loadCustomers',
       'loadDeposits',
       'loadServices',

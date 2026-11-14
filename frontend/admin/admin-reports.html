@@ -17,7 +17,7 @@
         </div>
         <div class="top-nav-right">
           <button onclick="exportCSV()" class="btn btn-secondary btn-sm">
-            ?? Export CSV Report
+            📥 Export CSV Report
           </button>
         </div>
       </header>
@@ -38,6 +38,7 @@
             </div>
             <button onclick="loadReport()" class="btn btn-primary" style="height:42px;">
               Apply Filter
+            <button onclick="window.UI.handleRefresh(this, loadReport)" class="btn btn-secondary" style="height:42px; margin-left:8px;" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 Refresh</button>
             </button>
           </div>
         </div>
@@ -117,6 +118,7 @@
       window.open(url, '_blank');
     }
 
+    window.loadReport = loadReport;
     loadReport();
   </script>
 </body>

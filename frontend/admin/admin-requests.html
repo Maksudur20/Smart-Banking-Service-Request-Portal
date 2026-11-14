@@ -37,6 +37,7 @@
                 <option value="Rejected">Rejected</option>
                 <option value="Completed">Completed</option>
               </select>
+              <button onclick="window.UI.handleRefresh(this, loadRequests)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 Refresh</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -119,6 +120,7 @@
       window._searchTimer = setTimeout(loadRequests, 350);
     });
 
+    window.loadRequests = loadRequests;
     loadRequests();
   </script>
 </body>

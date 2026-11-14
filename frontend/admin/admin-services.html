@@ -21,6 +21,7 @@
       <main class="content-container">
         <div class="card">
           <div class="card-header">
+            <button onclick="window.UI.handleRefresh(this, loadServices)" class="btn btn-secondary btn-sm" style="float:right;" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
             <div>
               <h3 class="card-title" data-bn="কনফিগারকৃত ব্যাংকিং সেবা তালিকা" data-en="Configured Banking Services Catalogue">কনফিগারকৃত ব্যাংকিং সেবা তালিকা</h3>
               <p class="card-subtitle" data-bn="১০টি প্রমিত ব্যাংকিং সেবা ক্যাটাগরি এবং সংযুক্ত ডকুমেন্ট ভেরিফিকেশন নিয়মাবলী" data-en="10 standard banking service categories and attached document verification rules">১০টি প্রমিত ব্যাংকিং সেবা ক্যাটাগরি এবং সংযুক্ত ডকুমেন্ট ভেরিফিকেশন নিয়মাবলী</p>
@@ -82,6 +83,7 @@
       }
     }
 
+    window.loadServices = loadServices;
     loadServices();
   </script>
 </body>

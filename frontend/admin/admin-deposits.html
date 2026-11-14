@@ -86,7 +86,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title" data-bn="পেন্ডিং ও বিগত ডিপোজিট রিকোয়েস্টসমূহ" data-en="Pending & Past Deposit Requests">পেন্ডিং ও বিগত ডিপোজিট রিকোয়েস্টসমূহ</h3>
-            <button onclick="loadDeposits()" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
+            <button onclick="window.UI.handleRefresh(this, loadDeposits)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
           </div>
           <div class="card-body" style="padding:0;">
             <div id="depositsTableContainer">
@@ -275,7 +275,8 @@
 
         window.showToast(res.message || 'ভেরিফিকেশন সম্পন্ন হয়েছে।', 'success');
         closeDepositModal();
-        loadDeposits();
+        window.loadDeposits = loadDeposits;
+    loadDeposits();
       } catch (err) {
         window.showToast(err.message || 'ভেরিফিকেশন সম্পন্ন করা যায়নি।', 'error');
       }

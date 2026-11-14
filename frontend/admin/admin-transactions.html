@@ -34,6 +34,7 @@
                 <option value="CREDIT" data-bn="ডিপোজিট / ক্রেডিট" data-en="Deposit / Credit">ডিপোজিট / ক্রেডিট</option>
                 <option value="DEBIT" data-bn="ফান্ড ট্রান্সফার / ডেবিট" data-en="Fund Transfer / Debit">ফান্ড ট্রান্সফার / ডেবিট</option>
               </select>
+              <button onclick="window.UI.handleRefresh(this, loadTransactions)" class="btn btn-secondary btn-sm" data-bn="🔄 রিফ্রেশ" data-en="🔄 Refresh">🔄 রিফ্রেশ</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -122,6 +123,7 @@
       window._searchTimer = setTimeout(loadTransactions, 350);
     });
 
+    window.loadTransactions = loadTransactions;
     loadTransactions();
   </script>
 </body>
