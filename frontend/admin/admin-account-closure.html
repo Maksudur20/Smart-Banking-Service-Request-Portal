@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>অ্যাকাউন্ট ক্লোজার কিউ - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <link rel="stylesheet" href="/=3.5">
   <style>
     .checklist-box {
       background: #f8fafc;
@@ -64,13 +64,30 @@
     }
     .modal-box-lg {
       background: #fff;
-      border-radius: 12px;
+      border-radius: 16px;
       width: 90%;
       max-width: 900px;
       max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25);
+    }
+    .modal-box-scroll {
       overflow-y: auto;
       padding: 24px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+      flex: 1;
+    }
+    .modal-box-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .modal-box-scroll::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 8px 0;
+    }
+    .modal-box-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -141,109 +158,111 @@
   <!-- Review & Verification Modal -->
   <div id="reviewModal" class="modal-backdrop">
     <div class="modal-box-lg">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
-        <h3 style="margin:0; font-size:1.2rem; color:#0f172a;" id="modalReqNumber">অ্যাকাউন্ট ক্লোজার যাচাই</h3>
-        <button onclick="closeReviewModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-      </div>
-
-      <!-- Customer & Account Details Grid -->
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px;">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-          <div><strong>গ্রাহকের নাম:</strong> <span id="mCustomerName">-</span></div>
-          <div><strong>অ্যাকাউন্ট নম্বর:</strong> <span id="mAccountNumber" style="color:#0284c7; font-family:monospace; font-weight:700;">-</span></div>
-          <div><strong>অ্যাকাউন্টের ধরন:</strong> <span id="mAccountType">-</span></div>
-          <div><strong>বর্তমান ব্যালেন্স:</strong> <span id="mCurrentBalance" style="color:#059669; font-weight:800;">-</span></div>
-          <div><strong>মোবাইল নম্বর:</strong> <span id="mCustomerPhone">-</span></div>
-          <div><strong>নিষ্পত্তি পদ্ধতি:</strong> <span id="mSettlementMethod">-</span></div>
+      <div class="modal-box-scroll">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+          <h3 style="margin:0; font-size:1.2rem; color:#0f172a;" id="modalReqNumber" data-bn="অ্যাকাউন্ট ক্লোজার যাচাই" data-en="Account Closure Review">অ্যাকাউন্ট ক্লোজার যাচাই</h3>
+          <button onclick="closeReviewModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
-        <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #cbd5e1;">
-          <strong>অ্যাকাউন্ট বন্ধ করার কারণ:</strong> <span id="mClosureReason">-</span>
+
+        <!-- Customer & Account Details Grid -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+            <div><strong data-bn="গ্রাহকের নাম:" data-en="Customer Name:">গ্রাহকের নাম:</strong> <span id="mCustomerName">-</span></div>
+            <div><strong data-bn="অ্যাকাউন্ট নম্বর:" data-en="Account Number:">অ্যাকাউন্ট নম্বর:</strong> <span id="mAccountNumber" style="color:#0284c7; font-family:monospace; font-weight:700;">-</span></div>
+            <div><strong data-bn="অ্যাকাউন্টের ধরন:" data-en="Account Type:">অ্যাকাউন্টের ধরন:</strong> <span id="mAccountType">-</span></div>
+            <div><strong data-bn="বর্তমান ব্যালেন্স:" data-en="Current Balance:">বর্তমান ব্যালেন্স:</strong> <span id="mCurrentBalance" style="color:#059669; font-weight:800;">-</span></div>
+            <div><strong data-bn="মোবাইল নম্বর:" data-en="Mobile Number:">মোবাইল নম্বর:</strong> <span id="mCustomerPhone">-</span></div>
+            <div><strong data-bn="নিষ্পত্তি পদ্ধতি:" data-en="Settlement Method:">নিষ্পত্তি পদ্ধতি:</strong> <span id="mSettlementMethod">-</span></div>
+          </div>
+          <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #cbd5e1;">
+            <strong data-bn="অ্যাকাউন্ট বন্ধ করার কারণ:" data-en="Reason for Closure:">অ্যাকাউন্ট বন্ধ করার কারণ:</strong> <span id="mClosureReason">-</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Uploaded Documents Preview -->
-      <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 16px 0 8px;">
-        📄 আপলোডকৃত নথিপত্র ও প্রমাণাদি (Documents Review)
-      </h4>
-      <div id="mDocsContainer" class="doc-preview-grid">
-        <p style="color:#94a3b8; font-size:0.85rem;">ডকুমেন্ট লোড হচ্ছে...</p>
-      </div>
-
-      <!-- 6-Point Verification Checklist (As per Prime Bank Policy) -->
-      <div class="checklist-box">
-        <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 0 0 10px;">
-          🔍 প্রাইম ব্যাংক শর্তাবলী ও ভেরিফিকেশন চেকলিস্ট (Verification Checklist)
+        <!-- Uploaded Documents Preview -->
+        <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 16px 0 8px;" data-bn="📄 আপলোডকৃত নথিপত্র ও প্রমাণাদি" data-en="📄 Uploaded Documents & Records">
+          📄 আপলোডকৃত নথিপত্র ও প্রমাণাদি
         </h4>
-        <div class="check-item">
-          <input type="checkbox" id="chkIdentity">
-          <label for="chkIdentity">১. অ্যাকাউন্ট হোল্ডারের পরিচয় ও এনআইডি যাচাই সম্পন্ন হয়েছে।</label>
+        <div id="mDocsContainer" class="doc-preview-grid">
+          <p style="color:#94a3b8; font-size:0.85rem;" data-bn="ডকুমেন্ট লোড হচ্ছে..." data-en="Loading documents...">ডকুমেন্ট লোড হচ্ছে...</p>
         </div>
-        <div class="check-item">
-          <input type="checkbox" id="chkSignature">
-          <label for="chkSignature">২. ব্যাংকের মূল সিগনেচার কার্ডের সাথে আবেদনপত্রের স্বাক্ষর মিলেছে।</label>
-        </div>
-        <div class="check-item">
-          <input type="checkbox" id="chkBalance">
-          <label for="chkBalance">৩. অ্যাকাউন্টের বর্তমান ব্যালেন্স ও কোনো পেন্ডিং ট্রানজেকশন না থাকার বিষয়টি যাচাইকৃত।</label>
-        </div>
-        <div class="check-item">
-          <input type="checkbox" id="chkLiabilities">
-          <label for="chkLiabilities">৪. গ্রাহকের কোনো বকেয়া ঋণ বা ব্যাংক দায় (Outstanding Dues / Liabilities) নেই।</label>
-        </div>
-        <div class="check-item">
-          <input type="checkbox" id="chkCheques">
-          <label for="chkCheques">৫. অব্যবহৃত চেকবই ও পাতা ব্যাংকে জমা বা বাতিল করা হয়েছে।</label>
-        </div>
-        <div class="check-item">
-          <input type="checkbox" id="chkCard">
-          <label for="chkCard">৬. ইস্যুকৃত ডেবিট কার্ড ব্যাংকে সমর্পণ বা সিস্টেমে বাতিল করা হয়েছে।</label>
-        </div>
-        <button onclick="saveChecklist()" class="btn btn-secondary btn-sm" style="margin-top:12px;">
-          💾 চেকলিস্ট সংরক্ষণ করুন
-        </button>
-      </div>
 
-      <!-- Closing Fee & VAT Calculation -->
-      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin-bottom:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong>Schedule of Charges ক্লোজিং ফি:</strong> <span id="mFeeDisplay">200.00 BDT</span> (+ ১৫% ভ্যাট: <span id="mVatDisplay">30.00 BDT</span>)
-            <div style="font-size:0.8rem; color:#1e40af; margin-top:2px;">মোট কর্তন: <span id="mTotalDeduction" style="font-weight:700;">230.00 BDT</span></div>
+        <!-- 6-Point Verification Checklist (As per Prime Bank Policy) -->
+        <div class="checklist-box">
+          <h4 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin: 0 0 10px;" data-bn="🔍 ব্যাংকিং শর্তাবলী ও ভেরিফিকেশন চেকলিস্ট" data-en="🔍 Verification Checklist & Audit">
+            🔍 ব্যাংকিং শর্তাবলী ও ভেরিফিকেশন চেকলিস্ট
+          </h4>
+          <div class="check-item">
+            <input type="checkbox" id="chkIdentity">
+            <label for="chkIdentity" data-bn="১. অ্যাকাউন্ট হোল্ডারের পরিচয় ও এনআইডি যাচাই সম্পন্ন হয়েছে।" data-en="1. Account holder identity and NID verified.">১. অ্যাকাউন্ট হোল্ডারের পরিচয় ও এনআইডি যাচাই সম্পন্ন হয়েছে।</label>
           </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <label style="font-size:0.8rem; color:#334155;">কাস্টম ফি (যদি প্রযোজ্য):</label>
-            <input type="number" id="customFeeInput" class="form-control" placeholder="ফি BDT" style="width:110px; font-size:0.85rem;">
+          <div class="check-item">
+            <input type="checkbox" id="chkSignature">
+            <label for="chkSignature" data-bn="২. ব্যাংকের মূল সিগনেচার কার্ডের সাথে আবেদনপত্রের স্বাক্ষর মিলেছে।" data-en="2. Specimen signature matches signature on closure application.">২. ব্যাংকের মূল সিগনেচার কার্ডের সাথে আবেদনপত্রের স্বাক্ষর মিলেছে।</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="chkBalance">
+            <label for="chkBalance" data-bn="৩. অ্যাকাউন্টের বর্তমান ব্যালেন্স ও কোনো পেন্ডিং ট্রানজেকশন না থাকার বিষয়টি যাচাইকৃত।" data-en="3. Available balance verified and no pending transactions exist.">৩. অ্যাকাউন্টের বর্তমান ব্যালেন্স ও কোনো পেন্ডিং ট্রানজেকশন না থাকার বিষয়টি যাচাইকৃত।</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="chkLiabilities">
+            <label for="chkLiabilities" data-bn="৪. গ্রাহকের কোনো বকেয়া ঋণ বা ব্যাংক দায় নেই।" data-en="4. No outstanding loans or liabilities exist.">৪. গ্রাহকের কোনো বকেয়া ঋণ বা ব্যাংক দায় নেই।</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="chkCheques">
+            <label for="chkCheques" data-bn="৫. অব্যবহৃত চেকবই ও পাতা ব্যাংকে জমা বা বাতিল করা হয়েছে।" data-en="5. Unused cheque book/leaves returned or revoked.">৫. অব্যবহৃত চেকবই ও পাতা ব্যাংকে জমা বা বাতিল করা হয়েছে।</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="chkCard">
+            <label for="chkCard" data-bn="৬. ইস্যুকৃত ডেবিট কার্ড ব্যাংকে সমর্পণ বা সিস্টেমে বাতিল করা হয়েছে।" data-en="6. Issued debit card surrendered or permanently cancelled.">৬. ইস্যুকৃত ডেবিট কার্ড ব্যাংকে সমর্পণ বা সিস্টেমে বাতিল করা হয়েছে।</label>
+          </div>
+          <button onclick="saveChecklist()" class="btn btn-secondary btn-sm" style="margin-top:12px;" data-bn="💾 চেকলিস্ট সংরক্ষণ করুন" data-en="💾 Save Checklist">
+            💾 চেকলিস্ট সংরক্ষণ করুন
+          </button>
+        </div>
+
+        <!-- Closing Fee & VAT Calculation -->
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong data-bn="Schedule of Charges ক্লোজিং ফি:" data-en="Schedule of Charges Closing Fee:">Schedule of Charges ক্লোজিং ফি:</strong> <span id="mFeeDisplay">200.00 BDT</span> (+ ১৫% VAT: <span id="mVatDisplay">30.00 BDT</span>)
+              <div style="font-size:0.8rem; color:#1e40af; margin-top:2px;" data-bn="মোট কর্তন:" data-en="Total Deduction:">মোট কর্তন: <span id="mTotalDeduction" style="font-weight:700;">230.00 BDT</span></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label style="font-size:0.8rem; color:#334155;" data-bn="কাস্টম ফি (যদি প্রযোজ্য):" data-en="Custom Fee (if applicable):">কাস্টম ফি (যদি প্রযোজ্য):</label>
+              <input type="number" id="customFeeInput" class="form-control" placeholder="ফি BDT" style="width:110px; font-size:0.85rem;" data-bn="ফি BDT" data-en="Fee BDT">
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Remarks / Reason Input -->
-      <div class="form-group">
-        <label class="form-label">অফিসার মন্তব্য বা রিজেকশন কারণ (Officer Remarks)</label>
-        <textarea id="modalRemarks" class="form-control" rows="2" placeholder="প্রয়োজনীয় মন্তব্য বা ডকুমেন্ট সংশোধনের কারণ লিখুন..."></textarea>
-      </div>
-
-      <!-- Action Buttons -->
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:16px;">
-        <div style="display:flex; gap:8px;">
-          <button onclick="makeClosureDecision('UNDER_REVIEW')" class="btn btn-secondary btn-sm">
-            🔍 Under Review
-          </button>
-          <button onclick="makeClosureDecision('REQUEST_DOCS')" class="btn btn-secondary btn-sm" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">
-            📝 অতিরিক্ত ডকুমেন্ট তলব
-          </button>
-          <button onclick="makeClosureDecision('PENDING_SETTLEMENT')" class="btn btn-secondary btn-sm" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">
-            💵 ব্যালেন্স নিষ্পত্তি কিউ
-          </button>
+        <!-- Remarks / Reason Input -->
+        <div class="form-group">
+          <label class="form-label" data-bn="অফিসার মন্তব্য বা রিজেকশন কারণ:" data-en="Officer Remarks or Reason:">অফিসার মন্তব্য বা রিজেকশন কারণ:</label>
+          <textarea id="modalRemarks" class="form-control" rows="2" placeholder="প্রয়োজনীয় মন্তব্য বা ডকুমেন্ট সংশোধনের কারণ লিখুন..." data-bn="প্রয়োজনীয় মন্তব্য বা ডকুমেন্ট সংশোধনের কারণ লিখুন..." data-en="Enter review notes or reason for requesting documents..."></textarea>
         </div>
 
-        <div style="display:flex; gap:8px;">
-          <button onclick="makeClosureDecision('REJECT')" class="btn btn-danger btn-sm">
-            ❌ আবেদন বাতিল
-          </button>
-          <button onclick="makeClosureDecision('CLOSE')" class="btn btn-primary btn-sm" style="background:#059669; border-color:#059669; font-weight:700;">
-            ✅ অ্যাকাউন্ট স্থায়ীভাবে ক্লোজ করুন (Final Close)
-          </button>
+        <!-- Action Buttons -->
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:16px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button onclick="makeClosureDecision('UNDER_REVIEW')" class="btn btn-secondary btn-sm" data-bn="🔍 Under Review" data-en="🔍 Under Review">
+              🔍 Under Review
+            </button>
+            <button onclick="makeClosureDecision('REQUEST_DOCS')" class="btn btn-secondary btn-sm" style="background:#fffbeb; color:#b45309; border-color:#fde68a;" data-bn="📝 অতিরিক্ত ডকুমেন্ট তলব" data-en="📝 Request Documents">
+              📝 অতিরিক্ত ডকুমেন্ট তলব
+            </button>
+            <button onclick="makeClosureDecision('PENDING_SETTLEMENT')" class="btn btn-secondary btn-sm" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;" data-bn="💵 ব্যালেন্স নিষ্পত্তি কিউ" data-en="💵 Pending Settlement">
+              💵 ব্যালেন্স নিষ্পত্তি কিউ
+            </button>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button onclick="makeClosureDecision('REJECT')" class="btn btn-danger btn-sm" data-bn="❌ আবেদন বাতিল" data-en="❌ Reject Request">
+              ❌ আবেদন বাতিল
+            </button>
+            <button onclick="makeClosureDecision('CLOSE')" class="btn btn-primary btn-sm" style="background:#059669; border-color:#059669; font-weight:700;" data-bn="✅ অ্যাকাউন্ট স্থায়ীভাবে ক্লোজ করুন" data-en="✅ Permanently Close Account">
+              ✅ অ্যাকাউন্ট স্থায়ীভাবে ক্লোজ করুন
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -252,46 +271,48 @@
   <!-- Dynamic Fee Schedule Management Modal -->
   <div id="feeModal" class="modal-backdrop">
     <div class="modal-box-lg" style="max-width:650px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
-        <h3 style="margin:0; font-size:1.15rem; color:#0f172a;">⚙️ Schedule of Charges ক্লোজিং ফি পরিচালনা</h3>
-        <button onclick="closeFeeModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-      </div>
-
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:16px;">
-        অ্যাকাউন্টের ধরন অনুযায়ী ক্লোজিং ফি পরিবর্তন করুন। কোডে কোনো ফিক্সড ফি হার্ডকোড করা নেই।
-      </p>
-
-      <div class="table-responsive" style="margin-bottom:16px;">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>অ্যাকাউন্টের ধরন</th>
-              <th>ক্লোজিং ফি (BDT)</th>
-              <th>ভ্যাট (%)</th>
-              <th>অ্যাকশন</th>
-            </tr>
-          </thead>
-          <tbody id="feeTableBody">
-            <tr><td colspan="4" style="text-align:center;">ফি লোড হচ্ছে...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px;">
-        <h5 style="margin:0 0 10px; font-size:0.9rem;">ফি আপডেট বা নতুন টাইপ যুক্ত করুন:</h5>
-        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:10px;">
-          <input type="text" id="newAccType" class="form-control" placeholder="Account Type (যেমন: Savings)">
-          <input type="number" id="newFeeAmount" class="form-control" placeholder="Fee BDT">
-          <input type="number" id="newVatPercent" class="form-control" value="15.00" placeholder="VAT %">
+      <div class="modal-box-scroll">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
+          <h3 style="margin:0; font-size:1.15rem; color:#0f172a;" data-bn="⚙️ Schedule of Charges ক্লোজিং ফি পরিচালনা" data-en="⚙️ Schedule of Charges Fee Management">⚙️ Schedule of Charges ক্লোজিং ফি পরিচালনা</h3>
+          <button onclick="closeFeeModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
-        <button onclick="saveFeeSchedule()" class="btn btn-primary btn-sm">সংরক্ষণ করুন</button>
+
+        <p style="font-size:0.85rem; color:#64748b; margin-bottom:16px;" data-bn="অ্যাকাউন্টের ধরন অনুযায়ী ক্লোজিং ফি পরিচালনা করুন। ব্যাংকের নির্ধারিত চার্জ স্বয়ংক্রিয়ভাবে কার্যকর হবে।" data-en="Manage closure fees according to account type. Applicable rates apply automatically.">
+          অ্যাকাউন্টের ধরন অনুযায়ী ক্লোজিং ফি পরিচালনা করুন। ব্যাংকের নির্ধারিত চার্জ স্বয়ংক্রিয়ভাবে কার্যকর হবে।
+        </p>
+
+        <div class="table-responsive" style="margin-bottom:16px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-bn="অ্যাকাউন্টের ধরন" data-en="Account Type">অ্যাকাউন্টের ধরন</th>
+                <th data-bn="ক্লোজিং ফি (BDT)" data-en="Closing Fee (BDT)">ক্লোজিং ফি (BDT)</th>
+                <th data-bn="ভ্যাট (%)" data-en="VAT (%)">ভ্যাট (%)</th>
+                <th data-bn="অ্যাকশন" data-en="Action">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="feeTableBody">
+              <tr><td colspan="4" style="text-align:center;" data-bn="ফি লোড হচ্ছে..." data-en="Loading fee schedule...">ফি লোড হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px;">
+          <h5 style="margin:0 0 10px; font-size:0.9rem;" data-bn="ফি আপডেট বা নতুন টাইপ যুক্ত করুন:" data-en="Update Fee or Add Account Type:">ফি আপডেট বা নতুন টাইপ যুক্ত করুন:</h5>
+          <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+            <input type="text" id="newAccType" class="form-control" placeholder="Account Type (যেমন: Savings)" data-bn="Account Type (যেমন: Savings)" data-en="Account Type (e.g. Savings)">
+            <input type="number" id="newFeeAmount" class="form-control" placeholder="Fee BDT" data-bn="ফি BDT" data-en="Fee BDT">
+            <input type="number" id="newVatPercent" class="form-control" value="15.00" placeholder="VAT %" data-bn="VAT %" data-en="VAT %">
+          </div>
+          <button onclick="saveFeeSchedule()" class="btn btn-primary btn-sm" data-bn="সংরক্ষণ করুন" data-en="Save Charges">সংরক্ষণ করুন</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('account-closure');
@@ -300,6 +321,7 @@
     let selectedRequest = null;
 
     async function loadClosureQueue() {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       const search = document.getElementById('searchInput').value;
       const status = document.getElementById('statusFilter').value;
       const params = {};
@@ -312,7 +334,7 @@
         const tbody = document.getElementById('closureQueueBody');
 
         if (currentRequests.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px; color:#94a3b8;">কোনো অ্যাকাউন্ট ক্লোজার আবেদন পাওয়া যায়নি।</td></tr>';
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:32px; color:#94a3b8;">${isBn ? 'কোনো অ্যাকাউন্ট ক্লোজার আবেদন পাওয়া যায়নি।' : 'No account closure applications found.'}</td></tr>`;
           return;
         }
 
@@ -330,30 +352,31 @@
                 <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">Ref: ${r.customer_reference || '-'} &bull; ${r.customer_email || ''}</div>
               </td>
               <td><span style="font-family:monospace; font-weight:700; color:#0284c7; font-size:0.9rem;">${r.account_number}</span></td>
-              <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">৳${Number(r.current_balance || 0).toLocaleString('en-US', {minimumFractionDigits:2})}</span></td>
-              <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${r.document_count || 0} টি ফাইল</span></td>
+              <td><span style="font-weight:800; color:#059669; font-size:0.95rem;">${Number(r.current_balance || 0).toLocaleString('en-US', {minimumFractionDigits:2})} BDT</span></td>
+              <td><span class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">📂 ${r.document_count || 0} ${isBn ? 'টি ফাইল' : 'files'}</span></td>
               <td><span class="badge ${badgeClass}">${r.status}</span></td>
               <td style="font-size:0.82rem; color:#64748b;">${new Date(r.created_at).toLocaleDateString()}</td>
               <td>
                 <button onclick="openReviewModal(${r.id})" class="table-action-btn primary">
-                  যাচাই ও সিদ্ধান্ত &rarr;
+                  ${isBn ? 'যাচাই ও সিদ্ধান্ত &rarr;' : 'Review & Decide &rarr;'}
                 </button>
               </td>
             </tr>
           `;
         }).join('');
       } catch (err) {
-        window.showToast('ক্লোজার কিউ লোড করা যায়নি।', 'error');
+        window.showToast(isBn ? 'ক্লোজার কিউ লোড করা যায়নি।' : 'Failed to load closure queue.', 'error');
       }
     }
 
     async function openReviewModal(requestId) {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         const res = await window.api.get(`/api/account-closure/${requestId}`);
         selectedRequest = res.request;
         const docs = res.documents || [];
 
-        document.getElementById('modalReqNumber').innerText = `ক্লোজার আবেদন — ${selectedRequest.request_number}`;
+        document.getElementById('modalReqNumber').innerText = `${isBn ? 'ক্লোজার আবেদন' : 'Closure Request'} — ${selectedRequest.request_number}`;
         document.getElementById('mCustomerName').innerText = selectedRequest.account_holder_name;
         document.getElementById('mAccountNumber').innerText = selectedRequest.account_number;
         document.getElementById('mAccountType').innerText = selectedRequest.account_type;
@@ -382,7 +405,7 @@
         // Render Docs
         const docsContainer = document.getElementById('mDocsContainer');
         if (docs.length === 0) {
-          docsContainer.innerHTML = '<p style="color:#94a3b8; font-size:0.85rem;">কোনো ডকুমেন্ট আপলোড করা হয়নি।</p>';
+          docsContainer.innerHTML = `<p style="color:#94a3b8; font-size:0.85rem;">${isBn ? 'কোনো ডকুমেন্ট আপলোড করা হয়নি।' : 'No documents uploaded.'}</p>`;
         } else {
           docsContainer.innerHTML = docs.map(d => {
             const isPdf = (d.mime_type || '').includes('pdf') || (d.file_name || '').endsWith('.pdf');
@@ -392,13 +415,24 @@
                 ${isPdf ? `
                   <div style="height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8fafc; border-radius:4px; margin-bottom:8px;">
                     <span style="font-size:2rem;">📄</span>
-                    <span style="font-size:0.75rem;">PDF ফাইল</span>
+                    <span style="font-size:0.75rem;">${isBn ? 'PDF ফাইল' : 'PDF Document'}</span>
                   </div>
                 ` : `
                   <img src="${d.file_url}" alt="${d.document_type}">
                 `}
                 <a href="${d.file_url}" target="_blank" class="table-action-btn secondary" style="font-size:0.75rem; padding:4px 10px;">
-                  পূর্ণাঙ্গ ফাইল দেখুন ↗
+                  ${isBn ? 'পূর্ণাঙ্গ ফাইল দেখুন ↗' : 'View Full File ↗'}
+                </a>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('reviewModal').classList.add('open');
+      } catch (err) {
+        window.showToast(err.message || (isBn ? 'আবেদন বিবরণ লোড ব্যর্থ হয়েছে।' : 'Failed to load request details.'), 'error');
+      }
+    }
                 </a>
               </div>
             `;

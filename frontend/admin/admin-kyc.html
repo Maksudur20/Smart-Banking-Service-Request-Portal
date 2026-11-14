@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>কেওয়াইসি ভেরিফিকেশন ডেস্ক - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <link rel="stylesheet" href="/=3.5">
   <style>
     .modal-overlay {
       position: fixed;
@@ -126,7 +126,7 @@
           </div>
           <div class="card-body" style="padding:0;">
             <div id="applicationsContainer">
-              <p style="padding:30px; text-align:center; color:#94a3b8;">লোড হচ্ছে...</p>
+              <p style="padding:30px; text-align:center; color:#94a3b8;" data-bn="লোড হচ্ছে..." data-en="Loading...">লোড হচ্ছে...</p>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@
     <div class="modal-box">
       <div class="modal-box-scroll">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
-          <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:#0f172a;" id="modalCustomerName">আবেদনকারীর তথ্য ও ডকুমেন্টস</h3>
+          <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:#0f172a;" id="modalCustomerName" data-bn="আবেদনকারীর তথ্য ও ডকুমেন্টস" data-en="Applicant Info & KYC Documents">আবেদনকারীর তথ্য ও ডকুমেন্টস</h3>
           <button onclick="closeModal()" class="table-action-btn secondary" style="font-size:1.2rem; padding:2px 10px;">&times;</button>
         </div>
 
@@ -177,9 +177,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('kyc');

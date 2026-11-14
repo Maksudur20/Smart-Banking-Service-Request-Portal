@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>নগদ টাকা উত্তোলন - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <link rel="stylesheet" href="/=3.5">
   <style>
     .withdraw-container {
       max-width: 1000px;
@@ -139,7 +139,7 @@
         <div class="info-summary-card">
           <div class="summary-item">
             <span class="summary-label" data-bn="অ্যাকাউন্ট হোল্ডার" data-en="Account Holder">অ্যাকাউন্ট হোল্ডার</span>
-            <span class="summary-val" id="holderNameDisplay">লোড হচ্ছে...</span>
+            <span class="summary-val" id="holderNameDisplay" data-bn="লোড হচ্ছে..." data-en="Loading...">লোড হচ্ছে...</span>
           </div>
           <div class="summary-item">
             <span class="summary-label" data-bn="অ্যাকাউন্ট নম্বর" data-en="Account Number">অ্যাকাউন্ট নম্বর</span>
@@ -147,7 +147,7 @@
           </div>
           <div class="summary-item">
             <span class="summary-label" data-bn="ব্যবহারযোগ্য ব্যালেন্স" data-en="Available Balance">ব্যবহারযোগ্য ব্যালেন্স</span>
-            <span class="summary-val" id="balanceDisplay" style="color:#a7f3d0;">৳0.00</span>
+            <span class="summary-val" id="balanceDisplay" style="color:#a7f3d0;">0.00 BDT</span>
           </div>
         </div>
 
@@ -155,7 +155,7 @@
         <div class="card" style="margin-bottom:28px;">
           <div class="card-header">
             <div>
-              <h3 class="card-title" data-bn="নগদ উত্তোলনের আবেদনপত্র (Withdrawal Form)" data-en="Cash Withdrawal Request Form">নগদ উত্তোলনের আবেদনপত্র (Withdrawal Form)</h3>
+              <h3 class="card-title" data-bn="নগদ উত্তোলনের আবেদনপত্র" data-en="Cash Withdrawal Request Form">নগদ উত্তোলনের আবেদনপত্র</h3>
               <p class="card-subtitle" data-bn="নিচের তথ্যগুলো সতর্কতার সাথে পূরণ করুন এবং চেকের পরিষ্কার ছবি সংযুক্ত করুন" data-en="Fill in cheque details carefully and attach a clear image of the cheque">নিচের তথ্যগুলো সতর্কতার সাথে পূরণ করুন এবং চেকের পরিষ্কার ছবি সংযুক্ত করুন</p>
             </div>
           </div>
@@ -163,45 +163,45 @@
             <form id="withdrawalForm" enctype="multipart/form-data">
               <div class="form-grid-3" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:18px;">
                 <div class="form-group">
-                  <label class="form-label" data-bn="অ্যাকাউন্টধারীর নাম (Auto-filled)" data-en="Account Holder Name (Auto-filled)">অ্যাকাউন্টধারীর নাম (Auto-filled)</label>
+                  <label class="form-label" data-bn="অ্যাকাউন্টধারীর নাম (স্বয়ংক্রিয়)" data-en="Account Holder Name (Auto-filled)">অ্যাকাউন্টধারীর নাম (স্বয়ংক্রিয়)</label>
                   <input type="text" id="holderNameInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" data-bn="অ্যাকাউন্ট নম্বর (Auto-filled)" data-en="Account Number (Auto-filled)">অ্যাকাউন্ট নম্বর (Auto-filled)</label>
+                  <label class="form-label" data-bn="অ্যাকাউন্ট নম্বর (স্বয়ংক্রিয়)" data-en="Account Number (Auto-filled)">অ্যাকাউন্ট নম্বর (স্বয়ংক্রিয়)</label>
                   <input type="text" id="accountNoInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed; font-family:ui-monospace, monospace;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" data-bn="উপলব্ধ ব্যালেন্স (Auto-filled)" data-en="Available Balance (Auto-filled)">উপলব্ধ ব্যালেন্স (Auto-filled)</label>
+                  <label class="form-label" data-bn="উপলব্ধ ব্যালেন্স (স্বয়ংক্রিয়)" data-en="Available Balance (Auto-filled)">উপলব্ধ ব্যালেন্স (স্বয়ংক্রিয়)</label>
                   <input type="text" id="availableBalInput" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed; font-weight:700; color:#059669;">
                 </div>
               </div>
 
               <div class="form-grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:18px;">
                 <div class="form-group">
-                  <label class="form-label required" data-bn="উত্তোলনের পরিমাণ (Withdrawal Amount in BDT)" data-en="Withdrawal Amount (BDT)">উত্তোলনের পরিমাণ (Withdrawal Amount in BDT)</label>
+                  <label class="form-label required" data-bn="উত্তোলনের পরিমাণ (BDT)" data-en="Withdrawal Amount (BDT)">উত্তোলনের পরিমাণ (BDT)</label>
                   <input type="number" id="withdrawAmount" name="amount" class="form-control" placeholder="যেমন: 5000" min="100" step="any" required data-bn="যেমন: 5000" data-en="e.g. 5000">
                   <small style="color:#64748b; font-size:0.75rem;" data-bn="সর্বনিম্ন উত্তোলন: ৳১০০ । উপলব্ধ ব্যালেন্সের বেশি উত্তোলন সম্ভব নয়।" data-en="Minimum withdrawal: BDT 100. Cannot exceed available balance.">সর্বনিম্ন উত্তোলন: ৳১০০ । উপলব্ধ ব্যালেন্সের বেশি উত্তোলন সম্ভব নয়।</small>
                 </div>
                 <div class="form-group">
-                  <label class="form-label required" data-bn="প্রাপকের নাম (Payee Name)" data-en="Payee Name">প্রাপকের নাম (Payee Name)</label>
-                  <input type="text" id="payeeName" name="payee_name" class="form-control" placeholder="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা নির্দিষ্ট ব্যক্তি)" required data-bn="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা ব্যক্তি)" data-en="Payee as written on cheque (e.g. Self or Name)">
+                  <label class="form-label required" data-bn="প্রাপকের নাম" data-en="Payee Name">প্রাপকের নাম</label>
+                  <input type="text" id="payeeName" name="payee_name" class="form-control" placeholder="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা ব্যক্তি)" required data-bn="যাঁর নামে চেক কাটা হয়েছে (যেমন: Self বা ব্যক্তি)" data-en="Payee as written on cheque (e.g. Self or Name)">
                 </div>
               </div>
 
               <div class="form-grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:20px;">
                 <div class="form-group">
-                  <label class="form-label required" data-bn="চেক নম্বর (Cheque Number)" data-en="Cheque Number">চেক নম্বর (Cheque Number)</label>
+                  <label class="form-label required" data-bn="চেক নম্বর" data-en="Cheque Number">চেক নম্বর</label>
                   <input type="text" id="chequeNumber" name="cheque_number" class="form-control" placeholder="যেমন: CHQ-8891023" required data-bn="যেমন: CHQ-8891023" data-en="e.g. CHQ-8891023">
                 </div>
                 <div class="form-group">
-                  <label class="form-label required" data-bn="চেকের তারিখ (Cheque Date)" data-en="Cheque Date">চেকের তারিখ (Cheque Date)</label>
+                  <label class="form-label required" data-bn="চেকের তারিখ" data-en="Cheque Date">চেকের তারিখ</label>
                   <input type="date" id="chequeDate" name="cheque_date" class="form-control" required>
                 </div>
               </div>
 
               <!-- Mandatory Cheque Image Upload -->
               <div class="form-group" style="margin-bottom:24px;">
-                <label class="form-label required" data-bn="চেকের ছবি আপলোড (Cheque Image Upload - Mandatory)" data-en="Cheque Image Upload (Mandatory)">চেকের ছবি আপলোড (Cheque Image Upload - Mandatory)</label>
+                <label class="form-label required" data-bn="চেকের ছবি আপলোড (বাধ্যতামূলক)" data-en="Cheque Image Upload (Mandatory)">চেকের ছবি আপলোড (বাধ্যতামূলক)</label>
                 <div class="cheque-preview-box" onclick="document.getElementById('chequeFileInput').click()">
                   <div id="uploadPrompt">
                     <span style="font-size:2.2rem; display:block; margin-bottom:6px;">🧾</span>
@@ -284,9 +284,9 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('withdraw');

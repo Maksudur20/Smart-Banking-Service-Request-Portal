@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>লাইভ লেনদেন খতিয়ান - Smart Banking PLC Admin</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.4">
+  <link rel="stylesheet" href="/=3.5">
 </head>
 <body>
   <div class="app-layout">
@@ -40,19 +40,19 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>ট্রানজেকশন নম্বর</th>
-                  <th>গ্রাহক ও অ্যাকাউন্ট</th>
-                  <th>লেনদেনের ধরন</th>
-                  <th>পরিমাণ (BDT)</th>
-                  <th>কাউন্টারপার্টি</th>
-                  <th>রেফারেন্স</th>
-                  <th>পরবর্তী ব্যালেন্স</th>
-                  <th>তারিখ ও সময়</th>
+                  <th data-bn="ট্রানজেকশন নম্বর" data-en="Transaction #">ট্রানজেকশন নম্বর</th>
+                  <th data-bn="গ্রাহক ও অ্যাকাউন্ট" data-en="Customer & A/C">গ্রাহক ও অ্যাকাউন্ট</th>
+                  <th data-bn="লেনদেনের ধরন" data-en="Type">লেনদেনের ধরন</th>
+                  <th data-bn="পরিমাণ (BDT)" data-en="Amount (BDT)">পরিমাণ (BDT)</th>
+                  <th data-bn="কাউন্টারপার্টি" data-en="Counterparty">কাউন্টারপার্টি</th>
+                  <th data-bn="রেফারেন্স" data-en="Reference">রেফারেন্স</th>
+                  <th data-bn="পরবর্তী ব্যালেন্স" data-en="Balance After">পরবর্তী ব্যালেন্স</th>
+                  <th data-bn="তারিখ ও সময়" data-en="Date & Time">তারিখ ও সময়</th>
                 </tr>
               </thead>
               <tbody id="txTableBody">
                 <tr>
-                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);">লেনদেন লোড হচ্ছে...</td>
+                  <td colspan="8" style="text-align:center; padding:30px; color:var(--text-light);" data-bn="লেনদেন লোড হচ্ছে..." data-en="Loading transactions...">লেনদেন লোড হচ্ছে...</td>
                 </tr>
               </tbody>
             </table>
@@ -62,14 +62,15 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js?v=3.4"></script>
-  <script src="/assets/js/auth.js?v=3.4"></script>
-  <script src="/assets/js/common.js?v=3.4"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
   <script>
     window.Auth.requireAuth('ADMIN');
     window.UI.renderAdminSidebar('transactions');
 
     async function loadTransactions() {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       const type = document.getElementById('typeFilter').value;
       const search = document.getElementById('txSearch').value;
       const params = {};
@@ -82,7 +83,7 @@
         const tbody = document.getElementById('txTableBody');
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">কোনো লেনদেন রেকর্ড পাওয়া যায়নি।</td></tr>';
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">${isBn ? 'কোনো লেনদেন রেকর্ড পাওয়া যায়নি।' : 'No transactions recorded.'}</td></tr>`;
           return;
         }
 
@@ -97,7 +98,7 @@
               </td>
               <td>
                 <span class="badge ${isCredit ? 'badge-approved' : 'badge-rejected'}">
-                  ${isCredit ? 'ক্রেডিট / জমা' : 'ডেবিট / ট্রান্সফার'}
+                  ${isCredit ? (isBn ? 'ক্রেডিট / জমা' : 'Credit / Deposit') : (isBn ? 'ডেবিট / ট্রান্সফার' : 'Debit / Transfer')}
                 </span>
               </td>
               <td style="font-weight:800; color:${isCredit ? '#059669' : '#e11d48'}; font-size:0.95rem;">
@@ -105,13 +106,13 @@
               </td>
               <td style="font-size:0.86rem; color:#334155; font-weight:500;">${t.counterparty_name || t.counterparty_account || '-'}</td>
               <td style="font-size:0.82rem; color:#64748b;">${t.reference || '-'}</td>
-              <td style="font-weight:700; color:#0f172a;">৳${Number(t.balance_after).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+              <td style="font-weight:700; color:#0f172a;">${Number(t.balance_after).toLocaleString('en-US', {minimumFractionDigits: 2})} BDT</td>
               <td style="font-size:0.82rem; color:#64748b; font-weight:500;">${new Date(t.created_at).toLocaleString()}</td>
             </tr>
           `;
         }).join('');
       } catch (err) {
-        window.showToast('লেনদেন তালিকা লোড করা যায়নি।', 'error');
+        window.showToast(isBn ? 'লেনদেন তালিকা লোড করা যায়নি।' : 'Failed to load transactions list.', 'error');
       }
     }
 

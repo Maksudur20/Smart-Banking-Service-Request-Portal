@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>নোটিফিকেশন ও অ্যালার্ট - Smart Banking PLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=3.2">
+  <link rel="stylesheet" href="/=3.5">
   <style>
     .notif-card {
       border: 1px solid #e2e8f0;
@@ -51,21 +51,21 @@
     <div class="main-wrapper">
       <header class="top-navbar">
         <div class="top-nav-left">
-          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">🔔 ইন-অ্যাপ নোটিফিকেশন ও অ্যালার্ট (Notifications)</h2>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;" data-bn="🔔 ইন-অ্যাপ নোটিফিকেশন ও অ্যালার্ট" data-en="🔔 In-App Notifications & Alerts">🔔 ইন-অ্যাপ নোটিফিকেশন ও অ্যালার্ট</h2>
         </div>
         <div class="top-nav-right">
-          <button onclick="markAllRead()" class="btn btn-secondary btn-sm">সকল পঠিত হিসেবে চিহ্নিত করুন</button>
+          <button onclick="markAllRead()" class="btn btn-secondary btn-sm" data-bn="সকল পঠিত হিসেবে চিহ্নিত করুন" data-en="Mark All as Read">সকল পঠিত হিসেবে চিহ্নিত করুন</button>
         </div>
       </header>
 
       <main class="content-container" style="max-width: 880px;">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">ব্যাংকিং লেনদেন, কেওয়াইসি ও স্ট্যাটাস আপডেট</h3>
+            <h3 class="card-title" data-bn="ব্যাংকিং লেনদেন, কেওয়াইসি ও স্ট্যাটাস আপডেট" data-en="Banking Transactions, KYC & Status Updates">ব্যাংকিং লেনদেন, কেওয়াইসি ও স্ট্যাটাস আপডেট</h3>
           </div>
           <div class="card-body">
             <div id="notificationsList">
-              <p style="color:#94a3b8; text-align:center; padding:30px;">নোটিফিকেশন লোড হচ্ছে...</p>
+              <p style="color:#94a3b8; text-align:center; padding:30px;" data-bn="নোটিফিকেশন লোড হচ্ছে..." data-en="Loading notifications...">নোটিফিকেশন লোড হচ্ছে...</p>
             </div>
           </div>
         </div>
@@ -73,21 +73,22 @@
     </div>
   </div>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/auth.js?v=3.2"></script>
-  <script src="/assets/js/common.js?v=3.2"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
+  <script src="/=3.5"></script>
   <script>
     window.Auth.requireAuth('CUSTOMER');
     window.UI.renderCustomerSidebar('notifications');
 
     async function loadNotifications() {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         const res = await window.api.get('/api/notifications', { limit: 30 });
         const list = res.notifications || [];
         const container = document.getElementById('notificationsList');
 
         if (list.length === 0) {
-          container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:30px;">কোনো নতুন নোটিফিকেশন নেই।</p>';
+          container.innerHTML = `<p style="color:#94a3b8; text-align:center; padding:30px;">${isBn ? 'কোনো নতুন নোটিফিকেশন নেই।' : 'No new notifications.'}</p>`;
           return;
         }
 
@@ -100,15 +101,15 @@
             </div>
             <div>
               ${!n.is_read ? `
-                <button onclick="markSingleRead(${n.id})" class="table-action-btn primary" title="Mark as read" style="font-size:0.75rem;">
-                  ✓ পঠিত
+                <button onclick="markSingleRead(${n.id})" class="table-action-btn primary" title="${isBn ? 'পঠিত চিহ্নিত করুন' : 'Mark as read'}" style="font-size:0.75rem;">
+                  ${isBn ? '✓ পঠিত' : '✓ Mark Read'}
                 </button>
               ` : ''}
             </div>
           </div>
         `).join('');
       } catch (err) {
-        window.showToast('নোটিফিকেশন লোড করা যায়নি।', 'error');
+        window.showToast(isBn ? 'নোটিফিকেশন লোড করা যায়নি।' : 'Failed to load notifications.', 'error');
       }
     }
 
@@ -123,13 +124,14 @@
     }
 
     async function markAllRead() {
+      const isBn = window.UI ? window.UI.getLanguage() === 'bn' : true;
       try {
         await window.api.patch('/api/notifications/read-all', {});
-        window.showToast('✅ সকল নোটিফিকেশন পঠিত হিসেবে চিহ্নিত হয়েছে।', 'success');
+        window.showToast(isBn ? '✅ সকল নোটিফিকেশন পঠিত হিসেবে চিহ্নিত হয়েছে।' : '✅ All notifications marked as read.', 'success');
         loadNotifications();
         window.UI.updateNotificationBadge();
       } catch (e) {
-        window.showToast('ব্যর্থ হয়েছে।', 'error');
+        window.showToast(isBn ? 'ব্যর্থ হয়েছে।' : 'Operation failed.', 'error');
       }
     }
 
